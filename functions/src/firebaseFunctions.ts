@@ -10,6 +10,7 @@ import { FineTemplateDeleteFunction } from './functions/FineTemplateDeleteFuncti
 import { FineDeleteFunction } from './functions/FineDeleteFunction';
 import { PersonDeleteFunction } from './functions/PersonDeleteFunction';
 import { UserRoleEditFunction } from './functions/UserRoleEditFunction';
+import { PaypalMeEditFunction } from './functions/PaypalMeEditFunction';
 
 export const firebaseFunctions = createFirebaseFunctions(builder => ({
     team: {
@@ -17,6 +18,9 @@ export const firebaseFunctions = createFirebaseFunctions(builder => ({
     },
     userRole: {
         edit: builder.function(UserRoleEditFunction)
+    },
+    paypalMe: {
+        edit: builder.function(PaypalMeEditFunction)
     },
     person: {
         add: builder.function(PersonAddFunction),
