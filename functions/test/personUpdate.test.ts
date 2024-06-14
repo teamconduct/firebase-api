@@ -14,15 +14,16 @@ describe('PersonUpdateFunction', () => {
     });
 
     it('team not found', async () => {
+        await FirebaseApp.shared.deleteOnlyTeam();
         const execute = async () => await FirebaseApp.shared.functions.function('person').function('update').callFunction({
-            teamId: Guid.generate(),
+            teamId: testTeam1.id,
             id: Guid.generate(),
             properties: {
                 firstName: 'Juan',
                 lastName: 'Perez'
             }
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('person not found', async () => {
@@ -34,7 +35,7 @@ describe('PersonUpdateFunction', () => {
                 lastName: 'Perez'
             }
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('should update person', async () => {

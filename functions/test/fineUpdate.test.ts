@@ -15,8 +15,9 @@ describe('FineUpdateFunction', () => {
     });
 
     it('team not found', async () => {
+        await FirebaseApp.shared.deleteOnlyTeam();
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('update').callFunction({
-            teamId: Guid.generate(),
+            teamId: testTeam1.id,
             personId: Guid.generate(),
             id: Guid.generate(),
             reason: 'Test Reason',
@@ -24,20 +25,20 @@ describe('FineUpdateFunction', () => {
             date: UtcDate.now,
             payedState: 'payed'
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('fine not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('update').callFunction({
             teamId: testTeam1.id,
             personId: Guid.generate(),
-            id: testTeam1.fines[1].id,
+            id: Guid.generate(),
             reason: 'Test Reason',
             amount: new Amount(10, 0),
             date: UtcDate.now,
             payedState: 'payed'
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('should update fine', async () => {

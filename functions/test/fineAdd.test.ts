@@ -15,8 +15,9 @@ describe('FineAddFunction', () => {
     });
 
     it('team not found', async () => {
+        await FirebaseApp.shared.deleteOnlyTeam();
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('add').callFunction({
-            teamId: Guid.generate(),
+            teamId: testTeam1.id,
             personId: Guid.generate(),
             id: Guid.generate(),
             reason: 'Test Reason',
@@ -24,7 +25,7 @@ describe('FineAddFunction', () => {
             date: UtcDate.now,
             payedState: 'payed'
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('person does not exist', async () => {
@@ -37,7 +38,7 @@ describe('FineAddFunction', () => {
             date: UtcDate.now,
             payedState: 'payed'
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('fine already exists', async () => {
@@ -50,7 +51,7 @@ describe('FineAddFunction', () => {
             date: UtcDate.now,
             payedState: 'payed'
         });
-        expect(execute()).to.awaitThrow('already-exists');
+        await expect(execute).to.awaitThrow('already-exists');
     });
 
     it('should add fine', async () => {

@@ -7,7 +7,7 @@ import { FirebaseApp as FirebaseAppBase } from 'firebase-function/lib/src/testSr
 import { HexBytesCoder, Sha512, Utf8BytesCoder } from 'firebase-function';
 import axios from 'axios';
 import { UserRole } from '../src/types';
-import { createTestTeam } from './createTestTeam';
+import { createTestTeam, deleteOnlyTeam } from './createTestTeam';
 import { testTeam1 } from './testTeams/testTeam_1';
 
 dotenv.config({ path: 'test/.env.test' });
@@ -63,6 +63,10 @@ export class FirebaseApp extends FirebaseAppBase<typeof firebaseFunctions, Fires
         const userId = this.hashUserId(userCredential.user.uid);
         await createTestTeam(testTeam1, userId, roles);
         return userId;
+    }
+
+    public async deleteOnlyTeam(): Promise<void> {
+        await deleteOnlyTeam(testTeam1.id);
     }
 
     public async clearFirestore(): Promise<void> {

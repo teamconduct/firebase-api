@@ -57,3 +57,7 @@ function* internal_createTestTeam(team: TestTeam, userId: string, roles: UserRol
 export async function createTestTeam(team: TestTeam, userId: string, roles: UserRole[]) {
     await Promise.all([...internal_createTestTeam(team, userId, roles)]);
 }
+
+export async function deleteOnlyTeam(id: Guid) {
+    await admin.app().firestore().collection('teams').doc(id.guidString).delete();
+}

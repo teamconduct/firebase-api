@@ -15,14 +15,15 @@ describe('FineTemplateUpdateFunction', () => {
     });
 
     it('team not found', async () => {
+        await FirebaseApp.shared.deleteOnlyTeam();
         const execute = async () => await FirebaseApp.shared.functions.function('fineTemplate').function('update').callFunction({
-            teamId: Guid.generate(),
+            teamId: testTeam1.id,
             id: Guid.generate(),
             reason: 'Test Reason',
             amount: new Amount(100, 0),
             multiple: null
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('fineTemplate not found', async () => {
@@ -33,7 +34,7 @@ describe('FineTemplateUpdateFunction', () => {
             amount: new Amount(100, 0),
             multiple: null
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('should update fineTemplate', async () => {

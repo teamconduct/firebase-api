@@ -14,15 +14,16 @@ describe('PersonAddFunction', () => {
     });
 
     it('team not found', async () => {
+        await FirebaseApp.shared.deleteOnlyTeam();
         const execute = async () => await FirebaseApp.shared.functions.function('person').function('add').callFunction({
-            teamId: Guid.generate(),
+            teamId: testTeam1.id,
             id: Guid.generate(),
             properties: {
                 firstName: 'Juan',
                 lastName: 'Perez'
             }
         });
-        expect(execute()).to.awaitThrow('not-found');
+        await expect(execute).to.awaitThrow('not-found');
     });
 
     it('person already exists', async () => {
@@ -34,7 +35,7 @@ describe('PersonAddFunction', () => {
                 lastName: 'Perez'
             }
         });
-        expect(execute()).to.awaitThrow('already-exists');
+        await expect(execute).to.awaitThrow('already-exists');
     });
 
     it('should add person', async () => {
