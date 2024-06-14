@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { FirebaseFunction, Flattable, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, UtcDate, ValueTypeBuilder } from 'firebase-function';
-import { PersonPrivateProperties, User } from '../types';
+import { PersonPrivateProperties, User, UserRole } from '../types';
 import { firestoreBase } from '../firestoreBase';
 
 export type Parameters = {
@@ -45,7 +45,7 @@ export class TeamNewFunction implements FirebaseFunction<Parameters, void> {
         user.teams.push({
             id: parameters.id.flatten,
             personId: parameters.personId.flatten,
-            roles: ['admin', 'user']
+            roles: UserRole.all
         });
         await userDocument.setValues(user);
     }

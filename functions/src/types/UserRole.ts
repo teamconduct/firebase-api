@@ -1,3 +1,6 @@
 export type UserRole =
-    | 'admin'
-    | 'user';
+    | 'person-add';
+
+export namespace UserRole {
+    export const all: UserRole[] = ['person-add'];
+}

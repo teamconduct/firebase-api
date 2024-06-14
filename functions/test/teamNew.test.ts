@@ -3,13 +3,14 @@ import { FirebaseApp } from './FirebaseApp';
 import { Guid } from 'firebase-function';
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { testTeam1 } from './testTeams/testTeam_1';
+import { UserRole } from '../src/types';
 
 describe('TeamNewFunction', () => {
 
     let userId: string;
 
     beforeEach(async () => {
-        userId = await FirebaseApp.shared.addTestTeam('admin', 'user');
+        userId = await FirebaseApp.shared.addTestTeam();
     });
 
     afterEach(async () => {
@@ -64,7 +65,7 @@ describe('TeamNewFunction', () => {
         expect(userTeam).to.be.deep.equal({
             id: teamId.guidString,
             personId: personId.guidString,
-            roles: ['admin', 'user']
+            roles: UserRole.all
         });
         const teamSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(teamId.guidString).snapshot();
         expect(teamSnapshot.exists).to.be.equal(true);
