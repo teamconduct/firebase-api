@@ -61,9 +61,9 @@ describe('TeamNewFunction', () => {
         });
         const userSnpapshot = await FirebaseApp.shared.firestore.getSubCollection('users').getDocument(userId).snapshot();
         expect(userSnpapshot.exists).to.be.equal(true);
-        const userTeam = userSnpapshot.data.teams.find(team => team.id === teamId.guidString);
+        expect(teamId.guidString in userSnpapshot.data.teams).to.be.equal(true);
+        const userTeam = userSnpapshot.data.teams[teamId.guidString];
         expect(userTeam).to.be.deep.equal({
-            id: teamId.guidString,
             personId: personId.guidString,
             roles: UserRole.all
         });

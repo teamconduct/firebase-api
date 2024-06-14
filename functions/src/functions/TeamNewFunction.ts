@@ -38,15 +38,14 @@ export class TeamNewFunction implements FirebaseFunction<Parameters, void> {
         const userDocument = firestoreBase.getSubCollection('users').getDocument(userId);
         const userSnapshot = await userDocument.snapshot();
         let user: User = {
-            teams: []
+            teams: {}
         };
         if (userSnapshot.exists)
             user = User.builder.build(userSnapshot.data, this.logger.nextIndent);
-        user.teams.push({
-            id: parameters.id,
+        user.teams[parameters.id.guidString] = {
             personId: parameters.personId,
             roles: UserRole.all
-        });
+        };
         await userDocument.setValues(user);
     }
 

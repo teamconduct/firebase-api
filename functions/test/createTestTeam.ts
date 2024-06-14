@@ -20,13 +20,12 @@ export type TestTeam = {
 // eslint-disable-next-line camelcase
 function* internal_createTestTeam(team: TestTeam, userId: string, roles: UserRole[]): Generator<Promise<unknown>> {
     yield admin.app().firestore().collection('users').doc(userId).set({
-        teams: [
-            {
-                id: team.id.guidString,
+        teams: {
+            [team.id.guidString]: {
                 personId: team.persons[0].id.guidString,
                 roles: roles
             }
-        ]
+        }
     });
     yield admin.app().firestore().collection('teams').doc(team.id.guidString).set({
         name: team.name,
@@ -56,8 +55,4 @@ function* internal_createTestTeam(team: TestTeam, userId: string, roles: UserRol
 
 export async function createTestTeam(team: TestTeam, userId: string, roles: UserRole[]) {
     await Promise.all([...internal_createTestTeam(team, userId, roles)]);
-}
-
-export async function deleteOnlyTeam(id: Guid) {
-    await admin.app().firestore().collection('teams').doc(id.guidString).delete();
 }

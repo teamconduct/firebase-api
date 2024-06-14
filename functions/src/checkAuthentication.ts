@@ -14,9 +14,9 @@ export async function checkAuthentication(userId: string | null, logger: ILogger
     const userSnapshot = await firestoreBase.getSubCollection('users').getDocument(userId).snapshot();
     if (!userSnapshot.exists)
         throw new functions.https.HttpsError('permission-denied', 'User does not exist');
-    const userTeam = userSnapshot.data.teams.find(team => team.id === teamId.guidString);
-    if (userTeam === undefined)
+    if (!(teamId.guidString in userSnapshot.data.teams))
         throw new functions.https.HttpsError('permission-denied', 'User is not a member of the team');
+    const userTeam = userSnapshot.data.teams[teamId.guidString];
     const userHasRoles = includesAll(userTeam.roles, ...roles);
     if (!userHasRoles)
         throw new functions.https.HttpsError('permission-denied', 'User does not have the required roles');

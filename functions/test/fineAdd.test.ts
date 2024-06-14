@@ -1,3 +1,4 @@
+import * as admin from 'firebase-admin';
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
 import { Guid, UtcDate } from 'firebase-function';
@@ -15,7 +16,7 @@ describe('FineAddFunction', () => {
     });
 
     it('team not found', async () => {
-        await FirebaseApp.shared.deleteOnlyTeam();
+        await admin.app().firestore().collection('teams').doc(testTeam1.id.guidString).delete();
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('add').callFunction({
             teamId: testTeam1.id,
             personId: Guid.generate(),

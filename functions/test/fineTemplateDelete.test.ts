@@ -1,3 +1,4 @@
+import * as admin from 'firebase-admin';
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
 import { Guid } from 'firebase-function';
@@ -14,7 +15,7 @@ describe('FineTemplateDeleteFunction', () => {
     });
 
     it('team not found', async () => {
-        await FirebaseApp.shared.deleteOnlyTeam();
+        await admin.app().firestore().collection('teams').doc(testTeam1.id.guidString).delete();
         const execute = async () => await FirebaseApp.shared.functions.function('fineTemplate').function('delete').callFunction({
             teamId: testTeam1.id,
             id: Guid.generate()

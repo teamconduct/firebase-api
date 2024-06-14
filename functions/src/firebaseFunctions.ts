@@ -9,10 +9,14 @@ import { FineUpdateFunction } from './functions/FineUpdateFunction';
 import { FineTemplateDeleteFunction } from './functions/FineTemplateDeleteFunction';
 import { FineDeleteFunction } from './functions/FineDeleteFunction';
 import { PersonDeleteFunction } from './functions/PersonDeleteFunction';
+import { UserRoleEditFunction } from './functions/UserRoleEditFunction';
 
 export const firebaseFunctions = createFirebaseFunctions(builder => ({
     team: {
         new: builder.function(TeamNewFunction)
+    },
+    userRole: {
+        edit: builder.function(UserRoleEditFunction)
     },
     person: {
         add: builder.function(PersonAddFunction),
