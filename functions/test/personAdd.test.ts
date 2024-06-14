@@ -15,8 +15,8 @@ describe('PersonAddFunction', () => {
 
     it('team not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('person').function('add').callFunction({
-            teamId: Guid.generate().guidString,
-            id: Guid.generate().guidString,
+            teamId: Guid.generate(),
+            id: Guid.generate(),
             properties: {
                 firstName: 'Juan',
                 lastName: 'Perez'
@@ -27,8 +27,8 @@ describe('PersonAddFunction', () => {
 
     it('person already exists', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('person').function('add').callFunction({
-            teamId: testTeam1.id.guidString,
-            id: testTeam1.persons[1].id.guidString,
+            teamId: testTeam1.id,
+            id: testTeam1.persons[1].id,
             properties: {
                 firstName: 'Juan',
                 lastName: 'Perez'
@@ -40,8 +40,8 @@ describe('PersonAddFunction', () => {
     it('should add person', async () => {
         const personId = Guid.generate();
         await FirebaseApp.shared.functions.function('person').function('add').callFunction({
-            teamId: testTeam1.id.guidString,
-            id: personId.guidString,
+            teamId: testTeam1.id,
+            id: personId,
             properties: {
                 firstName: 'Juan',
                 lastName: 'Perez'

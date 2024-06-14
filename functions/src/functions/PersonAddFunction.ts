@@ -49,7 +49,7 @@ export class PersonAddFunction implements FirebaseFunction<Parameters, void> {
             throw new functions.https.HttpsError('already-exists', 'Person already exists');
 
         await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('persons').addDocument(parameters.id.guidString, {
-            id: parameters.id.guidString,
+            id: parameters.id,
             properties: Flattable.flatten(parameters.properties),
             fineIds: [],
             signInProperties: null

@@ -1,9 +1,9 @@
-import { FirestoreCollection, FirestoreDocument, Flatten } from 'firebase-function';
+import { FirestoreCollection, FirestoreDocument } from 'firebase-function';
 import { Fine, FineTemplate, Person, User } from './types';
 
 export type FirestoreScheme = FirestoreDocument<never, {
     users: FirestoreCollection<{
-        [UserId in string]: FirestoreDocument<Flatten<User>>
+        [UserId in string]: FirestoreDocument<User>
     }>
     teams: FirestoreCollection<{
         [TeamId in string]: FirestoreDocument<{
@@ -11,13 +11,13 @@ export type FirestoreScheme = FirestoreDocument<never, {
             paypalMeLink: string | null
         }, {
             persons: FirestoreCollection<{
-                [PersonId in string]: FirestoreDocument<Flatten<Person>>
+                [PersonId in string]: FirestoreDocument<Person>
             }>
             fineTemplates: FirestoreCollection<{
-                [PersonId in string]: FirestoreDocument<Flatten<FineTemplate>>
+                [PersonId in string]: FirestoreDocument<FineTemplate>
             }>
             fines: FirestoreCollection<{
-                [PersonId in string]: FirestoreDocument<Flatten<Fine>>
+                [PersonId in string]: FirestoreDocument<Fine>
             }>
         }>
     }>

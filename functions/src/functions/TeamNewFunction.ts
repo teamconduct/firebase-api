@@ -37,14 +37,14 @@ export class TeamNewFunction implements FirebaseFunction<Parameters, void> {
     private async updateUserDocument(userId: string, parameters: Parameters) {
         const userDocument = firestoreBase.getSubCollection('users').getDocument(userId);
         const userSnapshot = await userDocument.snapshot();
-        let user: Flatten<User> = {
+        let user: User = {
             teams: []
         };
         if (userSnapshot.exists)
-            user = userSnapshot.data;
+            user = User.builder.build(userSnapshot.data, this.logger.nextIndent);
         user.teams.push({
-            id: parameters.id.flatten,
-            personId: parameters.personId.flatten,
+            id: parameters.id,
+            personId: parameters.personId,
             roles: UserRole.all
         });
         await userDocument.setValues(user);
@@ -52,12 +52,12 @@ export class TeamNewFunction implements FirebaseFunction<Parameters, void> {
 
     private async addPersonToTeam(parameters: Parameters, userId: string) {
         await firestoreBase.getSubCollection('teams').getDocument(parameters.id.guidString).getSubCollection('persons').addDocument(parameters.personId.guidString, {
-            id: parameters.personId.guidString,
+            id: parameters.personId,
             properties: Flattable.flatten(parameters.personProperties),
             fineIds: [],
             signInProperties: {
                 userId: userId,
-                signInDate: UtcDate.now.encoded,
+                signInDate: UtcDate.now,
                 notificationTokens: {}
             }
         });

@@ -20,10 +20,10 @@ describe('TeamNewFunction', () => {
     it('should throw an error if user is not authenticated', async () => {
         await FirebaseApp.shared.auth.signOut();
         const execute = async () => await FirebaseApp.shared.functions.function('team').function('new').callFunction({
-            id: Guid.generate().guidString,
+            id: Guid.generate(),
             name: 'Test Team',
             paypalMeLink: null,
-            personId: Guid.generate().guidString,
+            personId: Guid.generate(),
             personProperties: {
                 firstName: 'Test',
                 lastName: 'Person'
@@ -34,10 +34,10 @@ describe('TeamNewFunction', () => {
 
     it('should throw an error if team already exists', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('team').function('new').callFunction({
-            id: testTeam1.id.guidString,
+            id: testTeam1.id,
             name: 'Test Team',
             paypalMeLink: null,
-            personId: Guid.generate().guidString,
+            personId: Guid.generate(),
             personProperties: {
                 firstName: 'Test',
                 lastName: 'Person'
@@ -50,10 +50,10 @@ describe('TeamNewFunction', () => {
         const teamId = Guid.generate();
         const personId = Guid.generate();
         await FirebaseApp.shared.functions.function('team').function('new').callFunction({
-            id: teamId.guidString,
+            id: teamId,
             name: 'Test Team',
             paypalMeLink: null,
-            personId: personId.guidString,
+            personId: personId,
             personProperties: {
                 firstName: 'Test',
                 lastName: 'Person'
