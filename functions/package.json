@@ -8,23 +8,31 @@
         "shell": "npm run build && firebase functions:shell",
         "start": "npm run shell",
         "deploy": "firebase deploy --only functions",
-        "logs": "firebase functions:log"
+        "logs": "firebase functions:log",
+        "test": "npm run build && mocha --reporter spec -r ts-node/register --timeout 3600000 --reporter-option maxDiffSize=0",
+        "testAll": "npm run test test/**/*.test.ts"
     },
     "engines": {
         "node": "18"
     },
-    "main": "lib/index.js",
+    "main": "lib/src/index.js",
     "dependencies": {
         "firebase-admin": "^12.1.0",
+        "firebase-function": "^1.4.97",
         "firebase-functions": "^5.0.0"
     },
     "devDependencies": {
+        "@types/chai": "^4.3.16",
+        "@types/mocha": "^10.0.6",
         "@typescript-eslint/eslint-plugin": "^5.12.0",
         "@typescript-eslint/parser": "^5.12.0",
+        "chai": "^4.4.1",
         "eslint": "^8.9.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-import": "^2.25.4",
         "firebase-functions-test": "^3.1.0",
+        "mocha": "^10.4.0",
+        "ts-node": "^10.9.2",
         "typescript": "^4.9.0"
     },
     "private": true
