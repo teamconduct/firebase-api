@@ -22,7 +22,7 @@ describe('FineTemplateAddFunction', () => {
             amount: new Amount(100, 0),
             multiple: null
         });
-        expect(execute()).to.awaitThrow();
+        expect(execute()).to.awaitThrow('not-found');
     });
 
     it('fineTemplate already exists', async () => {
@@ -33,7 +33,7 @@ describe('FineTemplateAddFunction', () => {
             amount: new Amount(100, 0),
             multiple: null
         });
-        expect(execute()).to.awaitThrow();
+        expect(execute()).to.awaitThrow('already-exists');
     });
 
     it('should add fineTemplate', async () => {

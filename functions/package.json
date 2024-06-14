@@ -9,7 +9,7 @@
         "start": "npm run shell",
         "deploy": "firebase deploy --only functions",
         "logs": "firebase functions:log",
-        "test": "npm run build && mocha --reporter spec -r ts-node/register --timeout 3600000 --reporter-option maxDiffSize=0",
+        "test": "mocha --reporter spec -r ts-node/register --timeout 3600000 --reporter-option maxDiffSize=0",
         "testAll": "npm run test test/**/*.test.ts"
     },
     "engines": {
@@ -18,7 +18,7 @@
     "main": "lib/src/index.js",
     "dependencies": {
         "firebase-admin": "^12.1.0",
-        "firebase-function": "^1.4.100",
+        "firebase-function": "^1.4.105",
         "firebase-functions": "^5.0.0"
     },
     "devDependencies": {

@@ -22,7 +22,7 @@ describe('PersonAddFunction', () => {
                 lastName: 'Perez'
             }
         });
-        expect(execute()).to.awaitThrow();
+        expect(execute()).to.awaitThrow('not-found');
     });
 
     it('person already exists', async () => {
@@ -34,7 +34,7 @@ describe('PersonAddFunction', () => {
                 lastName: 'Perez'
             }
         });
-        expect(execute()).to.awaitThrow();
+        expect(execute()).to.awaitThrow('already-exists');
     });
 
     it('should add person', async () => {

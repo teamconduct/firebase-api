@@ -1,22 +1,22 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, OptionalTypeBuilder, TypeBuilder, ValueTypeBuilder } from 'firebase-function';
-import { Amount, FineTemplate, FineTemplateMultiple } from '../types';
+import { FirebaseFunction, Flatten, Guid, ILogger, IntersectionTypeBuilder, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
+import { FineTemplate } from '../types';
 import { firestoreBase } from '../firestoreBase';
 import { checkAuthentication } from '../checkAuthentication';
 
-export type Parameters = {
+type ParametersSubsection = {
     teamId: Guid
-} & FineTemplate;
+}
+
+export type Parameters = ParametersSubsection & FineTemplate;
 
 export class FineTemplateAddFunction implements FirebaseFunction<Parameters, void> {
 
-    public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
-        id: new TypeBuilder(Guid.from),
-        reason: new ValueTypeBuilder(),
-        amount: Amount.builder,
-        multiple: new OptionalTypeBuilder(FineTemplateMultiple.builder)
-    });
+    public parametersBuilder = new IntersectionTypeBuilder(
+        new ObjectTypeBuilder<Flatten<ParametersSubsection>, ParametersSubsection>({
+            teamId: new TypeBuilder(Guid.from)
+        }),
+        FineTemplate.builder);
 
     public constructor(
         private readonly userId: string | null,

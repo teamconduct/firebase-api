@@ -29,7 +29,7 @@ describe('TeamNewFunction', () => {
                 lastName: 'Person'
             }
         });
-        expect(execute).to.awaitThrow();
+        expect(execute).to.awaitThrow('permission-denied');
     });
 
     it('should throw an error if team already exists', async () => {
@@ -43,7 +43,7 @@ describe('TeamNewFunction', () => {
                 lastName: 'Person'
             }
         });
-        expect(execute).to.awaitThrow();
+        expect(execute).to.awaitThrow('already-exists');
     });
 
     it('should create a new team', async () => {
