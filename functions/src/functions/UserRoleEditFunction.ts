@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { ArrayTypeBuilder, FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder } from 'firebase-function';
-import { UserRole } from '../types';
+import { User, UserRole } from '../types';
 import { checkAuthentication } from '../checkAuthentication';
 import { firestoreBase } from '../firestoreBase';
 
@@ -37,11 +37,11 @@ export class UserRoleEditFunction implements FirebaseFunction<Parameters, void> 
         if (!userSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'User does not exist');
 
-        if (!(parameters.teamId.guidString in userSnapshot.data.teams))
+        const user = userSnapshot.data;
+        if (!(parameters.teamId.guidString in user.teams))
             throw new functions.https.HttpsError('not-found', 'User is not a member of the team');
 
-        await firestoreBase.getSubCollection('users').getDocument(parameters.userId).setValues({
-            [`teams.${parameters.teamId.guidString}.roles`]: parameters.roles
-        });
+        user.teams[parameters.teamId.guidString].roles = parameters.roles;
+        await firestoreBase.getSubCollection('users').getDocument(parameters.userId).setValues(User.builder.build(user, this.logger.nextIndent));
     }
 }

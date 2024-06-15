@@ -57,7 +57,10 @@ export class TeamNewFunction implements FirebaseFunction<Parameters, void> {
             signInProperties: {
                 userId: userId,
                 signInDate: UtcDate.now,
-                notificationTokens: {}
+                notificationProperties: {
+                    tokens: {},
+                    subscriptions: []
+                }
             }
         });
     }

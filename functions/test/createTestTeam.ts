@@ -37,7 +37,10 @@ function* internal_createTestTeam(team: TestTeam, userId: string, roles: UserRol
             signInProperties: {
                 userId: userId,
                 signInDate: UtcDate.now,
-                notificationTokens: {}
+                notificationProperties: {
+                    tokens: {},
+                    subscriptions: []
+                }
             }
         }));
     }

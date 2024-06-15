@@ -87,7 +87,10 @@ describe('TeamNewFunction', () => {
                 userId: userId,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 signInDate: personSnapshot.data.signInProperties!.signInDate,
-                notificationTokens: {}
+                notificationProperties: {
+                    tokens: {},
+                    subscriptions: []
+                }
             }
         });
     });
