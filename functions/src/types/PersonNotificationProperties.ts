@@ -3,11 +3,7 @@ import { ObjectTypeBuilder, Flatten, RecordTypeBuilder, ValueTypeBuilder, ArrayT
 export type NotificationSubscription =
     | 'new-fine'
     | 'fine-reminder'
-    | 'fine-state-change'
-    | 'team-change'
-    | 'any-person-change'
-    | 'any-fineTemplate-change'
-    | 'any-fine-change';
+    | 'fine-state-change';
 
 export type PersonNotificationProperties = {
     tokens: Record<string, string>,

@@ -12,6 +12,7 @@ import { PersonDeleteFunction } from './functions/PersonDeleteFunction';
 import { UserRoleEditFunction } from './functions/UserRoleEditFunction';
 import { PaypalMeEditFunction } from './functions/PaypalMeEditFunction';
 import { NotificationRegisterFunction } from './functions/NotificationRegisterFunction';
+import { NotificationSubscribeFunction } from './functions/NotificationSubscribeFunction';
 
 export const firebaseFunctions = createFirebaseFunctions(builder => ({
     team: {
@@ -24,7 +25,8 @@ export const firebaseFunctions = createFirebaseFunctions(builder => ({
         edit: builder.function(PaypalMeEditFunction)
     },
     notification: {
-        register: builder.function(NotificationRegisterFunction)
+        register: builder.function(NotificationRegisterFunction),
+        subscribe: builder.function(NotificationSubscribeFunction)
     },
     person: {
         add: builder.function(PersonAddFunction),
