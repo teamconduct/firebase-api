@@ -45,12 +45,12 @@ describe('FineDeleteFunction', () => {
     it('should delete fine', async () => {
         await FirebaseApp.shared.functions.function('fine').function('delete').callFunction({
             teamId: testTeam1.id,
-            personId: testTeam1.persons[1].id,
+            personId: testTeam1.persons[0].id,
             id: testTeam1.fines[1].id
         });
         const fineSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).getSubCollection('fines').getDocument(testTeam1.fines[1].id.guidString).snapshot();
         expect(fineSnapshot.exists).to.be.equal(false);
-        const personSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).getSubCollection('persons').getDocument(testTeam1.persons[1].id.guidString).snapshot();
+        const personSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).getSubCollection('persons').getDocument(testTeam1.persons[0].id.guidString).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.fineIds.includes(testTeam1.fines[1].id.guidString)).to.be.equal(false);
     });

@@ -2,6 +2,8 @@ import * as functions from 'firebase-functions';
 import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
 import { firestoreBase } from '../firestoreBase';
 import { checkAuthentication } from '../checkAuthentication';
+import { pushNotification } from '../pushNotification';
+import { Amount } from '../types';
 
 export type Parameters = {
     teamId: Guid,
@@ -30,12 +32,6 @@ export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
         return teamSnapshot.exists;
     }
 
-    private async existsFine(teamId: Guid, id: Guid): Promise<boolean> {
-        const fineDocument = firestoreBase.getSubCollection('teams').getDocument(teamId.guidString).getSubCollection('fines').getDocument(id.guidString);
-        const fineSnapshot = await fineDocument.snapshot();
-        return fineSnapshot.exists;
-    }
-
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('FineDeleteFunction.execute');
 
@@ -44,7 +40,8 @@ export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
         if (!await this.existsTeam(parameters.teamId))
             throw new functions.https.HttpsError('not-found', 'Team not found');
 
-        if (!await this.existsFine(parameters.teamId, parameters.id))
+        const fineSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('fines').getDocument(parameters.id.guidString).snapshot();
+        if (!fineSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Fine not found');
 
         const personSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('persons').getDocument(parameters.personId.guidString).snapshot();
@@ -57,5 +54,10 @@ export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
         await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('persons').getDocument(parameters.personId.guidString).setValues({
             fineIds: fineIds
         });
+
+        await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
+            title: i18n.__('notification.fine-state-change.title'),
+            body: i18n.__('notification.fine-state-change.body-deleted', fineSnapshot.data.reason, Amount.builder.build(fineSnapshot.data.amount).completeValue as unknown as string)
+        }, this.logger.nextIndent);
     }
 }

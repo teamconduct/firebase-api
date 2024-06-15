@@ -14,8 +14,12 @@ export class Amount implements Flattable<number> {
         );
     }
 
-    public get flatten(): number {
+    public get completeValue(): number {
         return this.value + this.subunitValue / 100;
+    }
+
+    public get flatten(): number {
+        return this.completeValue;
     }
 }
 

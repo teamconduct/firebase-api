@@ -46,7 +46,7 @@ describe('FineUpdateFunction', () => {
         const date = UtcDate.now;
         await FirebaseApp.shared.functions.function('fine').function('update').callFunction({
             teamId: testTeam1.id,
-            personId: testTeam1.persons[1].id,
+            personId: testTeam1.persons[0].id,
             id: testTeam1.fines[1].id,
             reason: 'Test Reason',
             amount: new Amount(10, 0),

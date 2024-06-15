@@ -1,8 +1,10 @@
 import * as functions from 'firebase-functions';
+import * as i18n from 'i18n';
 import { FirebaseFunction, Flatten, Guid, ILogger, IntersectionTypeBuilder, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
 import { Fine } from '../types';
 import { firestoreBase } from '../firestoreBase';
 import { checkAuthentication } from '../checkAuthentication';
+import { pushNotification } from '../pushNotification';
 
 type ParametersSubsection = {
     teamId: Guid
@@ -67,5 +69,10 @@ export class FineAddFunction implements FirebaseFunction<Parameters, void> {
             date: parameters.date,
             payedState: parameters.payedState
         });
+
+        await pushNotification(parameters.teamId, parameters.personId, 'new-fine', {
+            title: i18n.__('notification.new-fine.title', parameters.reason),
+            body: i18n.__('notification.new-fine.body', parameters.amount.completeValue as unknown as string)
+        }, this.logger.nextIndent);
     }
 }

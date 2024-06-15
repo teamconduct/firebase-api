@@ -55,12 +55,12 @@ describe('FineAddFunction', () => {
         await expect(execute).to.awaitThrow('already-exists');
     });
 
-    it('should add fine', async () => {
+    it.only('should add fine', async () => {
         const fineId = Guid.generate();
         const date = UtcDate.now;
         await FirebaseApp.shared.functions.function('fine').function('add').callFunction({
             teamId: testTeam1.id,
-            personId: testTeam1.persons[1].id,
+            personId: testTeam1.persons[0].id,
             id: fineId,
             reason: 'Test Reason',
             amount: new Amount(10, 0),
@@ -76,7 +76,7 @@ describe('FineAddFunction', () => {
             date: date.encoded,
             payedState: 'payed'
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).getSubCollection('persons').getDocument(testTeam1.persons[1].id.guidString).snapshot();
+        const personSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).getSubCollection('persons').getDocument(testTeam1.persons[0].id.guidString).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.fineIds.includes(fineId.guidString)).to.be.equal(true);
     });

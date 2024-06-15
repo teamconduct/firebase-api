@@ -3,6 +3,7 @@ import { FirebaseFunction, Flatten, Guid, ILogger, IntersectionTypeBuilder, Obje
 import { Fine } from '../types';
 import { firestoreBase } from '../firestoreBase';
 import { checkAuthentication } from '../checkAuthentication';
+import { pushNotification } from '../pushNotification';
 
 type ParametersSubsection = {
     teamId: Guid
@@ -35,12 +36,6 @@ export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
         return teamSnapshot.exists;
     }
 
-    private async existsFine(teamId: Guid, id: Guid): Promise<boolean> {
-        const fineDocument = firestoreBase.getSubCollection('teams').getDocument(teamId.guidString).getSubCollection('fines').getDocument(id.guidString);
-        const fineSnapshot = await fineDocument.snapshot();
-        return fineSnapshot.exists;
-    }
-
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('FineUpdateFunction.execute');
 
@@ -49,7 +44,8 @@ export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
         if (!await this.existsTeam(parameters.teamId))
             throw new functions.https.HttpsError('not-found', 'Team not found');
 
-        if (!await this.existsFine(parameters.teamId, parameters.id))
+        const fineSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('fines').getDocument(parameters.id.guidString).snapshot();
+        if (!fineSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Fine not found');
 
         await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('fines').getDocument(parameters.id.guidString).setValues({
@@ -59,5 +55,18 @@ export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
             date: parameters.date,
             payedState: parameters.payedState
         });
+
+        if (parameters.payedState !== fineSnapshot.data.payedState) {
+            let body: string;
+            if (parameters.payedState === 'payed')
+                body = i18n.__('notification.fine-state-change.body-payed', parameters.amount.completeValue as unknown as string, parameters.reason);
+            else
+                body = i18n.__('notification.fine-state-change.body-unpayed', parameters.reason, parameters.amount.completeValue as unknown as string);
+            await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
+                title: i18n.__('notification.fine-state-change.title'),
+                body: body
+            }, this.logger.nextIndent);
+
+        }
     }
 }

@@ -1,0 +1,18 @@
+{
+	"notification": {
+		"new-fine": {
+			"title": "%s",
+			"body": "Du hast eine neue Strafen von %.2f€. Bitte so schnell wie möglich zahlen."
+		},
+        "fine-reminder": {
+            "title": "Du hast noch offene Strafen",
+            "body": "Bei dir sind noch %.2f€ offen. Bitte so schnell wie möglich zahlen."
+        },
+        "fine-state-change": {
+            "title": "Eine deiner Strafen hat sich geändert",
+            "body-payed": "Du hast eine Strafe von %1$.2f€ bezahlt (%2$s).",
+            "body-unpayed": "%1$s, %2$.2f€ sind noch offen.",
+            "body-deleted": "1$s, %2$.2f€ wurde gelöscht."
+        }
+	}
+}

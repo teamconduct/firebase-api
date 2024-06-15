@@ -1,0 +1,18 @@
+{
+    "notification": {
+        "new-fine": {
+            "title": "%s",
+            "body": "You have a new fine of %.2f€. Please pay it as soon as possible."
+        },
+        "fine-reminder": {
+            "title": "You still have outstanding penalties",
+            "body": "You still have %.2f€ outstanding. Please pay as soon as possible."
+        },
+        "fine-state-change": {
+            "title": "One of your penalties has changed",
+            "body-paid": "You have paid a penalty of %1$.2f€ (%2$s).",
+            "body-unpayed": "%1$s, %2$.2f€ are still outstanding.",
+            "body-deleted": "1$s, %2$.2f€ has been deleted."
+        }
+    }
+}
