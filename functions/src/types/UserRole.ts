@@ -9,7 +9,8 @@ export type UserRole =
     | 'fine-update'
     | 'fine-delete'
     | 'userRole-manager'
-    | 'team-properties-manager';
+    | 'team-properties-manager'
+    | 'team-invitation-manager';
 
 export namespace UserRole {
     export const all: UserRole[] = [
@@ -23,6 +24,7 @@ export namespace UserRole {
         'fine-update',
         'fine-delete',
         'userRole-manager',
-        'team-properties-manager'
+        'team-properties-manager',
+        'team-invitation-manager'
     ];
 }

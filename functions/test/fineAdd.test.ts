@@ -55,7 +55,7 @@ describe('FineAddFunction', () => {
         await expect(execute).to.awaitThrow('already-exists');
     });
 
-    it.only('should add fine', async () => {
+    it('should add fine', async () => {
         const fineId = Guid.generate();
         const date = UtcDate.now;
         await FirebaseApp.shared.functions.function('fine').function('add').callFunction({

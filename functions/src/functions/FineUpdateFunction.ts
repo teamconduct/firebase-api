@@ -1,4 +1,5 @@
 import * as functions from 'firebase-functions';
+import * as i18n from 'i18n';
 import { FirebaseFunction, Flatten, Guid, ILogger, IntersectionTypeBuilder, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
 import { Fine } from '../types';
 import { firestoreBase } from '../firestoreBase';

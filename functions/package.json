@@ -4,13 +4,10 @@
         "lint": "eslint --ext .js,.ts .",
         "build": "tsc",
         "build:watch": "tsc --watch",
-        "serve": "npm run build && firebase emulators:start --only functions",
-        "shell": "npm run build && firebase functions:shell",
-        "start": "npm run shell",
+        "serve": "firebase emulators:start --inspect-functions",
         "deploy": "firebase deploy --only functions",
         "logs": "firebase functions:log",
-        "test": "mocha --reporter spec -r ts-node/register --timeout 3600000 --reporter-option maxDiffSize=0",
-        "testAll": "npm run test test/**/*.test.ts"
+        "test": "mocha --reporter spec -r ts-node/register --timeout 3600000 --reporter-option maxDiffSize=0 test/**/*.test.ts"
     },
     "engines": {
         "node": "18"
