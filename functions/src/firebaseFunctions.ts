@@ -14,6 +14,7 @@ import { PaypalMeEditFunction } from './functions/PaypalMeEditFunction';
 import { NotificationRegisterFunction } from './functions/NotificationRegisterFunction';
 import { NotificationSubscribeFunction } from './functions/NotificationSubscribeFunction';
 import { InvitationInviteFunction } from './functions/InvitationInviteFunction';
+import { InvitationWithdrawFunction } from './functions/InvitationWithdrawFunction';
 
 export const firebaseFunctions = createFirebaseFunctions(builder => ({
     team: {
@@ -30,7 +31,8 @@ export const firebaseFunctions = createFirebaseFunctions(builder => ({
         subscribe: builder.function(NotificationSubscribeFunction)
     },
     invitation: {
-        invite: builder.function(InvitationInviteFunction)
+        invite: builder.function(InvitationInviteFunction),
+        withdraw: builder.function(InvitationWithdrawFunction)
     },
     person: {
         add: builder.function(PersonAddFunction),
