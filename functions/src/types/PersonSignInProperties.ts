@@ -13,4 +13,15 @@ export namespace PersonSignInProperties {
         signInDate: new TypeBuilder(UtcDate.decode),
         notificationProperties: PersonNotificationProperties.builder
     });
+
+    export function empty(userId: string): PersonSignInProperties {
+        return {
+            userId,
+            signInDate: UtcDate.now,
+            notificationProperties: {
+                tokens: {},
+                subscriptions: []
+            }
+        };
+    }
 }

@@ -15,4 +15,10 @@ export namespace User {
             roles: new ArrayTypeBuilder(new ValueTypeBuilder())
         }))
     });
+
+    export function empty(): User {
+        return {
+            teams: {}
+        };
+    }
 }

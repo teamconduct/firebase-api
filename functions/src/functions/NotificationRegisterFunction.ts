@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { FirebaseFunction, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder, Flatten, Utf8BytesCoder, Sha512, HexBytesCoder } from 'firebase-function';
-import { firestoreBase } from '../firestoreBase';
-import { PersonSignInProperties } from '../types';
+import { Person } from '../types';
+import { Firestore } from '../Firestore';
 
 export type Parameters = {
     teamId: Guid,
@@ -37,22 +37,16 @@ export class NotificationRegisterFunction implements FirebaseFunction<Parameters
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('NotificationRegisterFunction.execute');
 
-        const teamSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).snapshot();
-        if (!teamSnapshot.exists)
-            throw new functions.https.HttpsError('not-found', 'Team not found');
-
-        const personSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('persons').getDocument(parameters.personId.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Person not found');
+        const person = Person.builder.build(personSnapshot.data, this.logger.nextIndent);
 
-        const person = personSnapshot.data;
         if (person.signInProperties === null)
             throw new functions.https.HttpsError('failed-precondition', 'Person not signed in');
 
         const tokenId = this.tokenId(parameters.token);
         person.signInProperties.notificationProperties.tokens[tokenId] = parameters.token;
-        await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('persons').getDocument(parameters.personId.guidString).setValues({
-            signInProperties: PersonSignInProperties.builder.build(person.signInProperties, this.logger.nextIndent)
-        });
+        await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
     }
 }

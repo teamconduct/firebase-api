@@ -1,7 +1,8 @@
 import * as functions from 'firebase-functions';
 import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder } from 'firebase-function';
 import { checkAuthentication } from '../checkAuthentication';
-import { firestoreBase } from '../firestoreBase';
+import { Firestore } from '../Firestore';
+import { Team } from '../types/Team';
 
 export type Parameters = {
     teamId: Guid;
@@ -27,12 +28,12 @@ export class PaypalMeEditFunction implements FirebaseFunction<Parameters, void> 
 
         await checkAuthentication(this.userId, this.logger.nextIndent, parameters.teamId, 'team-properties-manager');
 
-        const teamSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).snapshot();
+        const teamSnapshot = await Firestore.shared.team(parameters.teamId).snapshot();
         if (!teamSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Team not found');
+        const team = Team.builder.build(teamSnapshot.data, this.logger.nextIndent);
 
-        await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).setValues({
-            paypalMeLink: parameters.paypalMeLink
-        });
+        team.paypalMeLink = parameters.paypalMeLink;
+        await Firestore.shared.team(parameters.teamId).set(team);
     }
 }

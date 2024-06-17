@@ -1,9 +1,9 @@
 import * as admin from 'firebase-admin';
 import { Utf8BytesCoder, Sha512, HexBytesCoder, values, Guid, ILogger } from 'firebase-function';
-import { firestoreBase } from './firestoreBase';
-import { PersonSignInProperties } from './types';
+import { Person } from './types';
 import { NotificationSubscription } from './types/PersonNotificationProperties';
 import { BatchResponse, Notification } from 'firebase-admin/lib/messaging/messaging-api';
+import { Firestore } from './Firestore';
 
 function tokenId(token: string): string {
     const tokenCoder = new Utf8BytesCoder();
@@ -32,11 +32,11 @@ function successfulTokens(response: BatchResponse, tokens: string[]): Record<str
 
 export async function pushNotification(teamId: Guid, personId: Guid, topic: NotificationSubscription, notification: Notification, logger: ILogger): Promise<void> {
 
-    const personSnapshot = await firestoreBase.getSubCollection('teams').getDocument(teamId.guidString).getSubCollection('persons').getDocument(personId.guidString).snapshot();
+    const personSnapshot = await Firestore.shared.person(teamId, personId).snapshot();
     if (!personSnapshot.exists)
         return;
+    const person = Person.builder.build(personSnapshot.data, logger.nextIndent);
 
-    const person = personSnapshot.data;
     if (person.signInProperties === null || !person.signInProperties.notificationProperties.subscriptions.includes(topic))
         return;
 
@@ -46,7 +46,5 @@ export async function pushNotification(teamId: Guid, personId: Guid, topic: Noti
         notification: notification
     });
     person.signInProperties.notificationProperties.tokens = successfulTokens(response, tokens);
-    await firestoreBase.getSubCollection('teams').getDocument(teamId.guidString).getSubCollection('persons').getDocument(personId.guidString).setValues({
-        signInProperties: PersonSignInProperties.builder.build(person.signInProperties, logger.nextIndent)
-    });
+    await Firestore.shared.person(teamId, personId).set(person);
 }

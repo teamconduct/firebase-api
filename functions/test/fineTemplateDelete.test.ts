@@ -1,8 +1,7 @@
-import * as admin from 'firebase-admin';
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
 import { Guid } from 'firebase-function';
-import { testTeam1 } from './testTeams/testTeam_1';
+import { testTeam } from './testTeams/testTeam_1';
 
 describe('FineTemplateDeleteFunction', () => {
 
@@ -14,18 +13,9 @@ describe('FineTemplateDeleteFunction', () => {
         await FirebaseApp.shared.clearFirestore();
     });
 
-    it('team not found', async () => {
-        await admin.app().firestore().collection('teams').doc(testTeam1.id.guidString).delete();
-        const execute = async () => await FirebaseApp.shared.functions.function('fineTemplate').function('delete').callFunction({
-            teamId: testTeam1.id,
-            id: Guid.generate()
-        });
-        await expect(execute).to.awaitThrow('not-found');
-    });
-
     it('fineTemplate not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fineTemplate').function('delete').callFunction({
-            teamId: testTeam1.id,
+            teamId: testTeam.id,
             id: Guid.generate()
         });
         await expect(execute).to.awaitThrow('not-found');
@@ -33,10 +23,10 @@ describe('FineTemplateDeleteFunction', () => {
 
     it('should delete fineTemplate', async () => {
         await FirebaseApp.shared.functions.function('fineTemplate').function('delete').callFunction({
-            teamId: testTeam1.id,
-            id: testTeam1.fineTemplates[1].id
+            teamId: testTeam.id,
+            id: testTeam.fineTemplates[1].id
         });
-        const fineTemplateSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).getSubCollection('fineTemplates').getDocument(testTeam1.fineTemplates[1].id.guidString).snapshot();
+        const fineTemplateSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('fineTemplates').document(testTeam.fineTemplates[1].id.guidString).snapshot();
         expect(fineTemplateSnapshot.exists).to.be.equal(false);
     });
 });

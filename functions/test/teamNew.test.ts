@@ -1,8 +1,7 @@
-import { describe, it } from 'mocha';
 import { FirebaseApp } from './FirebaseApp';
 import { Guid } from 'firebase-function';
 import { expect } from 'firebase-function/lib/src/testSrc';
-import { testTeam1 } from './testTeams/testTeam_1';
+import { testTeam } from './testTeams/testTeam_1';
 import { UserRole } from '../src/types';
 
 describe('TeamNewFunction', () => {
@@ -34,7 +33,7 @@ describe('TeamNewFunction', () => {
 
     it('should throw an error if team already exists', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('team').function('new').callFunction({
-            id: testTeam1.id,
+            id: testTeam.id,
             name: 'Test Team',
             paypalMeLink: null,
             personId: Guid.generate(),
@@ -46,7 +45,7 @@ describe('TeamNewFunction', () => {
         await expect(execute).to.awaitThrow('already-exists');
     });
 
-    it('should create a new team', async () => {
+    it('should create a new team existing user', async () => {
         const teamId = Guid.generate();
         const personId = Guid.generate();
         await FirebaseApp.shared.functions.function('team').function('new').callFunction({
@@ -59,7 +58,7 @@ describe('TeamNewFunction', () => {
                 lastName: 'Person'
             }
         });
-        const userSnpapshot = await FirebaseApp.shared.firestore.getSubCollection('users').getDocument(userId).snapshot();
+        const userSnpapshot = await FirebaseApp.shared.firestore.collection('users').document(userId).snapshot();
         expect(userSnpapshot.exists).to.be.equal(true);
         expect(teamId.guidString in userSnpapshot.data.teams).to.be.equal(true);
         const userTeam = userSnpapshot.data.teams[teamId.guidString];
@@ -67,13 +66,63 @@ describe('TeamNewFunction', () => {
             personId: personId.guidString,
             roles: UserRole.all
         });
-        const teamSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(teamId.guidString).snapshot();
+        const teamSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(teamId.guidString).snapshot();
         expect(teamSnapshot.exists).to.be.equal(true);
         expect(teamSnapshot.data).to.be.deep.equal({
             name: 'Test Team',
             paypalMeLink: null
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(teamId.guidString).getSubCollection('persons').getDocument(personId.guidString).snapshot();
+        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(teamId.guidString).collection('persons').document(personId.guidString).snapshot();
+        expect(personSnapshot.exists).to.be.equal(true);
+        expect(personSnapshot.data.signInProperties !== null).to.be.equal(true);
+        expect(personSnapshot.data).to.be.deep.equal({
+            id: personId.guidString,
+            properties: {
+                firstName: 'Test',
+                lastName: 'Person'
+            },
+            fineIds: [],
+            signInProperties: {
+                userId: userId,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                signInDate: personSnapshot.data.signInProperties!.signInDate,
+                notificationProperties: {
+                    tokens: {},
+                    subscriptions: []
+                }
+            }
+        });
+    });
+
+    it('should create a new team not exiting user', async () => {
+        const teamId = Guid.generate();
+        const personId = Guid.generate();
+        await FirebaseApp.shared.firestore.collection('users').document(userId).remove();
+        await FirebaseApp.shared.functions.function('team').function('new').callFunction({
+            id: teamId,
+            name: 'Test Team',
+            paypalMeLink: null,
+            personId: personId,
+            personProperties: {
+                firstName: 'Test',
+                lastName: 'Person'
+            }
+        });
+        const userSnpapshot = await FirebaseApp.shared.firestore.collection('users').document(userId).snapshot();
+        expect(userSnpapshot.exists).to.be.equal(true);
+        expect(teamId.guidString in userSnpapshot.data.teams).to.be.equal(true);
+        const userTeam = userSnpapshot.data.teams[teamId.guidString];
+        expect(userTeam).to.be.deep.equal({
+            personId: personId.guidString,
+            roles: UserRole.all
+        });
+        const teamSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(teamId.guidString).snapshot();
+        expect(teamSnapshot.exists).to.be.equal(true);
+        expect(teamSnapshot.data).to.be.deep.equal({
+            name: 'Test Team',
+            paypalMeLink: null
+        });
+        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(teamId.guidString).collection('persons').document(personId.guidString).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.signInProperties !== null).to.be.equal(true);
         expect(personSnapshot.data).to.be.deep.equal({

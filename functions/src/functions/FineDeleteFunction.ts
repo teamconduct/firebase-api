@@ -1,23 +1,23 @@
 import * as functions from 'firebase-functions';
 import * as i18n from 'i18n';
 import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
-import { firestoreBase } from '../firestoreBase';
 import { checkAuthentication } from '../checkAuthentication';
 import { pushNotification } from '../pushNotification';
-import { Amount } from '../types';
+import { Amount, Person } from '../types';
+import { Firestore } from '../Firestore';
 
 export type Parameters = {
     teamId: Guid,
-    id: Guid,
-    personId: Guid
+    personId: Guid,
+    id: Guid
 }
 
 export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
         teamId: new TypeBuilder(Guid.from),
-        id: new TypeBuilder(Guid.from),
-        personId: new TypeBuilder(Guid.from)
+        personId: new TypeBuilder(Guid.from),
+        id: new TypeBuilder(Guid.from)
     });
 
     public constructor(
@@ -27,34 +27,24 @@ export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
         this.logger.log('FineDeleteFunction.constructor', null, 'notice');
     }
 
-    private async existsTeam(id: Guid): Promise<boolean> {
-        const teamDocument = firestoreBase.getSubCollection('teams').getDocument(id.guidString);
-        const teamSnapshot = await teamDocument.snapshot();
-        return teamSnapshot.exists;
-    }
-
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('FineDeleteFunction.execute');
 
         await checkAuthentication(this.userId, this.logger.nextIndent, parameters.teamId, 'fine-delete');
 
-        if (!await this.existsTeam(parameters.teamId))
-            throw new functions.https.HttpsError('not-found', 'Team not found');
-
-        const fineSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('fines').getDocument(parameters.id.guidString).snapshot();
+        const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.id).snapshot();
         if (!fineSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Fine not found');
 
-        const personSnapshot = await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('persons').getDocument(parameters.personId.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Person not found');
+        const person = Person.builder.build(personSnapshot.data, this.logger.nextIndent);
 
-        await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('fines').removeDocument(parameters.id.guidString);
+        await Firestore.shared.fine(parameters.teamId, parameters.id).remove();
 
-        const fineIds = personSnapshot.data.fineIds.filter(id => id !== parameters.id.guidString).map(Guid.from);
-        await firestoreBase.getSubCollection('teams').getDocument(parameters.teamId.guidString).getSubCollection('persons').getDocument(parameters.personId.guidString).setValues({
-            fineIds: fineIds
-        });
+        person.fineIds = person.fineIds.filter(id => id.guidString !== parameters.id.guidString);
+        await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
 
         await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
             title: i18n.__('notification.fine-state-change.title'),

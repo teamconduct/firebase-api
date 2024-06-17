@@ -16,6 +16,7 @@ import { NotificationSubscribeFunction } from './functions/NotificationSubscribe
 import { InvitationInviteFunction } from './functions/InvitationInviteFunction';
 import { InvitationWithdrawFunction } from './functions/InvitationWithdrawFunction';
 import { UserLoginFunction } from './functions/UserLoginFunction';
+import { InvitationRegisterFunction } from './functions/InvitationRegisterFunction';
 
 export const firebaseFunctions = createFirebaseFunctions(builder => ({
     team: {
@@ -34,7 +35,8 @@ export const firebaseFunctions = createFirebaseFunctions(builder => ({
     },
     invitation: {
         invite: builder.function(InvitationInviteFunction),
-        withdraw: builder.function(InvitationWithdrawFunction)
+        withdraw: builder.function(InvitationWithdrawFunction),
+        register: builder.function(InvitationRegisterFunction)
     },
     person: {
         add: builder.function(PersonAddFunction),

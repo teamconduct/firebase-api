@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 import { ArrayTypeBuilder, FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder } from 'firebase-function';
 import { User, UserRole } from '../types';
 import { checkAuthentication } from '../checkAuthentication';
-import { firestoreBase } from '../firestoreBase';
+import { Firestore } from '../Firestore';
 
 export type Parameters = {
     userId: string
@@ -33,15 +33,15 @@ export class UserRoleEditFunction implements FirebaseFunction<Parameters, void> 
         if (userId === parameters.userId && !parameters.roles.includes('userRole-manager'))
             throw new functions.https.HttpsError('invalid-argument', 'User cannot remove their own userRole-manager role');
 
-        const userSnapshot = await firestoreBase.getSubCollection('users').getDocument(parameters.userId).snapshot();
+        const userSnapshot = await Firestore.shared.user(parameters.userId).snapshot();
         if (!userSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'User does not exist');
+        const user = User.builder.build(userSnapshot.data, this.logger.nextIndent);
 
-        const user = userSnapshot.data;
         if (!(parameters.teamId.guidString in user.teams))
             throw new functions.https.HttpsError('not-found', 'User is not a member of the team');
 
         user.teams[parameters.teamId.guidString].roles = parameters.roles;
-        await firestoreBase.getSubCollection('users').getDocument(parameters.userId).setValues(User.builder.build(user, this.logger.nextIndent));
+        await Firestore.shared.user(parameters.userId).set(user);
     }
 }

@@ -4,7 +4,7 @@ import { Amount } from '../../src/types';
 
 const fineIds = [Guid.generate(), Guid.generate(), Guid.generate()];
 
-export const testTeam1: TestTeam = {
+export const testTeam: TestTeam = {
     id: Guid.generate(),
     name: 'Test Team 1',
     persons: [

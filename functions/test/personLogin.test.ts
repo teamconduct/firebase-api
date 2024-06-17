@@ -21,18 +21,14 @@ describe('UserLoginFunction', () => {
 
     it('user not found', async () => {
         await FirebaseApp.shared.auth.signOut();
-        try {
-            await FirebaseApp.shared.auth.createUser('abc.def@ghi.jkl', 'password');
-        } catch {
-            await FirebaseApp.shared.auth.signIn('abc.def@ghi.jkl', 'password');
-        }
+        await FirebaseApp.shared.auth.signIn('abc.def@ghi.jkl', 'password');
         const execute = async () => await FirebaseApp.shared.functions.function('user').function('login').callFunction(null);
         await expect(execute).to.awaitThrow('not-found');
     });
 
     it('login', async () => {
         const user = await FirebaseApp.shared.functions.function('user').function('login').callFunction(null);
-        const userSnapshot = await FirebaseApp.shared.firestore.getSubCollection('users').getDocument(userId).snapshot();
+        const userSnapshot = await FirebaseApp.shared.firestore.collection('users').document(userId).snapshot();
         expect(user).to.be.deep.equal(userSnapshot.data);
     });
 });

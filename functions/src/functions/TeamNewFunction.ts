@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flattable, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, UtcDate, ValueTypeBuilder } from 'firebase-function';
-import { PersonPrivateProperties, User, UserRole } from '../types';
-import { firestoreBase } from '../firestoreBase';
+import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder } from 'firebase-function';
+import { PersonPrivateProperties, PersonSignInProperties, User, UserRole } from '../types';
+import { Firestore } from '../Firestore';
 
 export type Parameters = {
     id: Guid
@@ -28,59 +28,37 @@ export class TeamNewFunction implements FirebaseFunction<Parameters, void> {
         this.logger.log('TeamNewFunction.constructor', null, 'notice');
     }
 
-    private async existsTeam(id: Guid): Promise<boolean> {
-        const teamDocument = firestoreBase.getSubCollection('teams').getDocument(id.guidString);
-        const teamSnapshot = await teamDocument.snapshot();
-        return teamSnapshot.exists;
-    }
-
-    private async updateUserDocument(userId: string, parameters: Parameters) {
-        const userDocument = firestoreBase.getSubCollection('users').getDocument(userId);
-        const userSnapshot = await userDocument.snapshot();
-        let user: User = {
-            teams: {}
-        };
-        if (userSnapshot.exists)
-            user = User.builder.build(userSnapshot.data, this.logger.nextIndent);
-        user.teams[parameters.id.guidString] = {
-            personId: parameters.personId,
-            roles: UserRole.all
-        };
-        await userDocument.setValues(user);
-    }
-
-    private async addPersonToTeam(parameters: Parameters, userId: string) {
-        await firestoreBase.getSubCollection('teams').getDocument(parameters.id.guidString).getSubCollection('persons').addDocument(parameters.personId.guidString, {
-            id: parameters.personId,
-            properties: Flattable.flatten(parameters.personProperties),
-            fineIds: [],
-            signInProperties: {
-                userId: userId,
-                signInDate: UtcDate.now,
-                notificationProperties: {
-                    tokens: {},
-                    subscriptions: []
-                }
-            }
-        });
-    }
-
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('TeamNewFunction.execute');
 
         if (this.userId === null)
             throw new functions.https.HttpsError('permission-denied', 'User is not authenticated');
 
-        if (await this.existsTeam(parameters.id))
+        const teamSnapshot = await Firestore.shared.team(parameters.id).snapshot();
+        if (teamSnapshot.exists)
             throw new functions.https.HttpsError('already-exists', 'Team already exists');
 
-        await this.updateUserDocument(this.userId, parameters);
+        const userSnapshot = await Firestore.shared.user(this.userId).snapshot();
+        let user = User.empty();
+        if (userSnapshot.exists)
+            user = User.builder.build(userSnapshot.data, this.logger.nextIndent);
 
-        await firestoreBase.getSubCollection('teams').addDocument(parameters.id.guidString, {
+        user.teams[parameters.id.guidString] = {
+            personId: parameters.personId,
+            roles: UserRole.all
+        };
+        await Firestore.shared.user(this.userId).set(user);
+
+        await Firestore.shared.team(parameters.id).set({
             name: parameters.name,
             paypalMeLink: parameters.paypalMeLink
         });
 
-        await this.addPersonToTeam(parameters, this.userId);
+        await Firestore.shared.person(parameters.id, parameters.personId).set({
+            id: parameters.personId,
+            properties: parameters.personProperties,
+            fineIds: [],
+            signInProperties: PersonSignInProperties.empty(this.userId)
+        });
     }
 }

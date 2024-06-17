@@ -1,7 +1,6 @@
-import * as admin from 'firebase-admin';
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { testTeam1 } from './testTeams/testTeam_1';
+import { testTeam } from './testTeams/testTeam_1';
 
 describe('PaypalMeEditFunction', () => {
 
@@ -14,9 +13,9 @@ describe('PaypalMeEditFunction', () => {
     });
 
     it('team not found', async () => {
-        await admin.app().firestore().collection('teams').doc(testTeam1.id.guidString).delete();
+        await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).remove();
         const execute = async () => await FirebaseApp.shared.functions.function('paypalMe').function('edit').callFunction({
-            teamId: testTeam1.id,
+            teamId: testTeam.id,
             paypalMeLink: 'https://paypal.me/TeamPropertiesManager'
         });
         await expect(execute).to.awaitThrow('not-found');
@@ -24,18 +23,18 @@ describe('PaypalMeEditFunction', () => {
 
     it('add and remove paypalMeLink', async () => {
         await FirebaseApp.shared.functions.function('paypalMe').function('edit').callFunction({
-            teamId: testTeam1.id,
+            teamId: testTeam.id,
             paypalMeLink: 'paypal.me/my-link'
         });
-        let teamSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).snapshot();
+        let teamSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).snapshot();
         expect(teamSnapshot.exists).to.be.equal(true);
         expect(teamSnapshot.data.paypalMeLink).to.be.equal('paypal.me/my-link');
 
         await FirebaseApp.shared.functions.function('paypalMe').function('edit').callFunction({
-            teamId: testTeam1.id,
+            teamId: testTeam.id,
             paypalMeLink: null
         });
-        teamSnapshot = await FirebaseApp.shared.firestore.getSubCollection('teams').getDocument(testTeam1.id.guidString).snapshot();
+        teamSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).snapshot();
         expect(teamSnapshot.exists).to.be.equal(true);
         expect(teamSnapshot.data.paypalMeLink).to.be.equal(null);
     });

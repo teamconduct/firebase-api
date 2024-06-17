@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import { FirebaseFunction, ILogger, ValueTypeBuilder } from 'firebase-function';
 import { User } from '../types';
-import { firestoreBase } from '../firestoreBase';
+import { Firestore } from '../Firestore';
 
 export class UserLoginFunction implements FirebaseFunction<null, User> {
 
@@ -20,7 +20,7 @@ export class UserLoginFunction implements FirebaseFunction<null, User> {
         if (this.userId === null)
             throw new functions.https.HttpsError('unauthenticated', 'User is not authenticated.');
 
-        const userSnapshot = await firestoreBase.getSubCollection('users').getDocument(this.userId).snapshot();
+        const userSnapshot = await Firestore.shared.user(this.userId).snapshot();
         if (!userSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'User not found.');
 
