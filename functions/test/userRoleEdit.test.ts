@@ -17,7 +17,7 @@ describe('UserRoleEditFunction', () => {
     });
 
     it('remove userRole-manager role from user', async () => {
-        const execute = async () => await FirebaseApp.shared.functions.function('userRole').function('edit').callFunction({
+        const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
             userId: userId,
             teamId: testTeam1.id,
             roles: []
@@ -26,7 +26,7 @@ describe('UserRoleEditFunction', () => {
     });
 
     it('user does not exist', async () => {
-        const execute = async () => await FirebaseApp.shared.functions.function('userRole').function('edit').callFunction({
+        const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
             userId: 'non-existent',
             teamId: testTeam1.id,
             roles: ['userRole-manager']
@@ -43,7 +43,7 @@ describe('UserRoleEditFunction', () => {
                 }
             }
         });
-        const execute = async () => await FirebaseApp.shared.functions.function('userRole').function('edit').callFunction({
+        const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
             userId: 'asdf',
             teamId: testTeam1.id,
             roles: ['userRole-manager']
@@ -52,7 +52,7 @@ describe('UserRoleEditFunction', () => {
     });
 
     it('edit user roles', async () => {
-        await FirebaseApp.shared.functions.function('userRole').function('edit').callFunction({
+        await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
             userId: userId,
             teamId: testTeam1.id,
             roles: ['userRole-manager', 'fine-delete', 'person-add']

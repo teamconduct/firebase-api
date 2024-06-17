@@ -15,13 +15,15 @@ import { NotificationRegisterFunction } from './functions/NotificationRegisterFu
 import { NotificationSubscribeFunction } from './functions/NotificationSubscribeFunction';
 import { InvitationInviteFunction } from './functions/InvitationInviteFunction';
 import { InvitationWithdrawFunction } from './functions/InvitationWithdrawFunction';
+import { UserLoginFunction } from './functions/UserLoginFunction';
 
 export const firebaseFunctions = createFirebaseFunctions(builder => ({
     team: {
         new: builder.function(TeamNewFunction)
     },
-    userRole: {
-        edit: builder.function(UserRoleEditFunction)
+    user: {
+        login: builder.function(UserLoginFunction),
+        roleEdit: builder.function(UserRoleEditFunction)
     },
     paypalMe: {
         edit: builder.function(PaypalMeEditFunction)
