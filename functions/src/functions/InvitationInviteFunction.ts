@@ -1,10 +1,10 @@
 import * as functions from 'firebase-functions';
 import { FirebaseFunction, ILogger } from 'firebase-function';
-import { Invitation } from '../types/Invitation';
+import { Invitation, InvitationId } from '../types/Invitation';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
 
-export class InvitationInviteFunction implements FirebaseFunction<Invitation, string> {
+export class InvitationInviteFunction implements FirebaseFunction<Invitation, InvitationId> {
 
     public parametersBuilder = Invitation.builder;
 
@@ -16,7 +16,7 @@ export class InvitationInviteFunction implements FirebaseFunction<Invitation, st
     }
 
 
-    public async execute(invitation: Invitation): Promise<string> {
+    public async execute(invitation: Invitation): Promise<InvitationId> {
         this.logger.log('InvitationInviteFunction.execute');
 
         await checkAuthentication(this.userId, this.logger.nextIndent, invitation.teamId, 'team-invitation-manager');
@@ -28,7 +28,7 @@ export class InvitationInviteFunction implements FirebaseFunction<Invitation, st
         if (personSnapshot.data.signInProperties !== null)
             throw new functions.https.HttpsError('already-exists', 'Person already has an account');
 
-        const invitationId = Invitation.createId(invitation);
+        const invitationId = InvitationId.create(invitation);
         const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();
         if (invitationSnapshot.exists)
             throw new functions.https.HttpsError('already-exists', 'Invitation already exists');

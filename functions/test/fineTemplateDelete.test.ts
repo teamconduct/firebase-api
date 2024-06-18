@@ -1,7 +1,8 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
+import { Firestore } from '../src/Firestore';
 
 describe('FineTemplateDeleteFunction', () => {
 
@@ -16,7 +17,7 @@ describe('FineTemplateDeleteFunction', () => {
     it('fineTemplate not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fineTemplate').function('delete').callFunction({
             teamId: testTeam.id,
-            id: Guid.generate()
+            id: Tagged.generate('fineTemplate')
         });
         await expect(execute).to.awaitThrow('not-found');
     });
@@ -26,7 +27,7 @@ describe('FineTemplateDeleteFunction', () => {
             teamId: testTeam.id,
             id: testTeam.fineTemplates[1].id
         });
-        const fineTemplateSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('fineTemplates').document(testTeam.fineTemplates[1].id.guidString).snapshot();
+        const fineTemplateSnapshot = await Firestore.shared.fineTemplate(testTeam.id, testTeam.fineTemplates[1].id).snapshot();
         expect(fineTemplateSnapshot.exists).to.be.equal(false);
     });
 });

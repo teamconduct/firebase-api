@@ -1,8 +1,9 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid, UtcDate } from 'firebase-function';
+import { Tagged, UtcDate } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
 import { Amount } from '../src/types';
+import { Firestore } from '../src/Firestore';
 
 describe('FineUpdateFunction', () => {
 
@@ -17,9 +18,9 @@ describe('FineUpdateFunction', () => {
     it('fine not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('update').callFunction({
             teamId: testTeam.id,
-            personId: Guid.generate(),
+            personId: Tagged.generate('person'),
             fine: {
-                id: Guid.generate(),
+                id: Tagged.generate('fine'),
                 reason: 'Test Reason',
                 amount: new Amount(10, 0),
                 date: UtcDate.now,
@@ -42,7 +43,7 @@ describe('FineUpdateFunction', () => {
                 payedState: 'payed'
             }
         });
-        const fineSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('fines').document(testTeam.fines[1].id.guidString).snapshot();
+        const fineSnapshot = await Firestore.shared.fine(testTeam.id, testTeam.fines[1].id).snapshot();
         expect(fineSnapshot.exists).to.be.equal(true);
         expect(fineSnapshot.data).to.be.deep.equal({
             id: testTeam.fines[1].id.guidString,

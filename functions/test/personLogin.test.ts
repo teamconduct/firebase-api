@@ -1,9 +1,11 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
+import { UserId } from '../src/types';
+import { Firestore } from '../src/Firestore';
 
 describe('UserLoginFunction', () => {
 
-    let userId: string;
+    let userId: UserId;
 
     beforeEach(async () => {
         userId = await FirebaseApp.shared.addTestTeam();
@@ -28,7 +30,7 @@ describe('UserLoginFunction', () => {
 
     it('login', async () => {
         const user = await FirebaseApp.shared.functions.function('user').function('login').callFunction(null);
-        const userSnapshot = await FirebaseApp.shared.firestore.collection('users').document(userId).snapshot();
+        const userSnapshot = await Firestore.shared.user(userId).snapshot();
         expect(user).to.be.deep.equal(userSnapshot.data);
     });
 });

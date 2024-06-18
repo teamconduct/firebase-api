@@ -1,7 +1,8 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
 import { testTeam } from './testTeams/testTeam_1';
-import { Invitation } from '../src/types/Invitation';
+import { InvitationId } from '../src/types/Invitation';
+import { Firestore } from '../src/Firestore';
 
 describe('InvitationWithdrawFunction', () => {
 
@@ -22,11 +23,11 @@ describe('InvitationWithdrawFunction', () => {
     });
 
     it('should withdraw', async () => {
-        const invitationId = Invitation.createId({
+        const invitationId = InvitationId.create({
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        await FirebaseApp.shared.firestore.collection('invitations').document(invitationId).set({
+        await Firestore.shared.invitation(invitationId).set({
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
@@ -34,7 +35,7 @@ describe('InvitationWithdrawFunction', () => {
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        const invitationSnapshot = await FirebaseApp.shared.firestore.collection('invitations').document(invitationId).snapshot();
+        const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();
         expect(invitationSnapshot.exists).to.be.equal(false);
     });
 });

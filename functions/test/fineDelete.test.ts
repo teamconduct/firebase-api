@@ -1,7 +1,8 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
+import { Firestore } from '../src/Firestore';
 
 describe('FineDeleteFunction', () => {
 
@@ -16,7 +17,7 @@ describe('FineDeleteFunction', () => {
     it('person does not exist', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('delete').callFunction({
             teamId: testTeam.id,
-            personId: Guid.generate(),
+            personId: Tagged.generate('person'),
             id: testTeam.fines[1].id
         });
         await expect(execute).to.awaitThrow('not-found');
@@ -26,7 +27,7 @@ describe('FineDeleteFunction', () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('delete').callFunction({
             teamId: testTeam.id,
             personId: testTeam.persons[1].id,
-            id: Guid.generate()
+            id: Tagged.generate('fine')
         });
         await expect(execute).to.awaitThrow('not-found');
     });
@@ -37,9 +38,9 @@ describe('FineDeleteFunction', () => {
             personId: testTeam.persons[0].id,
             id: testTeam.fines[1].id
         });
-        const fineSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('fines').document(testTeam.fines[1].id.guidString).snapshot();
+        const fineSnapshot = await Firestore.shared.fine(testTeam.id, testTeam.fines[1].id).snapshot();
         expect(fineSnapshot.exists).to.be.equal(false);
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[0].id.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[0].id).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.fineIds.includes(testTeam.fines[1].id.guidString)).to.be.equal(false);
     });

@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import { FirebaseFunction, ILogger } from 'firebase-function';
-import { Invitation } from '../types/Invitation';
+import { Invitation, InvitationId } from '../types/Invitation';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
 
@@ -21,7 +21,7 @@ export class InvitationWithdrawFunction implements FirebaseFunction<Invitation, 
 
         await checkAuthentication(this.userId, this.logger.nextIndent, invitation.teamId, 'team-invitation-manager');
 
-        const invitationId = Invitation.createId(invitation);
+        const invitationId = InvitationId.create(invitation);
         const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();
         if (!invitationSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Invitation not found');

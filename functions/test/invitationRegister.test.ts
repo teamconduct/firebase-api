@@ -1,11 +1,13 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
 import { testTeam } from './testTeams/testTeam_1';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
+import { User, UserId } from '../src/types';
+import { Firestore } from '../src/Firestore';
 
 describe('InvitationRegisterFunction', () => {
 
-    let userId: string;
+    let userId: UserId;
 
     beforeEach(async () => {
         userId = await FirebaseApp.shared.addTestTeam('team-invitation-manager');
@@ -21,12 +23,12 @@ describe('InvitationRegisterFunction', () => {
             personId: testTeam.persons[1].id
         });
         await FirebaseApp.shared.auth.signOut();
-        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(invitationId);
+        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(new Tagged(invitationId, 'invitation'));
         await expect(execute).to.awaitThrow('unauthenticated');
     });
 
     it('invitation not found', async () => {
-        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction('no-invitation');
+        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(new Tagged('no-invitation', 'invitation'));
         await expect(execute).to.awaitThrow('not-found');
     });
 
@@ -35,7 +37,7 @@ describe('InvitationRegisterFunction', () => {
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(invitationId);
+        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(new Tagged(invitationId, 'invitation'));
         await expect(execute).to.awaitThrow('already-exists');
     });
 
@@ -44,9 +46,9 @@ describe('InvitationRegisterFunction', () => {
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        await FirebaseApp.shared.firestore.collection('users').document(userId).remove();
-        await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[1].id.guidString).remove();
-        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(invitationId);
+        await Firestore.shared.user(userId).remove();
+        await Firestore.shared.person(testTeam.id, testTeam.persons[1].id).remove();
+        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(new Tagged(invitationId, 'invitation'));
         await expect(execute).to.awaitThrow('not-found');
     });
 
@@ -55,13 +57,13 @@ describe('InvitationRegisterFunction', () => {
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        await FirebaseApp.shared.firestore.collection('users').document(userId).remove();
-        const user = await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(invitationId);
+        await Firestore.shared.user(userId).remove();
+        const user = await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(new Tagged(invitationId, 'invitation'));
         expect(user.teamId).to.be.equal(testTeam.id.guidString);
         expect(user.personId).to.be.equal(testTeam.persons[1].id.guidString);
-        const invitationSnapshot = await FirebaseApp.shared.firestore.collection('invitations').document(invitationId).snapshot();
+        const invitationSnapshot = await Firestore.shared.invitation(new Tagged(invitationId, 'invitation')).snapshot();
         expect(invitationSnapshot.exists).to.be.equal(false);
-        const userSnapshot = await FirebaseApp.shared.firestore.collection('users').document(userId).snapshot();
+        const userSnapshot = await Firestore.shared.user(userId).snapshot();
         expect(userSnapshot.exists).to.be.equal(true);
         expect(userSnapshot.data).to.be.deep.equal({
             teams: {
@@ -71,13 +73,13 @@ describe('InvitationRegisterFunction', () => {
                 }
             }
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[1].id.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[1].id).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.signInProperties !== null).to.be.deep.equal(true);
         expect(personSnapshot.data).to.be.deep.equal({
             ...personSnapshot.data,
             signInProperties: {
-                userId: userId,
+                userId: userId.value,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 signInDate: personSnapshot.data.signInProperties!.signInDate,
                 notificationProperties: {
@@ -93,19 +95,18 @@ describe('InvitationRegisterFunction', () => {
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        await FirebaseApp.shared.firestore.collection('users').document(userId).set({
-            teams: {
-                [Guid.generate().guidString]: {
-                    personId: Guid.generate(),
-                    roles: []
-                }
-            } });
-        const user = await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(invitationId);
+        const signedInUser = User.empty();
+        signedInUser.teams.set(Tagged.generate('team'), {
+            personId: Tagged.generate('person'),
+            roles: []
+        });
+        await Firestore.shared.user(userId).set(signedInUser);
+        const user = await FirebaseApp.shared.functions.function('invitation').function('register').callFunction(new Tagged(invitationId, 'invitation'));
         expect(user.teamId).to.be.equal(testTeam.id.guidString);
         expect(user.personId).to.be.equal(testTeam.persons[1].id.guidString);
-        const invitationSnapshot = await FirebaseApp.shared.firestore.collection('invitations').document(invitationId).snapshot();
+        const invitationSnapshot = await Firestore.shared.invitation(new Tagged(invitationId, 'invitation')).snapshot();
         expect(invitationSnapshot.exists).to.be.equal(false);
-        const userSnapshot = await FirebaseApp.shared.firestore.collection('users').document(userId).snapshot();
+        const userSnapshot = await Firestore.shared.user(userId).snapshot();
         expect(userSnapshot.exists).to.be.equal(true);
         expect(userSnapshot.data).to.be.deep.equal({
             teams: {
@@ -116,13 +117,13 @@ describe('InvitationRegisterFunction', () => {
                 }
             }
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[1].id.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[1].id).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.signInProperties !== null).to.be.deep.equal(true);
         expect(personSnapshot.data).to.be.deep.equal({
             ...personSnapshot.data,
             signInProperties: {
-                userId: userId,
+                userId: userId.value,
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 signInDate: personSnapshot.data.signInProperties!.signInDate,
                 notificationProperties: {

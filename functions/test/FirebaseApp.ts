@@ -1,16 +1,14 @@
-import { FirestoreScheme } from './../src/FirestoreScheme';
 import { firebaseFunctions } from './../src/firebaseFunctions';
 import * as dotenv from 'dotenv';
 import { FirebaseApp as FirebaseAppBase } from 'firebase-function/lib/src/testSrc';
-import { HexBytesCoder, Sha512, Utf8BytesCoder } from 'firebase-function';
+import { HexBytesCoder, Sha512, Tagged, Utf8BytesCoder } from 'firebase-function';
 import axios from 'axios';
-import { UserRole } from '../src/types';
-import { createTestTeam } from './createTestTeam';
+import { UserId, UserRole } from '../src/types';
 import { testTeam } from './testTeams/testTeam_1';
 
 dotenv.config({ path: 'test/.env.test' });
 
-export class FirebaseApp extends FirebaseAppBase<typeof firebaseFunctions, FirestoreScheme> {
+export class FirebaseApp extends FirebaseAppBase<typeof firebaseFunctions> {
 
     private constructor() {
         const macKeyBytesCoder = new HexBytesCoder();
@@ -40,20 +38,22 @@ export class FirebaseApp extends FirebaseAppBase<typeof firebaseFunctions, Fires
 
     public static shared = new FirebaseApp();
 
-    private hashUserId(userId: string): string {
+    private hashUserId(userId: string): UserId {
         const userIdBytesCoder = new Utf8BytesCoder();
         const hasher = new Sha512();
         const hashedUserIdBytesCoder = new HexBytesCoder();
         const userIdBytes = userIdBytesCoder.encode(userId);
         const hashedUserIdBytes = hasher.hash(userIdBytes);
-        return hashedUserIdBytesCoder.decode(hashedUserIdBytes);
+        const rawId = hashedUserIdBytesCoder.decode(hashedUserIdBytes);
+        return new Tagged(rawId, 'user');
     }
 
-    public async addTestTeam(...roles: UserRole[]): Promise<string> {
+    public async addTestTeam(...roles: UserRole[]): Promise<UserId> {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const userCredential = await this.auth.signIn(process.env.FUNCTESTS_USER_EMAIL!, process.env.FUNCTESTS_USER_PASSWORD!);
         const userId = this.hashUserId(userCredential.user.uid);
-        await createTestTeam(testTeam, userId, roles);
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        await require('./createTestTeam').createTestTeam(testTeam, userId, roles);
         return userId;
     }
 

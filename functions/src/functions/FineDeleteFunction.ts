@@ -1,23 +1,24 @@
 import * as functions from 'firebase-functions';
 import * as i18n from 'i18n';
-import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
+import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
 import { checkAuthentication } from '../checkAuthentication';
 import { pushNotification } from '../pushNotification';
-import { Amount, Person } from '../types';
+import { Amount, FineId, Person, PersonId } from '../types';
 import { Firestore } from '../Firestore';
+import { TeamId } from '../types/Team';
 
 export type Parameters = {
-    teamId: Guid,
-    personId: Guid,
-    id: Guid
+    teamId: TeamId,
+    personId: PersonId,
+    id: FineId
 }
 
 export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
-        personId: new TypeBuilder(Guid.from),
-        id: new TypeBuilder(Guid.from)
+        teamId: TeamId.builder,
+        personId: PersonId.builder,
+        id: FineId.builder
     });
 
     public constructor(

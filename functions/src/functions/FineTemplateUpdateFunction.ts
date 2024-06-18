@@ -1,18 +1,19 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
+import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
 import { FineTemplate } from '../types';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
+import { TeamId } from '../types/Team';
 
 export type Parameters = {
-    teamId: Guid,
+    teamId: TeamId,
     fineTemplate: FineTemplate
 };
 
 export class FineTemplateUpdateFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
+        teamId: TeamId.builder,
         fineTemplate: FineTemplate.builder
     });
 

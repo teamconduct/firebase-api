@@ -1,14 +1,15 @@
 import * as functions from 'firebase-functions';
 import * as i18n from 'i18n';
-import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
-import { Fine } from '../types';
+import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
+import { Fine, PersonId } from '../types';
 import { checkAuthentication } from '../checkAuthentication';
 import { pushNotification } from '../pushNotification';
 import { Firestore } from '../Firestore';
+import { TeamId } from '../types/Team';
 
 export type Parameters = {
-    teamId: Guid,
-    personId: Guid,
+    teamId: TeamId,
+    personId: PersonId,
     fine: Fine
 };
 
@@ -16,8 +17,8 @@ export type Parameters = {
 export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
-        personId: new TypeBuilder(Guid.from),
+        teamId: TeamId.builder,
+        personId: PersonId.builder,
         fine: Fine.builder
     });
 

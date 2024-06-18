@@ -1,7 +1,9 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid, HexBytesCoder, Sha512, Utf8BytesCoder } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
+import { Firestore } from '../src/Firestore';
+import { TokenId } from '../src/types/PersonNotificationProperties';
 
 describe('NotificationRegisterFunction', () => {
 
@@ -13,20 +15,10 @@ describe('NotificationRegisterFunction', () => {
         await FirebaseApp.shared.clearFirestore();
     });
 
-    function tokenId(token: string): string {
-        const tokenCoder = new Utf8BytesCoder();
-        const hasher = new Sha512();
-        const idCoder = new HexBytesCoder();
-        const tokenBytes = tokenCoder.encode(token);
-        const tokenIdBytes = hasher.hash(tokenBytes);
-        const tokenId = idCoder.decode(tokenIdBytes);
-        return tokenId.slice(0, 16);
-    }
-
     it('person not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('notification').function('register').callFunction({
             teamId: testTeam.id,
-            personId: Guid.generate(),
+            personId: Tagged.generate('person'),
             token: 'abc'
         });
         await expect(execute).to.awaitThrow('not-found');
@@ -47,9 +39,9 @@ describe('NotificationRegisterFunction', () => {
             personId: testTeam.persons[0].id,
             token: 'abc'
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[0].id.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[0].id).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.signInProperties !== null).to.be.equal(true);
-        expect(personSnapshot.data.signInProperties?.notificationProperties.tokens[tokenId('abc')]).to.be.equal('abc');
+        expect(personSnapshot.data.signInProperties?.notificationProperties.tokens[TokenId.create('abc').value]).to.be.equal('abc');
     });
 });

@@ -1,19 +1,21 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder, Flatten, Utf8BytesCoder, Sha512, HexBytesCoder } from 'firebase-function';
-import { Person } from '../types';
+import { FirebaseFunction, ILogger, ObjectTypeBuilder, ValueTypeBuilder, Flatten } from 'firebase-function';
+import { Person, PersonId } from '../types';
 import { Firestore } from '../Firestore';
+import { TeamId } from '../types/Team';
+import { TokenId } from '../types/PersonNotificationProperties';
 
 export type Parameters = {
-    teamId: Guid,
-    personId: Guid,
+    teamId: TeamId,
+    personId: PersonId,
     token: string
 }
 
 export class NotificationRegisterFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
-        personId: new TypeBuilder(Guid.from),
+        teamId: TeamId.builder,
+        personId: PersonId.builder,
         token: new ValueTypeBuilder()
     });
 
@@ -22,16 +24,6 @@ export class NotificationRegisterFunction implements FirebaseFunction<Parameters
         private readonly logger: ILogger
     ) {
         this.logger.log('NotificationRegisterFunction.constructor', null, 'notice');
-    }
-
-    private tokenId(token: string): string {
-        const tokenCoder = new Utf8BytesCoder();
-        const hasher = new Sha512();
-        const idCoder = new HexBytesCoder();
-        const tokenBytes = tokenCoder.encode(token);
-        const tokenIdBytes = hasher.hash(tokenBytes);
-        const tokenId = idCoder.decode(tokenIdBytes);
-        return tokenId.slice(0, 16);
     }
 
     public async execute(parameters: Parameters): Promise<void> {
@@ -45,8 +37,7 @@ export class NotificationRegisterFunction implements FirebaseFunction<Parameters
         if (person.signInProperties === null)
             throw new functions.https.HttpsError('failed-precondition', 'Person not signed in');
 
-        const tokenId = this.tokenId(parameters.token);
-        person.signInProperties.notificationProperties.tokens[tokenId] = parameters.token;
+        person.signInProperties.notificationProperties.tokens.set(TokenId.create(parameters.token), parameters.token);
         await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
     }
 }

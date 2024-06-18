@@ -1,17 +1,18 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Guid, ILogger, ValueTypeBuilder } from 'firebase-function';
-import { Person, PersonSignInProperties, User } from '../types';
-import { Invitation } from '../types/Invitation';
+import { FirebaseFunction, ILogger } from 'firebase-function';
+import { Person, PersonId, PersonSignInProperties, User, UserId } from '../types';
+import { Invitation, InvitationId } from '../types/Invitation';
 import { Firestore } from '../Firestore';
+import { TeamId } from '../types/Team';
 
 export type ReturnType = {
-    teamId: Guid,
-    personId: Guid
+    teamId: TeamId,
+    personId: PersonId
 };
 
-export class InvitationRegisterFunction implements FirebaseFunction<string, ReturnType> {
+export class InvitationRegisterFunction implements FirebaseFunction<InvitationId, ReturnType> {
 
-    public parametersBuilder = new ValueTypeBuilder<string>();
+    public parametersBuilder = InvitationId.builder;
 
     public constructor(
         private readonly userId: string | null,
@@ -20,23 +21,25 @@ export class InvitationRegisterFunction implements FirebaseFunction<string, Retu
         this.logger.log('InvitationRegisterFunction.constructor', null, 'notice');
     }
 
-    public async execute(invitationId: string): Promise<ReturnType> {
+    public async execute(invitationId: InvitationId): Promise<ReturnType> {
         this.logger.log('InvitationRegisterFunction.execute');
+
 
         if (this.userId === null)
             throw new functions.https.HttpsError('unauthenticated', 'User not authenticated');
+        const userId = UserId.builder.build(this.userId, this.logger.nextIndent);
 
         const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();
         if (!invitationSnapshot.exists)
             throw new functions.https.HttpsError('not-found', 'Invitation not found');
         const invitation = Invitation.builder.build(invitationSnapshot.data, this.logger.nextIndent);
 
-        const userSnapshot = await Firestore.shared.user(this.userId).snapshot();
+        const userSnapshot = await Firestore.shared.user(userId).snapshot();
         let user = User.empty();
         if (userSnapshot.exists)
             user = User.builder.build(userSnapshot.data, this.logger.nextIndent);
 
-        if (invitation.teamId.guidString in user.teams)
+        if (user.teams.has(invitation.teamId))
             throw new functions.https.HttpsError('already-exists', 'User already in team');
 
         const personSnapshot = await Firestore.shared.person(invitation.teamId, invitation.personId).snapshot();
@@ -49,13 +52,13 @@ export class InvitationRegisterFunction implements FirebaseFunction<string, Retu
 
         await Firestore.shared.invitation(invitationId).remove();
 
-        user.teams[invitation.teamId.guidString] = {
+        user.teams.set(invitation.teamId, {
             personId: invitation.personId,
             roles: []
-        };
-        await Firestore.shared.user(this.userId).set(user);
+        });
+        await Firestore.shared.user(userId).set(user);
 
-        person.signInProperties = PersonSignInProperties.empty(this.userId);
+        person.signInProperties = PersonSignInProperties.empty(userId);
         await Firestore.shared.person(invitation.teamId, invitation.personId).set(person);
 
         return invitation;

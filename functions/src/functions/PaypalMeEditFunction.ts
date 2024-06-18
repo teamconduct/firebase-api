@@ -1,18 +1,18 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder } from 'firebase-function';
+import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder, ValueTypeBuilder } from 'firebase-function';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
-import { Team } from '../types/Team';
+import { Team, TeamId } from '../types/Team';
 
 export type Parameters = {
-    teamId: Guid;
+    teamId: TeamId;
     paypalMeLink: string | null;
 };
 
 export class PaypalMeEditFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
+        teamId: TeamId.builder,
         paypalMeLink: new ValueTypeBuilder()
     });
 

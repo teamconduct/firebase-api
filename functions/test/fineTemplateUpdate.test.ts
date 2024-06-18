@@ -1,8 +1,9 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
 import { Amount } from '../src/types';
+import { Firestore } from '../src/Firestore';
 
 describe('FineTemplateUpdateFunction', () => {
 
@@ -18,7 +19,7 @@ describe('FineTemplateUpdateFunction', () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fineTemplate').function('update').callFunction({
             teamId: testTeam.id,
             fineTemplate: {
-                id: Guid.generate(),
+                id: Tagged.generate('fineTemplate'),
                 reason: 'Test Reason',
                 amount: new Amount(100, 0),
                 multiple: null
@@ -37,7 +38,7 @@ describe('FineTemplateUpdateFunction', () => {
                 multiple: null
             }
         });
-        const fineTemplateSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('fineTemplates').document(testTeam.fineTemplates[1].id.guidString).snapshot();
+        const fineTemplateSnapshot = await Firestore.shared.fineTemplate(testTeam.id, testTeam.fineTemplates[1].id).snapshot();
         expect(fineTemplateSnapshot.exists).to.be.equal(true);
         expect(fineTemplateSnapshot.data).to.be.deep.equal({
             id: testTeam.fineTemplates[1].id.guidString,

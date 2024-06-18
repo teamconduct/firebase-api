@@ -1,20 +1,21 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flatten, Guid, ILogger, ObjectTypeBuilder, TypeBuilder } from 'firebase-function';
-import { Person, PersonPrivateProperties } from '../types';
+import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
+import { Person, PersonId, PersonPrivateProperties } from '../types';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
+import { TeamId } from '../types/Team';
 
 export type Parameters = {
-    teamId: Guid,
+    teamId: TeamId,
     person: Omit<Person, 'fineIds' | 'signInProperties'>
 };
 
 export class PersonUpdateFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
+        teamId: TeamId.builder,
         person: new ObjectTypeBuilder({
-            id: new TypeBuilder(Guid.from),
+            id: PersonId.builder,
             properties: PersonPrivateProperties.builder
         })
     });

@@ -1,21 +1,12 @@
 import * as admin from 'firebase-admin';
-import { Utf8BytesCoder, Sha512, HexBytesCoder, values, Guid, ILogger } from 'firebase-function';
-import { Person } from './types';
-import { NotificationSubscription } from './types/PersonNotificationProperties';
+import { ILogger, Dictionary } from 'firebase-function';
+import { Person, PersonId } from './types';
+import { NotificationSubscription, TokenId } from './types/PersonNotificationProperties';
 import { BatchResponse, Notification } from 'firebase-admin/lib/messaging/messaging-api';
 import { Firestore } from './Firestore';
+import { TeamId } from './types/Team';
 
-function tokenId(token: string): string {
-    const tokenCoder = new Utf8BytesCoder();
-    const hasher = new Sha512();
-    const idCoder = new HexBytesCoder();
-    const tokenBytes = tokenCoder.encode(token);
-    const tokenIdBytes = hasher.hash(tokenBytes);
-    const tokenId = idCoder.decode(tokenIdBytes);
-    return tokenId.slice(0, 16);
-}
-
-function successfulTokens(response: BatchResponse, tokens: string[]): Record<string, string> {
+function successfulTokens(response: BatchResponse, tokens: string[]): Dictionary<TokenId, string> {
     const successfulTokens = response.responses
         .map((response, index) => ({
             failed: response.error?.code ==='messaging/invalid-registration-token' || response.error?.code === 'messaging/registration-token-not-registered',
@@ -23,14 +14,13 @@ function successfulTokens(response: BatchResponse, tokens: string[]): Record<str
         }))
         .filter(response => !response.failed)
         .map(response => response.token);
-    const tokensRecord: Record<string, string> = {};
+    const tokenDict = new Dictionary<TokenId, string>();
     for (const token of successfulTokens)
-        tokensRecord[tokenId(token)] = token;
-    return tokensRecord;
-
+        tokenDict.set(TokenId.create(token), token);
+    return tokenDict;
 }
 
-export async function pushNotification(teamId: Guid, personId: Guid, topic: NotificationSubscription, notification: Notification, logger: ILogger): Promise<void> {
+export async function pushNotification(teamId: TeamId, personId: PersonId, topic: NotificationSubscription, notification: Notification, logger: ILogger): Promise<void> {
 
     const personSnapshot = await Firestore.shared.person(teamId, personId).snapshot();
     if (!personSnapshot.exists)
@@ -40,7 +30,7 @@ export async function pushNotification(teamId: Guid, personId: Guid, topic: Noti
     if (person.signInProperties === null || !person.signInProperties.notificationProperties.subscriptions.includes(topic))
         return;
 
-    const tokens = values(person.signInProperties.notificationProperties.tokens);
+    const tokens = person.signInProperties.notificationProperties.tokens.values;
     const response = await admin.messaging().sendEachForMulticast({
         tokens: tokens,
         notification: notification

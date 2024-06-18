@@ -1,8 +1,9 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
-import { Invitation } from '../src/types/Invitation';
+import { InvitationId } from '../src/types/Invitation';
+import { Firestore } from '../src/Firestore';
 
 describe('InvitationInviteFunction', () => {
 
@@ -17,7 +18,7 @@ describe('InvitationInviteFunction', () => {
     it('person not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('invite').callFunction({
             teamId: testTeam.id,
-            personId: Guid.generate()
+            personId: Tagged.generate('person')
         });
         await expect(execute).to.awaitThrow('not-found');
     });
@@ -31,11 +32,11 @@ describe('InvitationInviteFunction', () => {
     });
 
     it('invitation already exists', async () => {
-        const invitationId = Invitation.createId({
+        const invitationId = InvitationId.create({
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        await FirebaseApp.shared.firestore.collection('invitations').document(invitationId).set({
+        await Firestore.shared.invitation(invitationId).set({
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
@@ -51,11 +52,11 @@ describe('InvitationInviteFunction', () => {
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
         });
-        expect(invitationId).to.be.equal(Invitation.createId({
+        expect(invitationId).to.be.equal(InvitationId.create({
             teamId: testTeam.id,
             personId: testTeam.persons[1].id
-        }));
-        const invitationSnapshot = await FirebaseApp.shared.firestore.collection('invitations').document(invitationId).snapshot();
+        }).value);
+        const invitationSnapshot = await Firestore.shared.invitation(new Tagged(invitationId, 'invitation')).snapshot();
         expect(invitationSnapshot.exists).to.be.equal(true);
         expect(invitationSnapshot.data).to.be.deep.equal({
             teamId: testTeam.id.guidString,

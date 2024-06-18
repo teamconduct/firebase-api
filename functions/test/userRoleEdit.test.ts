@@ -1,11 +1,13 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
 import { testTeam } from './testTeams/testTeam_1';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
+import { User, UserId } from '../src/types';
+import { Firestore } from '../src/Firestore';
 
 describe('UserRoleEditFunction', () => {
 
-    let userId: string;
+    let userId: UserId;
 
     beforeEach(async () => {
         userId = await FirebaseApp.shared.addTestTeam('userRole-manager');
@@ -26,7 +28,7 @@ describe('UserRoleEditFunction', () => {
 
     it('user does not exist', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
-            userId: 'non-existent',
+            userId: new Tagged('non-existent', 'user'),
             teamId: testTeam.id,
             roles: ['userRole-manager']
         });
@@ -34,16 +36,14 @@ describe('UserRoleEditFunction', () => {
     });
 
     it('user is not in team', async () => {
-        await FirebaseApp.shared.firestore.collection('users').document('asdf').set({
-            teams: {
-                [Guid.generate().guidString]: {
-                    personId: Guid.generate(),
-                    roles: ['fine-add']
-                }
-            }
+        const user = User.empty();
+        user.teams.set(Tagged.generate('team'), {
+            personId: Tagged.generate('person'),
+            roles: ['fine-add']
         });
+        await Firestore.shared.user(new Tagged('asdf', 'user')).set(user);
         const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
-            userId: 'asdf',
+            userId: new Tagged('asdf', 'user'),
             teamId: testTeam.id,
             roles: ['userRole-manager']
         });
@@ -56,7 +56,7 @@ describe('UserRoleEditFunction', () => {
             teamId: testTeam.id,
             roles: ['userRole-manager', 'fine-delete', 'person-add']
         });
-        const userSnapshot = await FirebaseApp.shared.firestore.collection('users').document(userId).snapshot();
+        const userSnapshot = await Firestore.shared.user(userId).snapshot();
         expect(userSnapshot.exists).to.be.equal(true);
         expect(userSnapshot.data.teams[testTeam.id.guidString].roles).to.be.deep.equal(['userRole-manager', 'fine-delete', 'person-add']);
     });

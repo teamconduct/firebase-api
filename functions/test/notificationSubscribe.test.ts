@@ -1,7 +1,8 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
+import { Firestore } from '../src/Firestore';
 
 describe('NotificationSubscribeFunction', () => {
 
@@ -16,7 +17,7 @@ describe('NotificationSubscribeFunction', () => {
     it('person not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('notification').function('subscribe').callFunction({
             teamId: testTeam.id,
-            personId: Guid.generate(),
+            personId: Tagged.generate('person'),
             subscriptions: ['new-fine', 'fine-reminder']
         });
         await expect(execute).to.awaitThrow('not-found');
@@ -37,7 +38,7 @@ describe('NotificationSubscribeFunction', () => {
             personId: testTeam.persons[0].id,
             subscriptions: ['new-fine', 'fine-reminder']
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[0].id.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[0].id).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.signInProperties !== null).to.be.equal(true);
         expect(personSnapshot.data.signInProperties?.notificationProperties.subscriptions).to.be.deep.equal(['new-fine', 'fine-reminder']);

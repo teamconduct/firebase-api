@@ -1,20 +1,21 @@
 import { NotificationSubscription } from './../types/PersonNotificationProperties';
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Guid, ILogger, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder, Flatten, ArrayTypeBuilder } from 'firebase-function';
-import { Person } from '../types';
+import { FirebaseFunction, ILogger, ObjectTypeBuilder, ValueTypeBuilder, Flatten, ArrayTypeBuilder } from 'firebase-function';
+import { Person, PersonId } from '../types';
 import { Firestore } from '../Firestore';
+import { TeamId } from '../types/Team';
 
 export type Parameters = {
-    teamId: Guid,
-    personId: Guid,
+    teamId: TeamId,
+    personId: PersonId,
     subscriptions: NotificationSubscription[]
 }
 
 export class NotificationSubscribeFunction implements FirebaseFunction<Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flatten<Parameters>, Parameters>({
-        teamId: new TypeBuilder(Guid.from),
-        personId: new TypeBuilder(Guid.from),
+        teamId: TeamId.builder,
+        personId: PersonId.builder,
         subscriptions: new ArrayTypeBuilder(new ValueTypeBuilder())
     });
 

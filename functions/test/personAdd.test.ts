@@ -1,7 +1,9 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
+import { PersonId } from '../src/types';
+import { Firestore } from '../src/Firestore';
 
 describe('PersonAddFunction', () => {
 
@@ -28,7 +30,7 @@ describe('PersonAddFunction', () => {
     });
 
     it('should add person', async () => {
-        const personId = Guid.generate();
+        const personId: PersonId = Tagged.generate('person');
         await FirebaseApp.shared.functions.function('person').function('add').callFunction({
             teamId: testTeam.id,
             person: {
@@ -39,7 +41,7 @@ describe('PersonAddFunction', () => {
                 }
             }
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(personId.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, personId).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data).to.be.deep.equal({
             id: personId.guidString,

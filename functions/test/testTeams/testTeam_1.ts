@@ -1,15 +1,19 @@
-import { Guid, UtcDate } from 'firebase-function';
+import { Tagged, UtcDate } from 'firebase-function';
 import { TestTeam } from '../createTestTeam';
-import { Amount } from '../../src/types';
+import { Amount, FineId } from '../../src/types';
 
-const fineIds = [Guid.generate(), Guid.generate(), Guid.generate()];
+const fineIds: FineId[] = [
+    Tagged.generate('fine'),
+    Tagged.generate('fine'),
+    Tagged.generate('fine')
+];
 
 export const testTeam: TestTeam = {
-    id: Guid.generate(),
+    id: Tagged.generate('team'),
     name: 'Test Team 1',
     persons: [
         {
-            id: Guid.generate(),
+            id: Tagged.generate('person'),
             properties: {
                 firstName: 'John',
                 lastName: 'Doe'
@@ -17,7 +21,7 @@ export const testTeam: TestTeam = {
             fineIds: [fineIds[0], fineIds[1]]
         },
         {
-            id: Guid.generate(),
+            id: Tagged.generate('person'),
             properties: {
                 firstName: 'Max',
                 lastName: 'Mustermann'
@@ -27,13 +31,13 @@ export const testTeam: TestTeam = {
     ],
     fineTemplates: [
         {
-            id: Guid.generate(),
+            id: Tagged.generate('fineTemplate'),
             reason: 'Fine Template 1',
             amount: new Amount(10, 50),
             multiple: null
         },
         {
-            id: Guid.generate(),
+            id: Tagged.generate('fineTemplate'),
             reason: 'Fine Template 2',
             amount: new Amount(5, 0),
             multiple: {

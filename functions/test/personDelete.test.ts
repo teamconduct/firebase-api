@@ -1,7 +1,8 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid } from 'firebase-function';
+import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
+import { Firestore } from '../src/Firestore';
 
 describe('PersonDeleteFunction', () => {
 
@@ -16,7 +17,7 @@ describe('PersonDeleteFunction', () => {
     it('person not found', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('person').function('delete').callFunction({
             teamId: testTeam.id,
-            id: Guid.generate()
+            id: Tagged.generate('person')
         });
         await expect(execute).to.awaitThrow('not-found');
     });
@@ -34,7 +35,7 @@ describe('PersonDeleteFunction', () => {
             teamId: testTeam.id,
             id: testTeam.persons[1].id
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[1].id.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[1].id).snapshot();
         expect(personSnapshot.exists).to.be.equal(false);
     });
 });

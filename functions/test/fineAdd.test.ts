@@ -1,8 +1,9 @@
 import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
-import { Guid, UtcDate } from 'firebase-function';
+import { Tagged, UtcDate } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
-import { Amount } from '../src/types';
+import { Amount, FineId } from '../src/types';
+import { Firestore } from '../src/Firestore';
 
 describe('FineAddFunction', () => {
 
@@ -17,9 +18,9 @@ describe('FineAddFunction', () => {
     it('person does not exist', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('fine').function('add').callFunction({
             teamId: testTeam.id,
-            personId: Guid.generate(),
+            personId: Tagged.generate('person'),
             fine: {
-                id: Guid.generate(),
+                id: Tagged.generate('fine'),
                 reason: 'Test Reason',
                 amount: new Amount(10, 0),
                 date: UtcDate.now,
@@ -45,7 +46,7 @@ describe('FineAddFunction', () => {
     });
 
     it('should add fine', async () => {
-        const fineId = Guid.generate();
+        const fineId: FineId = Tagged.generate('fine');
         const date = UtcDate.now;
         await FirebaseApp.shared.functions.function('fine').function('add').callFunction({
             teamId: testTeam.id,
@@ -58,7 +59,7 @@ describe('FineAddFunction', () => {
                 payedState: 'payed'
             }
         });
-        const fineSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('fines').document(fineId.guidString).snapshot();
+        const fineSnapshot = await Firestore.shared.fine(testTeam.id, fineId).snapshot();
         expect(fineSnapshot.exists).to.be.equal(true);
         expect(fineSnapshot.data).to.be.deep.equal({
             id: fineId.guidString,
@@ -67,7 +68,7 @@ describe('FineAddFunction', () => {
             date: date.encoded,
             payedState: 'payed'
         });
-        const personSnapshot = await FirebaseApp.shared.firestore.collection('teams').document(testTeam.id.guidString).collection('persons').document(testTeam.persons[0].id.guidString).snapshot();
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[0].id).snapshot();
         expect(personSnapshot.exists).to.be.equal(true);
         expect(personSnapshot.data.fineIds.includes(fineId.guidString)).to.be.equal(true);
     });
