@@ -13,7 +13,7 @@ export type Person = {
     id: PersonId,
     properties: PersonPrivateProperties,
     fineIds: FineId[],
-    signInProperties: PersonSignInProperties | null
+    signInProperties: PersonSignInProperties | null,
 }
 
 export namespace Person {

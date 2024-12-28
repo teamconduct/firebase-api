@@ -7,7 +7,7 @@ import { Firestore } from '../src/Firestore';
 describe('NotificationSubscribeFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('fineTemplate-delete');
+        await FirebaseApp.shared.addTestTeam('fineTemplate-manager');
     });
 
     afterEach(async () => {

@@ -1,4 +1,5 @@
 import { Flattable, Flatten, TypeBuilder } from 'firebase-function';
+import * as i18n from 'i18n';
 
 export class Amount implements Flattable<number> {
 
@@ -16,6 +17,14 @@ export class Amount implements Flattable<number> {
 
     public get completeValue(): number {
         return this.value + this.subunitValue / 100;
+    }
+
+    public formatted(currency: string = 'EUR'): string {
+        const numberFormat = Intl.NumberFormat(i18n.getLocale(), {
+            style: 'currency',
+            currency: currency
+        });
+        return numberFormat.format(this.completeValue);
     }
 
     public get flatten(): number {

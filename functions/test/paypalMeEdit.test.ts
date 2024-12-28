@@ -6,7 +6,7 @@ import { Firestore } from '../src/Firestore';
 describe('PaypalMeEditFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('team-properties-manager');
+        await FirebaseApp.shared.addTestTeam('team-manager');
     });
 
     afterEach(async () => {

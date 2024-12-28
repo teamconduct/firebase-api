@@ -1,18 +1,18 @@
 import * as functions from 'firebase-functions';
 import * as i18n from 'i18n';
-import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
+import { AuthUser, FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
 import { Fine, PersonId } from '../types';
 import { checkAuthentication } from '../checkAuthentication';
 import { pushNotification } from '../pushNotification';
 import { Firestore } from '../Firestore';
 import { TeamId } from '../types/Team';
+import { FineValue } from '../types/FineValue';
 
 export type Parameters = {
     teamId: TeamId,
     personId: PersonId,
     fine: Fine
 };
-
 
 export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
 
@@ -23,7 +23,7 @@ export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
     });
 
     public constructor(
-        private readonly userId: string | null,
+        private readonly authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('FineUpdateFunction.constructor', null, 'notice');
@@ -32,7 +32,7 @@ export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('FineUpdateFunction.execute');
 
-        await checkAuthentication(this.userId, this.logger.nextIndent, parameters.teamId, 'fine-update');
+        await checkAuthentication(this.authUser, this.logger.nextIndent, parameters.teamId, 'fine-manager');
 
         const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.fine.id).snapshot();
         if (!fineSnapshot.exists)
@@ -43,9 +43,9 @@ export class FineUpdateFunction implements FirebaseFunction<Parameters, void> {
         if (parameters.fine.payedState !== fineSnapshot.data.payedState) {
             let body: string;
             if (parameters.fine.payedState === 'payed')
-                body = i18n.__('notification.fine-state-change.body-payed', parameters.fine.amount.completeValue as unknown as string, parameters.fine.reason);
+                body = i18n.__('notification.fine-state-change.body-payed', FineValue.format(parameters.fine.value), parameters.fine.reason);
             else
-                body = i18n.__('notification.fine-state-change.body-unpayed', parameters.fine.reason, parameters.fine.amount.completeValue as unknown as string);
+                body = i18n.__('notification.fine-state-change.body-unpayed', parameters.fine.reason, FineValue.format(parameters.fine.value));
             await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
                 title: i18n.__('notification.fine-state-change.title'),
                 body: body

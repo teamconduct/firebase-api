@@ -4,11 +4,12 @@ import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
 import { Amount, FineTemplateId } from '../src/types';
 import { Firestore } from '../src/Firestore';
+import { FineValue } from '../src/types/FineValue';
 
 describe('FineTemplateAddFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('fineTemplate-add');
+        await FirebaseApp.shared.addTestTeam('fineTemplate-manager');
     });
 
     afterEach(async () => {
@@ -21,7 +22,7 @@ describe('FineTemplateAddFunction', () => {
             fineTemplate: {
                 id: testTeam.fineTemplates[1].id,
                 reason: 'Test Reason',
-                amount: new Amount(100, 0),
+                value: FineValue.amount(new Amount(100, 0)),
                 multiple: null
             }
         });
@@ -35,7 +36,7 @@ describe('FineTemplateAddFunction', () => {
             fineTemplate: {
                 id: fineTemplateId,
                 reason: 'Test Reason',
-                amount: new Amount(100, 0),
+                value: FineValue.item('crateOfBeer', 1),
                 multiple: null
             }
         });
@@ -44,7 +45,11 @@ describe('FineTemplateAddFunction', () => {
         expect(fineTemplateSnapshot.data).to.be.deep.equal({
             id: fineTemplateId.guidString,
             reason: 'Test Reason',
-            amount: 100,
+            value: {
+                type: 'item',
+                item: 'crateOfBeer',
+                count: 1
+            },
             multiple: null
         });
     });

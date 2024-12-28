@@ -1,6 +1,6 @@
 import { Flatten, Guid, ObjectTypeBuilder, TypeBuilder, UtcDate, ValueTypeBuilder, Tagged, TaggedTypeBuilder } from 'firebase-function';
-import { Amount } from './Amount';
 import { PayedState } from './PayedState';
+import { FineValue } from './FineValue';
 
 export type FineId = Tagged<Guid, 'fine'>;
 
@@ -13,7 +13,7 @@ export type Fine = {
     payedState: PayedState,
     date: UtcDate,
     reason: string,
-    amount: Amount
+    value: FineValue
 }
 
 export namespace Fine {
@@ -22,6 +22,6 @@ export namespace Fine {
         payedState: new ValueTypeBuilder(),
         date: new TypeBuilder(UtcDate.decode),
         reason: new ValueTypeBuilder(),
-        amount: Amount.builder
+        value: FineValue.builder
     });
 }

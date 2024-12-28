@@ -7,7 +7,7 @@ import { Firestore } from '../src/Firestore';
 describe('PersonDeleteFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('person-delete');
+        await FirebaseApp.shared.addTestTeam('person-manager');
     });
 
     afterEach(async () => {

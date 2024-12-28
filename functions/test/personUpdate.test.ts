@@ -7,7 +7,7 @@ import { Firestore } from '../src/Firestore';
 describe('PersonUpdateFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('person-update');
+        await FirebaseApp.shared.addTestTeam('person-manager');
     });
 
     afterEach(async () => {

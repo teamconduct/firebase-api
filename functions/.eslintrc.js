@@ -37,6 +37,8 @@ module.exports = {
         'padded-blocks': 'off',
         'curly': ['error', 'multi-or-nest'],
         'arrow-parens': ['error', 'as-needed'],
-        '@typescript-eslint/no-floating-promises': 'error'
+        '@typescript-eslint/no-floating-promises': 'error',
+        'new-cap': 'off',
+        '@typescript-eslint/no-inferrable-types': 'off'
     }
 };

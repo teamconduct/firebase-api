@@ -4,11 +4,12 @@ import { Tagged } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
 import { Amount } from '../src/types';
 import { Firestore } from '../src/Firestore';
+import { FineValue } from '../src/types/FineValue';
 
 describe('FineTemplateUpdateFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('fineTemplate-update');
+        await FirebaseApp.shared.addTestTeam('fineTemplate-manager');
     });
 
     afterEach(async () => {
@@ -21,7 +22,7 @@ describe('FineTemplateUpdateFunction', () => {
             fineTemplate: {
                 id: Tagged.generate('fineTemplate'),
                 reason: 'Test Reason',
-                amount: new Amount(100, 0),
+                value: FineValue.amount(new Amount(100, 0)),
                 multiple: null
             }
         });
@@ -34,7 +35,7 @@ describe('FineTemplateUpdateFunction', () => {
             fineTemplate: {
                 id: testTeam.fineTemplates[1].id,
                 reason: 'Test Reason',
-                amount: new Amount(100, 0),
+                value: FineValue.amount(new Amount(100, 0)),
                 multiple: null
             }
         });
@@ -43,7 +44,10 @@ describe('FineTemplateUpdateFunction', () => {
         expect(fineTemplateSnapshot.data).to.be.deep.equal({
             id: testTeam.fineTemplates[1].id.guidString,
             reason: 'Test Reason',
-            amount: 100,
+            value: {
+                type: 'amount',
+                amount: 100
+            },
             multiple: null
         });
     });

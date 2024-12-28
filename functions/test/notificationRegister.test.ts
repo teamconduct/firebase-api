@@ -8,7 +8,7 @@ import { TokenId } from '../src/types/PersonNotificationProperties';
 describe('NotificationRegisterFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('fineTemplate-delete');
+        await FirebaseApp.shared.addTestTeam('fineTemplate-manager');
     });
 
     afterEach(async () => {

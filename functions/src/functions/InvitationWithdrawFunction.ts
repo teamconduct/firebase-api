@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, ILogger } from 'firebase-function';
+import { AuthUser, FirebaseFunction, ILogger } from 'firebase-function';
 import { Invitation, InvitationId } from '../types/Invitation';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
@@ -9,7 +9,7 @@ export class InvitationWithdrawFunction implements FirebaseFunction<Invitation, 
     public parametersBuilder = Invitation.builder;
 
     public constructor(
-        private readonly userId: string | null,
+        private readonly authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('InvitationWithdrawFunction.constructor', null, 'notice');
@@ -19,7 +19,7 @@ export class InvitationWithdrawFunction implements FirebaseFunction<Invitation, 
     public async execute(invitation: Invitation): Promise<void> {
         this.logger.log('InvitationWithdrawFunction.execute');
 
-        await checkAuthentication(this.userId, this.logger.nextIndent, invitation.teamId, 'team-invitation-manager');
+        await checkAuthentication(this.authUser, this.logger.nextIndent, invitation.teamId, 'team-manager');
 
         const invitationId = InvitationId.create(invitation);
         const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();

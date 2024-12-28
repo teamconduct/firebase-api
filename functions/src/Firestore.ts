@@ -20,6 +20,12 @@ export class Firestore {
             .document(id.guidString) as FirestoreDocument<Team>;
     }
 
+    public auth(uid: string): FirestoreDocument<{ userId: string }> {
+        return this.base
+            .collection('auth')
+            .document(uid);
+    }
+
     public user(id: UserId): FirestoreDocument<User> {
         return this.base
             .collection('users')

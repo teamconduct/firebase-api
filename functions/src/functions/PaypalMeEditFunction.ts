@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder, ValueTypeBuilder } from 'firebase-function';
+import { AuthUser, FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder, ValueTypeBuilder } from 'firebase-function';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
 import { Team, TeamId } from '../types/Team';
@@ -17,7 +17,7 @@ export class PaypalMeEditFunction implements FirebaseFunction<Parameters, void> 
     });
 
     public constructor(
-        private readonly userId: string | null,
+        private readonly authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('PaypalMeEditFunction.constructor', null, 'notice');
@@ -26,7 +26,7 @@ export class PaypalMeEditFunction implements FirebaseFunction<Parameters, void> 
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('PaypalMeEditFunction.execute');
 
-        await checkAuthentication(this.userId, this.logger.nextIndent, parameters.teamId, 'team-properties-manager');
+        await checkAuthentication(this.authUser, this.logger.nextIndent, parameters.teamId, 'team-manager');
 
         const teamSnapshot = await Firestore.shared.team(parameters.teamId).snapshot();
         if (!teamSnapshot.exists)

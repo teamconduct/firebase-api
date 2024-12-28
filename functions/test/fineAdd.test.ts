@@ -4,11 +4,12 @@ import { Tagged, UtcDate } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
 import { Amount, FineId } from '../src/types';
 import { Firestore } from '../src/Firestore';
+import { FineValue } from '../src/types/FineValue';
 
 describe('FineAddFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('fine-add');
+        await FirebaseApp.shared.addTestTeam('fine-manager');
     });
 
     afterEach(async () => {
@@ -22,7 +23,7 @@ describe('FineAddFunction', () => {
             fine: {
                 id: Tagged.generate('fine'),
                 reason: 'Test Reason',
-                amount: new Amount(10, 0),
+                value: FineValue.amount(new Amount(10, 0)),
                 date: UtcDate.now,
                 payedState: 'payed'
             }
@@ -37,7 +38,7 @@ describe('FineAddFunction', () => {
             fine: {
                 id: testTeam.fines[1].id,
                 reason: 'Test Reason',
-                amount: new Amount(10, 0),
+                value: FineValue.amount(new Amount(10, 0)),
                 date: UtcDate.now,
                 payedState: 'payed'
             }
@@ -54,7 +55,7 @@ describe('FineAddFunction', () => {
             fine: {
                 id: fineId,
                 reason: 'Test Reason',
-                amount: new Amount(10, 0),
+                value: FineValue.item('crateOfBeer', 1),
                 date: date,
                 payedState: 'payed'
             }
@@ -64,7 +65,11 @@ describe('FineAddFunction', () => {
         expect(fineSnapshot.data).to.be.deep.equal({
             id: fineId.guidString,
             reason: 'Test Reason',
-            amount: 10,
+            value: {
+                type: 'item',
+                item: 'crateOfBeer',
+                count: 1
+            },
             date: date.encoded,
             payedState: 'payed'
         });

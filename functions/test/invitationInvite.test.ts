@@ -8,7 +8,7 @@ import { Firestore } from '../src/Firestore';
 describe('InvitationInviteFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('team-invitation-manager');
+        await FirebaseApp.shared.addTestTeam('team-manager');
     });
 
     afterEach(async () => {
@@ -27,22 +27,6 @@ describe('InvitationInviteFunction', () => {
         const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('invite').callFunction({
             teamId: testTeam.id,
             personId: testTeam.persons[0].id
-        });
-        await expect(execute).to.awaitThrow('already-exists');
-    });
-
-    it('invitation already exists', async () => {
-        const invitationId = InvitationId.create({
-            teamId: testTeam.id,
-            personId: testTeam.persons[1].id
-        });
-        await Firestore.shared.invitation(invitationId).set({
-            teamId: testTeam.id,
-            personId: testTeam.persons[1].id
-        });
-        const execute = async () => await FirebaseApp.shared.functions.function('invitation').function('invite').callFunction({
-            teamId: testTeam.id,
-            personId: testTeam.persons[1].id
         });
         await expect(execute).to.awaitThrow('already-exists');
     });

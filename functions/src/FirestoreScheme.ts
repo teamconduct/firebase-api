@@ -4,6 +4,11 @@ import { Invitation } from './types/Invitation';
 import { Team } from './types/Team';
 
 export type FirestoreScheme = FirestoreDocument<never, {
+    auth: FirestoreCollection<{
+        [RawUid in string]: FirestoreDocument<{
+            userId: string
+        }>
+    }>
     users: FirestoreCollection<{
         [UserId in string]: FirestoreDocument<User>
     }>

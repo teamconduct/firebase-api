@@ -7,7 +7,7 @@ import { Firestore } from '../src/Firestore';
 describe('InvitationWithdrawFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('team-invitation-manager');
+        await FirebaseApp.shared.addTestTeam('team-manager');
     });
 
     afterEach(async () => {

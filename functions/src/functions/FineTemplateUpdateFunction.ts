@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
+import { AuthUser, FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
 import { FineTemplate } from '../types';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
@@ -18,7 +18,7 @@ export class FineTemplateUpdateFunction implements FirebaseFunction<Parameters, 
     });
 
     public constructor(
-        private readonly userId: string | null,
+        private readonly authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('FineTemplateUpdateFunction.constructor', null, 'notice');
@@ -27,7 +27,7 @@ export class FineTemplateUpdateFunction implements FirebaseFunction<Parameters, 
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('FineTemplateUpdateFunction.execute');
 
-        await checkAuthentication(this.userId, this.logger.nextIndent, parameters.teamId, 'fineTemplate-update');
+        await checkAuthentication(this.authUser, this.logger.nextIndent, parameters.teamId, 'fineTemplate-manager');
 
         const fineTemplateSnapshot = await Firestore.shared.fineTemplate(parameters.teamId, parameters.fineTemplate.id).snapshot();
         if (!fineTemplateSnapshot.exists)

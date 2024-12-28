@@ -12,10 +12,10 @@ export type TestTeam = {
 
 // eslint-disable-next-line camelcase
 function* internal_createTestTeam(team: TestTeam, userId: UserId, roles: UserRole[]): Generator<Promise<unknown>> {
-    const user = User.empty();
+    const user = User.empty(userId);
     user.teams.set(team.id, {
-        personId: team.persons[0].id,
-        roles: roles
+        name: team.name,
+        personId: team.persons[0].id
     });
     yield Firestore.shared.user(userId).set(user);
     yield Firestore.shared.team(team.id).set({
@@ -23,9 +23,11 @@ function* internal_createTestTeam(team: TestTeam, userId: UserId, roles: UserRol
         paypalMeLink: null
     });
     if (team.persons.length !== 0) {
+        const signInProperties = PersonSignInProperties.empty(userId);
+        signInProperties.roles = roles;
         yield Firestore.shared.person(team.id, team.persons[0].id).set({
             ...team.persons[0],
-            signInProperties: PersonSignInProperties.empty(userId)
+            signInProperties: signInProperties
         });
     }
     for (const person of team.persons.slice(1)) {

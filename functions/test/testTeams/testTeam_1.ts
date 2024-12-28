@@ -1,3 +1,4 @@
+import { FineValue } from './../../src/types/FineValue';
 import { Tagged, UtcDate } from 'firebase-function';
 import { TestTeam } from '../createTestTeam';
 import { Amount, FineId } from '../../src/types';
@@ -33,13 +34,13 @@ export const testTeam: TestTeam = {
         {
             id: Tagged.generate('fineTemplate'),
             reason: 'Fine Template 1',
-            amount: new Amount(10, 50),
+            value: FineValue.amount(new Amount(10, 50)),
             multiple: null
         },
         {
             id: Tagged.generate('fineTemplate'),
             reason: 'Fine Template 2',
-            amount: new Amount(5, 0),
+            value: FineValue.item('crateOfBeer', 1),
             multiple: {
                 item: 'day',
                 maxCount: 3
@@ -49,21 +50,21 @@ export const testTeam: TestTeam = {
     fines: [
         {
             id: fineIds[0],
-            amount: new Amount(10, 50),
+            value: FineValue.amount(new Amount(10, 50)),
             date: UtcDate.now,
             reason: 'Fine 1',
             payedState: 'notPayed'
         },
         {
             id: fineIds[1],
-            amount: new Amount(1, 0),
+            value: FineValue.item('crateOfBeer', 2),
             date: UtcDate.now,
             reason: 'Fine 2',
             payedState: 'payed'
         },
         {
             id: fineIds[2],
-            amount: new Amount(5, 0),
+            value: FineValue.amount(new Amount(5, 0)),
             date: UtcDate.now,
             reason: 'Fine 3',
             payedState: 'notPayed'

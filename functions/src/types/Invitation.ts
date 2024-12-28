@@ -12,8 +12,8 @@ export namespace InvitationId {
         const invitationCoder = new Utf8BytesCoder();
         const hasher = new Sha512();
         const idCoder = new HexBytesCoder();
-        const teamIdBytes = invitationCoder.encode(invitation.personId.guidString);
-        const personIdBytes = invitationCoder.encode(invitation.teamId.guidString);
+        const teamIdBytes = invitationCoder.encode(invitation.teamId.guidString);
+        const personIdBytes = invitationCoder.encode(invitation.personId.guidString);
         const hashedInvitationBytes = hasher.hash(new Uint8Array([...teamIdBytes, ...personIdBytes]));
         const rawId = idCoder.decode(hashedInvitationBytes).slice(0, 12);
         return new Tagged(rawId, 'invitation');

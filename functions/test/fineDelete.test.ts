@@ -7,7 +7,7 @@ import { Firestore } from '../src/Firestore';
 describe('FineDeleteFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('fine-delete');
+        await FirebaseApp.shared.addTestTeam('fine-manager');
     });
 
     afterEach(async () => {

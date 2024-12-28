@@ -4,11 +4,12 @@ import { Tagged, UtcDate } from 'firebase-function';
 import { testTeam } from './testTeams/testTeam_1';
 import { Amount } from '../src/types';
 import { Firestore } from '../src/Firestore';
+import { FineValue } from '../src/types/FineValue';
 
 describe('FineUpdateFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('fine-update');
+        await FirebaseApp.shared.addTestTeam('fine-manager');
     });
 
     afterEach(async () => {
@@ -22,7 +23,7 @@ describe('FineUpdateFunction', () => {
             fine: {
                 id: Tagged.generate('fine'),
                 reason: 'Test Reason',
-                amount: new Amount(10, 0),
+                value: FineValue.amount(new Amount(10, 0)),
                 date: UtcDate.now,
                 payedState: 'payed'
             }
@@ -38,7 +39,7 @@ describe('FineUpdateFunction', () => {
             fine: {
                 id: testTeam.fines[1].id,
                 reason: 'Test Reason',
-                amount: new Amount(10, 0),
+                value: FineValue.amount(new Amount(10, 0)),
                 date: date,
                 payedState: 'payed'
             }
@@ -48,7 +49,10 @@ describe('FineUpdateFunction', () => {
         expect(fineSnapshot.data).to.be.deep.equal({
             id: testTeam.fines[1].id.guidString,
             reason: 'Test Reason',
-            amount: 10,
+            value: {
+                type: 'amount',
+                amount: 10
+            },
             date: date.encoded,
             payedState: 'payed'
         });

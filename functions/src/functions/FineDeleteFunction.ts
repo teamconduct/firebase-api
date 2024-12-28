@@ -1,11 +1,12 @@
 import * as functions from 'firebase-functions';
 import * as i18n from 'i18n';
-import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
+import { AuthUser, FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
 import { checkAuthentication } from '../checkAuthentication';
 import { pushNotification } from '../pushNotification';
-import { Amount, FineId, Person, PersonId } from '../types';
+import { FineId, Person, PersonId } from '../types';
 import { Firestore } from '../Firestore';
 import { TeamId } from '../types/Team';
+import { FineValue } from '../types/FineValue';
 
 export type Parameters = {
     teamId: TeamId,
@@ -22,7 +23,7 @@ export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
     });
 
     public constructor(
-        private readonly userId: string | null,
+        private readonly authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('FineDeleteFunction.constructor', null, 'notice');
@@ -31,7 +32,7 @@ export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('FineDeleteFunction.execute');
 
-        await checkAuthentication(this.userId, this.logger.nextIndent, parameters.teamId, 'fine-delete');
+        await checkAuthentication(this.authUser, this.logger.nextIndent, parameters.teamId, 'fine-manager');
 
         const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.id).snapshot();
         if (!fineSnapshot.exists)
@@ -49,7 +50,7 @@ export class FineDeleteFunction implements FirebaseFunction<Parameters, void> {
 
         await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
             title: i18n.__('notification.fine-state-change.title'),
-            body: i18n.__('notification.fine-state-change.body-deleted', fineSnapshot.data.reason, Amount.builder.build(fineSnapshot.data.amount).completeValue as unknown as string)
+            body: i18n.__('notification.fine-state-change.body-deleted', fineSnapshot.data.reason, FineValue.format(FineValue.builder.build(fineSnapshot.data.value, this.logger.nextIndent)))
         }, this.logger.nextIndent);
     }
 }

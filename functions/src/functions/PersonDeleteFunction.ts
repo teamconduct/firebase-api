@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
+import { AuthUser, FirebaseFunction, Flatten, ILogger, ObjectTypeBuilder } from 'firebase-function';
 import { checkAuthentication } from '../checkAuthentication';
 import { Firestore } from '../Firestore';
 import { TeamId } from '../types/Team';
@@ -18,7 +18,7 @@ export class PersonDeleteFunction implements FirebaseFunction<Parameters, void> 
     });
 
     public constructor(
-        private readonly userId: string | null,
+        private readonly authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('PersonDeleteFunction.constructor', null, 'notice');
@@ -27,7 +27,7 @@ export class PersonDeleteFunction implements FirebaseFunction<Parameters, void> 
     public async execute(parameters: Parameters): Promise<void> {
         this.logger.log('PersonDeleteFunction.execute');
 
-        await checkAuthentication(this.userId, this.logger.nextIndent, parameters.teamId, 'person-delete');
+        await checkAuthentication(this.authUser, this.logger.nextIndent, parameters.teamId, 'person-manager');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.id).snapshot();
         if (!personSnapshot.exists)

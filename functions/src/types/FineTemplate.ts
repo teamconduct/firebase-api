@@ -1,6 +1,6 @@
 import { Flatten, Guid, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder, OptionalTypeBuilder, Tagged, TaggedTypeBuilder } from 'firebase-function';
 import { FineTemplateMultiple } from './FineTemplateMultiple';
-import { Amount } from './Amount';
+import { FineValue } from './FineValue';
 
 export type FineTemplateId = Tagged<Guid, 'fineTemplate'>;
 
@@ -11,7 +11,7 @@ export namespace FineTemplateId {
 export type FineTemplate = {
     id: FineTemplateId,
     reason: string,
-    amount: Amount,
+    value: FineValue,
     multiple: FineTemplateMultiple | null
 }
 
@@ -19,7 +19,7 @@ export namespace FineTemplate {
     export const builder = new ObjectTypeBuilder<Flatten<FineTemplate>, FineTemplate>({
         id: FineTemplateId.builder,
         reason: new ValueTypeBuilder(),
-        amount: Amount.builder,
+        value: FineValue.builder,
         multiple: new OptionalTypeBuilder(FineTemplateMultiple.builder)
     });
 }

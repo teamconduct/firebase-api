@@ -8,7 +8,7 @@ import { Firestore } from '../src/Firestore';
 describe('PersonAddFunction', () => {
 
     beforeEach(async () => {
-        await FirebaseApp.shared.addTestTeam('person-add');
+        await FirebaseApp.shared.addTestTeam('person-manager');
     });
 
     afterEach(async () => {

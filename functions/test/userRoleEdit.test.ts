@@ -2,25 +2,23 @@ import { expect } from 'firebase-function/lib/src/testSrc';
 import { FirebaseApp } from './FirebaseApp';
 import { testTeam } from './testTeams/testTeam_1';
 import { Tagged } from 'firebase-function';
-import { User, UserId } from '../src/types';
 import { Firestore } from '../src/Firestore';
+import { assert } from 'chai';
 
 describe('UserRoleEditFunction', () => {
 
-    let userId: UserId;
-
     beforeEach(async () => {
-        userId = await FirebaseApp.shared.addTestTeam('userRole-manager');
+        await FirebaseApp.shared.addTestTeam('team-manager');
     });
 
     afterEach(async () => {
         await FirebaseApp.shared.clearFirestore();
     });
 
-    it('remove userRole-manager role from user', async () => {
+    it('remove team-manager role from user', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
-            userId: userId,
             teamId: testTeam.id,
+            personId: testTeam.persons[0].id,
             roles: []
         });
         await expect(execute).to.awaitThrow('invalid-argument');
@@ -28,36 +26,23 @@ describe('UserRoleEditFunction', () => {
 
     it('user does not exist', async () => {
         const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
-            userId: new Tagged('non-existent', 'user'),
             teamId: testTeam.id,
-            roles: ['userRole-manager']
-        });
-        await expect(execute).to.awaitThrow('not-found');
-    });
-
-    it('user is not in team', async () => {
-        const user = User.empty();
-        user.teams.set(Tagged.generate('team'), {
             personId: Tagged.generate('person'),
-            roles: ['fine-add']
-        });
-        await Firestore.shared.user(new Tagged('asdf', 'user')).set(user);
-        const execute = async () => await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
-            userId: new Tagged('asdf', 'user'),
-            teamId: testTeam.id,
-            roles: ['userRole-manager']
+            roles: ['team-manager']
         });
         await expect(execute).to.awaitThrow('not-found');
     });
 
     it('edit user roles', async () => {
         await FirebaseApp.shared.functions.function('user').function('roleEdit').callFunction({
-            userId: userId,
             teamId: testTeam.id,
-            roles: ['userRole-manager', 'fine-delete', 'person-add']
+            personId: testTeam.persons[0].id,
+            roles: ['team-manager', 'fine-manager', 'person-manager']
         });
-        const userSnapshot = await Firestore.shared.user(userId).snapshot();
-        expect(userSnapshot.exists).to.be.equal(true);
-        expect(userSnapshot.data.teams[testTeam.id.guidString].roles).to.be.deep.equal(['userRole-manager', 'fine-delete', 'person-add']);
+        const personSnapshot = await Firestore.shared.person(testTeam.id, testTeam.persons[0].id).snapshot();
+        expect(personSnapshot.exists).to.be.equal(true);
+        expect(personSnapshot.data.signInProperties === null).to.be.equal(false);
+        assert(personSnapshot.data.signInProperties !== null);
+        expect(personSnapshot.data.signInProperties.roles).to.be.deep.equal(['team-manager', 'fine-manager', 'person-manager']);
     });
 });

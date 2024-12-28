@@ -1,6 +1,6 @@
 import { NotificationSubscription } from './../types/PersonNotificationProperties';
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, ILogger, ObjectTypeBuilder, ValueTypeBuilder, Flatten, ArrayTypeBuilder } from 'firebase-function';
+import { FirebaseFunction, ILogger, ObjectTypeBuilder, ValueTypeBuilder, Flatten, ArrayTypeBuilder, AuthUser } from 'firebase-function';
 import { Person, PersonId } from '../types';
 import { Firestore } from '../Firestore';
 import { TeamId } from '../types/Team';
@@ -20,7 +20,7 @@ export class NotificationSubscribeFunction implements FirebaseFunction<Parameter
     });
 
     public constructor(
-        _userId: string | null,
+        _authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('NotificationSubscribeFunction.constructor', null, 'notice');

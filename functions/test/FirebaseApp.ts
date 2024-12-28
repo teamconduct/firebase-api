@@ -48,13 +48,20 @@ export class FirebaseApp extends FirebaseAppBase<typeof firebaseFunctions> {
         return new Tagged(rawId, 'user');
     }
 
-    public async addTestTeam(...roles: UserRole[]): Promise<UserId> {
+    public async signIn(): Promise<{ id: UserId, rawUid: string }> {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const userCredential = await this.auth.signIn(process.env.FUNCTESTS_USER_EMAIL!, process.env.FUNCTESTS_USER_PASSWORD!);
-        const userId = this.hashUserId(userCredential.user.uid);
+        return {
+            id: this.hashUserId(userCredential.user.uid),
+            rawUid: userCredential.user.uid
+        };
+    }
+
+    public async addTestTeam(...roles: UserRole[]): Promise<UserId> {
+        const authUser = await this.signIn();
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        await require('./createTestTeam').createTestTeam(testTeam, userId, roles);
-        return userId;
+        await require('./createTestTeam').createTestTeam(testTeam, authUser.id, roles);
+        return authUser.id;
     }
 
     public async clearFirestore(): Promise<void> {

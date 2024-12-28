@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { FirebaseFunction, ILogger, ObjectTypeBuilder, ValueTypeBuilder, Flatten } from 'firebase-function';
+import { FirebaseFunction, ILogger, ObjectTypeBuilder, ValueTypeBuilder, Flatten, AuthUser } from 'firebase-function';
 import { Person, PersonId } from '../types';
 import { Firestore } from '../Firestore';
 import { TeamId } from '../types/Team';
@@ -20,7 +20,7 @@ export class NotificationRegisterFunction implements FirebaseFunction<Parameters
     });
 
     public constructor(
-        _userId: string | null,
+        _authUser: AuthUser | null,
         private readonly logger: ILogger
     ) {
         this.logger.log('NotificationRegisterFunction.constructor', null, 'notice');

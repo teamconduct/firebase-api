@@ -50,7 +50,7 @@ describe('TeamNewFunction', () => {
     it('should create a new team existing user', async () => {
         const teamId: TeamId = Tagged.generate('team');
         const personId: PersonId = Tagged.generate('person');
-        await FirebaseApp.shared.functions.function('team').function('new').callFunction({
+        const user = await FirebaseApp.shared.functions.function('team').function('new').callFunction({
             id: teamId,
             name: 'Test Team',
             paypalMeLink: null,
@@ -60,13 +60,18 @@ describe('TeamNewFunction', () => {
                 lastName: 'Person'
             }
         });
+        expect(teamId.guidString in user.teams).to.be.equal(true);
+        expect(user.teams[teamId.guidString]).to.be.deep.equal({
+            name: 'Test Team',
+            personId: personId.guidString
+        });
         const userSnpapshot = await Firestore.shared.user(userId).snapshot();
         expect(userSnpapshot.exists).to.be.equal(true);
         expect(teamId.guidString in userSnpapshot.data.teams).to.be.equal(true);
         const userTeam = userSnpapshot.data.teams[teamId.guidString];
         expect(userTeam).to.be.deep.equal({
-            personId: personId.guidString,
-            roles: UserRole.all
+            name: 'Test Team',
+            personId: personId.guidString
         });
         const teamSnapshot = await Firestore.shared.team(teamId).snapshot();
         expect(teamSnapshot.exists).to.be.equal(true);
@@ -91,7 +96,8 @@ describe('TeamNewFunction', () => {
                 notificationProperties: {
                     tokens: {},
                     subscriptions: []
-                }
+                },
+                roles: UserRole.all
             }
         });
     });
@@ -100,7 +106,7 @@ describe('TeamNewFunction', () => {
         const teamId: TeamId = Tagged.generate('team');
         const personId: PersonId = Tagged.generate('person');
         await Firestore.shared.user(userId).remove();
-        await FirebaseApp.shared.functions.function('team').function('new').callFunction({
+        const user = await FirebaseApp.shared.functions.function('team').function('new').callFunction({
             id: teamId,
             name: 'Test Team',
             paypalMeLink: null,
@@ -110,13 +116,18 @@ describe('TeamNewFunction', () => {
                 lastName: 'Person'
             }
         });
+        expect(teamId.guidString in user.teams).to.be.equal(true);
+        expect(user.teams[teamId.guidString]).to.be.deep.equal({
+            name: 'Test Team',
+            personId: personId.guidString
+        });
         const userSnpapshot = await Firestore.shared.user(userId).snapshot();
         expect(userSnpapshot.exists).to.be.equal(true);
         expect(teamId.guidString in userSnpapshot.data.teams).to.be.equal(true);
         const userTeam = userSnpapshot.data.teams[teamId.guidString];
         expect(userTeam).to.be.deep.equal({
-            personId: personId.guidString,
-            roles: UserRole.all
+            name: 'Test Team',
+            personId: personId.guidString
         });
         const teamSnapshot = await Firestore.shared.team(teamId).snapshot();
         expect(teamSnapshot.exists).to.be.equal(true);
@@ -141,7 +152,8 @@ describe('TeamNewFunction', () => {
                 notificationProperties: {
                     tokens: {},
                     subscriptions: []
-                }
+                },
+                roles: UserRole.all
             }
         });
     });
