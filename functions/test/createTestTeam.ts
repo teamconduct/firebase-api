@@ -1,47 +1,43 @@
-import { Fine, FineTemplate, Person, PersonSignInProperties, User, UserId, UserRole } from '../src/types';
-import { TeamId } from '../src/types/Team';
-import { Firestore } from '../src/Firestore';
+import { UtcDate } from '@stevenkellner/typescript-common-functionality';
+import { Fine, FineTemplate, Person, PersonSignInProperties, User, UserRole, Team, NotificationProperties } from '../src/types';
+import { testTeam1 } from './testTeams/testTeam1';
+import { FirebaseApp } from './FirebaseApp';
 
 export type TestTeam = {
-    id: TeamId
+    id: Team.Id
     name: string,
-    persons: Omit<Person, 'signInProperties'>[],
+    persons: Person[],
     fineTemplates: FineTemplate[]
     fines: Fine[]
 }
 
-// eslint-disable-next-line camelcase
-function* internal_createTestTeam(team: TestTeam, userId: UserId, roles: UserRole[]): Generator<Promise<unknown>> {
-    const user = User.empty(userId);
-    user.teams.set(team.id, {
-        name: team.name,
-        personId: team.persons[0].id
-    });
-    yield Firestore.shared.user(userId).set(user);
-    yield Firestore.shared.team(team.id).set({
-        name: team.name,
-        paypalMeLink: null
-    });
-    if (team.persons.length !== 0) {
-        const signInProperties = PersonSignInProperties.empty(userId);
-        signInProperties.roles = roles;
-        yield Firestore.shared.person(team.id, team.persons[0].id).set({
-            ...team.persons[0],
-            signInProperties: signInProperties
-        });
-    }
-    for (const person of team.persons.slice(1)) {
-        yield Firestore.shared.person(team.id, person.id).set({
-            ...person,
-            signInProperties: null
-        });
+function* internal_createTestTeam(team: TestTeam, userId: User.Id, roles: UserRole[]): Generator<Promise<unknown>> {
+    const user = new User(userId);
+    user.teams.set(team.id, new User.TeamProperties(team.name, team.persons[0].id));
+    yield FirebaseApp.shared.firestore.user(userId).set(user);
+    yield FirebaseApp.shared.firestore.team(team.id).set(new Team(team.id, team.name, null));
+    for (const [index, person] of team.persons.entries()) {
+        if (index === 0)
+            person.signInProperties = new PersonSignInProperties(userId, UtcDate.now, new NotificationProperties(), roles);
+        yield FirebaseApp.shared.firestore.person(team.id, person.id).set(person);
     }
     for (const fineTemplate of team.fineTemplates)
-        yield Firestore.shared.fineTemplate(team.id, fineTemplate.id).set(fineTemplate);
+        yield FirebaseApp.shared.firestore.fineTemplate(team.id, fineTemplate.id).set(fineTemplate);
     for (const fine of team.fines)
-        yield Firestore.shared.fine(team.id, fine.id).set(fine);
+        yield FirebaseApp.shared.firestore.fine(team.id, fine.id).set(fine);
 }
 
-export async function createTestTeam(team: TestTeam, userId: UserId, roles: UserRole[]) {
-    await Promise.all([...internal_createTestTeam(team, userId, roles)]);
+function getTestTeam(team: TestTeam | number): TestTeam {
+    if (typeof team !== 'number')
+        return team;
+    switch (team) {
+    case 1:
+        return testTeam1;
+    default:
+        throw new Error(`Unknown test team: ${team}`);
+    }
+}
+
+export async function createTestTeam(team: TestTeam | number, userId: User.Id, roles: UserRole[]) {
+    await Promise.all([...internal_createTestTeam(getTestTeam(team), userId, roles)]);
 }

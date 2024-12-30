@@ -1,14 +1,7 @@
-import { FirestoreCollection, FirestoreDocument } from 'firebase-function';
-import { Fine, FineTemplate, Person, User } from './types';
-import { Invitation } from './types/Invitation';
-import { Team } from './types/Team';
+import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function/admin';
+import { Fine, FineTemplate, Invitation, Person, Team, User } from './types';
 
 export type FirestoreScheme = FirestoreDocument<never, {
-    auth: FirestoreCollection<{
-        [RawUid in string]: FirestoreDocument<{
-            userId: string
-        }>
-    }>
     users: FirestoreCollection<{
         [UserId in string]: FirestoreDocument<User>
     }>

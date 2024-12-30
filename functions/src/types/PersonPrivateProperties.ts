@@ -1,13 +1,37 @@
-import { Flatten, ObjectTypeBuilder, ValueTypeBuilder } from 'firebase-function';
+import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export type PersonPrivateProperties = {
-    firstName: string
-    lastName: string | null
+export class PersonPrivateProperties implements Flattable<PersonPrivateProperties.Flatten> {
+
+    constructor(
+        public firstName: string,
+        public lastName: string | null,
+    ) {}
+
+    public get flatten(): PersonPrivateProperties.Flatten {
+        return {
+            firstName: this.firstName,
+            lastName: this.lastName
+        };
+    }
 }
 
 export namespace PersonPrivateProperties {
-    export const builder = new ObjectTypeBuilder<Flatten<PersonPrivateProperties>, PersonPrivateProperties>({
-        firstName: new ValueTypeBuilder(),
-        lastName: new ValueTypeBuilder()
-    });
+
+    export type Flatten = {
+        firstName: string;
+        lastName: string | null;
+    }
+
+    export class TypeBuilder implements ITypeBuilder<Flatten, PersonPrivateProperties> {
+
+        public build(value: Flatten): PersonPrivateProperties {
+            return new PersonPrivateProperties(
+                value.firstName,
+                value.lastName
+            );
+        }
+    }
+
+    export const builder = new TypeBuilder();
 }
+

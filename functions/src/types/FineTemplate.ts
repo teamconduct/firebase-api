@@ -1,25 +1,55 @@
-import { Flatten, Guid, ObjectTypeBuilder, TypeBuilder, ValueTypeBuilder, OptionalTypeBuilder, Tagged, TaggedTypeBuilder } from 'firebase-function';
-import { FineTemplateMultiple } from './FineTemplateMultiple';
-import { FineValue } from './FineValue';
+import { Flattable, Guid, ITypeBuilder, Tagged } from '@stevenkellner/typescript-common-functionality';
+import { FineAmount } from './FineAmount';
+import { FineTemplateRepetition } from './FineTemplateRepetition';
 
-export type FineTemplateId = Tagged<Guid, 'fineTemplate'>;
+export class FineTemplate implements Flattable<FineTemplate.Flatten> {
 
-export namespace FineTemplateId {
-    export const builder = new TaggedTypeBuilder<string, FineTemplateId>('fineTemplate', new TypeBuilder(Guid.from));
-}
+    public constructor(
+        public id: FineTemplate.Id,
+        public reason: string,
+        public amount: FineAmount,
+        public repetition: FineTemplateRepetition | null
+    ) {}
 
-export type FineTemplate = {
-    id: FineTemplateId,
-    reason: string,
-    value: FineValue,
-    multiple: FineTemplateMultiple | null
+    public get flatten(): FineTemplate.Flatten {
+        return {
+            id: this.id.flatten,
+            reason: this.reason,
+            amount: this.amount.flatten,
+            repetition: this.repetition === null ? null : this.repetition.flatten
+        };
+    }
 }
 
 export namespace FineTemplate {
-    export const builder = new ObjectTypeBuilder<Flatten<FineTemplate>, FineTemplate>({
-        id: FineTemplateId.builder,
-        reason: new ValueTypeBuilder(),
-        value: FineValue.builder,
-        multiple: new OptionalTypeBuilder(FineTemplateMultiple.builder)
-    });
+
+    export type Id = Tagged<Guid, 'fineTemplate'>;
+
+    export namespace Id {
+
+        export type Flatten = string;
+
+        export const builder = Tagged.builder('fineTemplate' as const, Guid.builder);
+    }
+
+    export type Flatten = {
+        id: Id.Flatten,
+        reason: string,
+        amount: FineAmount.Flatten,
+        repetition: FineTemplateRepetition.Flatten | null
+    };
+
+    export class TypeBuilder implements ITypeBuilder<Flatten, FineTemplate> {
+
+        public build(value: Flatten): FineTemplate {
+            return new FineTemplate(
+                Id.builder.build(value.id),
+                value.reason,
+                FineAmount.builder.build(value.amount),
+                value.repetition === null ? null : FineTemplateRepetition.builder.build(value.repetition)
+            );
+        }
+    }
+
+    export const builder = new TypeBuilder();
 }

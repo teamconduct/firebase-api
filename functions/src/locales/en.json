@@ -1,22 +1,30 @@
 {
     "notification": {
-        "new-fine": {
-            "title": "%s",
-            "body": "You have a new fine of %s. Please pay it as soon as possible."
-        },
-        "fine-reminder": {
-            "title": "You still have outstanding penalties",
-            "body": "You still have %s outstanding. Please pay as soon as possible."
-        },
-        "fine-state-change": {
-            "title": "One of your penalties has changed",
-            "body-paid": "You have paid a penalty of %1$s (%2$s).",
-            "body-unpayed": "%1$s, %2$s are still outstanding.",
-            "body-deleted": "%1$s, %2$s has been deleted."
+        "fine": {
+            "new": {
+                "title": "%s",
+                "body": "You have a new fine of %s. Please pay it as soon as possible."
+            },
+            "reminder": {
+                "title": "You still have outstanding penalties",
+                "body": "You still have %s outstanding. Please pay as soon as possible."
+            },
+            "state-change": {
+                "title": "One of your penalties has changed",
+                "body-paid": "You have paid a penalty of %1$s (%2$s).",
+                "body-unpayed": "%1$s, %2$s are still outstanding.",
+                "body-deleted": "%1$s, %2$s has been deleted."
+            }
         }
     },
-    "fineValue": {
-        "crateOfBeer-singular": "One Crate of Beer",
-        "crateOfBeer-plural": "%s Crates of Beer"
+    "FineAmount": {
+        "Item": {
+            "Type": {
+                "crateOfBeer": {
+                    "singular": "One Crate of Beer",
+                    "plural": "%s Crates of Beer"
+                }
+            }
+        }
     }
 }

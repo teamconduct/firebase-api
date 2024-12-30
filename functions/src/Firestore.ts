@@ -1,44 +1,43 @@
-import { FirestoreDocument, FirestorePath } from 'firebase-function';
-import * as admin from 'firebase-admin';
+import { FirestoreDocument } from '@stevenkellner/firebase-function/admin';
 import { FirestoreScheme } from './FirestoreScheme';
-import { Fine, FineId, FineTemplate, FineTemplateId, Person, PersonId, User, UserId } from './types';
-import { Invitation, InvitationId } from './types/Invitation';
-import { Team, TeamId } from './types/Team';
+import { Fine, FineTemplate, Invitation, Person, User, Team } from './types';
+import { getFirestore } from 'firebase-admin/firestore';
 
 export class Firestore {
 
-    public base: FirestoreScheme = new FirestoreDocument(admin.app().firestore(), new FirestorePath());
+    protected base: FirestoreScheme;
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public constructor() {}
+    protected constructor() {
+        this.base = FirestoreDocument.base(getFirestore());
+    }
 
-    public static shared = new Firestore();
+    private static sharedInstance: Firestore | null = null;
 
-    public team(id: TeamId): FirestoreDocument<Team> {
+    public static get shared(): Firestore {
+        if (!Firestore.sharedInstance)
+            Firestore.sharedInstance = new Firestore();
+        return Firestore.sharedInstance;
+    }
+
+    public team(id: Team.Id): FirestoreDocument<Team> {
         return this.base
             .collection('teams')
             .document(id.guidString) as FirestoreDocument<Team>;
     }
 
-    public auth(uid: string): FirestoreDocument<{ userId: string }> {
-        return this.base
-            .collection('auth')
-            .document(uid);
-    }
-
-    public user(id: UserId): FirestoreDocument<User> {
+    public user(id: User.Id): FirestoreDocument<User> {
         return this.base
             .collection('users')
             .document(id.value);
     }
 
-    public invitation(id: InvitationId): FirestoreDocument<Invitation> {
+    public invitation(id: Invitation.Id): FirestoreDocument<Invitation> {
         return this.base
             .collection('invitations')
             .document(id.value);
     }
 
-    public person(teamId: TeamId, id: PersonId): FirestoreDocument<Person> {
+    public person(teamId: Team.Id, id: Person.Id): FirestoreDocument<Person> {
         return this.base
             .collection('teams')
             .document(teamId.guidString)
@@ -46,7 +45,7 @@ export class Firestore {
             .document(id.guidString);
     }
 
-    public fineTemplate(teamId: TeamId, id: FineTemplateId): FirestoreDocument<FineTemplate> {
+    public fineTemplate(teamId: Team.Id, id: FineTemplate.Id): FirestoreDocument<FineTemplate> {
         return this.base
             .collection('teams')
             .document(teamId.guidString)
@@ -54,7 +53,7 @@ export class Firestore {
             .document(id.guidString);
     }
 
-    public fine(teamId: TeamId, id: FineId): FirestoreDocument<Fine> {
+    public fine(teamId: Team.Id, id: Fine.Id): FirestoreDocument<Fine> {
         return this.base
             .collection('teams')
             .document(teamId.guidString)

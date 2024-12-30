@@ -1,22 +1,22 @@
-import { createFirebaseFunctions } from 'firebase-function';
-import { TeamNewFunction } from './functions/TeamNewFunction';
-import { PersonAddFunction } from './functions/PersonAddFunction';
-import { FineTemplateAddFunction } from './functions/FineTemplateAddFunction';
-import { FineAddFunction } from './functions/FineAddFunction';
-import { PersonUpdateFunction } from './functions/PersonUpdateFunction';
-import { FineTemplateUpdateFunction } from './functions/FineTemplateUpdateFunction';
-import { FineUpdateFunction } from './functions/FineUpdateFunction';
-import { FineTemplateDeleteFunction } from './functions/FineTemplateDeleteFunction';
-import { FineDeleteFunction } from './functions/FineDeleteFunction';
-import { PersonDeleteFunction } from './functions/PersonDeleteFunction';
-import { UserRoleEditFunction } from './functions/UserRoleEditFunction';
-import { PaypalMeEditFunction } from './functions/PaypalMeEditFunction';
-import { NotificationRegisterFunction } from './functions/NotificationRegisterFunction';
-import { NotificationSubscribeFunction } from './functions/NotificationSubscribeFunction';
-import { InvitationInviteFunction } from './functions/InvitationInviteFunction';
-import { InvitationWithdrawFunction } from './functions/InvitationWithdrawFunction';
-import { UserLoginFunction } from './functions/UserLoginFunction';
-import { InvitationRegisterFunction } from './functions/InvitationRegisterFunction';
+import { createFirebaseFunctions } from '@stevenkellner/firebase-function/admin';
+import { TeamNewFunction } from './functions/team/new';
+import { UserLoginFunction } from './functions/user/login';
+import { UserRoleEditFunction } from './functions/user/roleEdit';
+import { PaypalMeEditFunction } from './functions/paypalMe/edit';
+import { NotificationRegisterFunction } from './functions/notification/register';
+import { NotificationSubscribeFunction } from './functions/notification/subscribe';
+import { InvitationInviteFunction } from './functions/invitation/invite';
+import { InvitationWithdrawFunction } from './functions/invitation/withdraw';
+import { InvitationRegisterFunction } from './functions/invitation/register';
+import { PersonAddFunction } from './functions/person/add';
+import { PersonUpdateFunction } from './functions/person/update';
+import { PersonDeleteFunction } from './functions/person/delete';
+import { FineAddFunction } from './functions/fine/add';
+import { FineUpdateFunction } from './functions/fine/update';
+import { FineDeleteFunction } from './functions/fine/delete';
+import { FineTemplateAddFunction } from './functions/fineTemplate/add';
+import { FineTemplateUpdateFunction } from './functions/fineTemplate/update';
+import { FineTemplateDeleteFunction } from './functions/fineTemplate/delete';
 
 export const firebaseFunctions = createFirebaseFunctions(builder => ({
     team: {

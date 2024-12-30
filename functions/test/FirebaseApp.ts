@@ -1,71 +1,104 @@
-import { firebaseFunctions } from './../src/firebaseFunctions';
-import * as dotenv from 'dotenv';
-import { FirebaseApp as FirebaseAppBase } from 'firebase-function/lib/src/testSrc';
-import { HexBytesCoder, Sha512, Tagged, Utf8BytesCoder } from 'firebase-function';
-import axios from 'axios';
-import { UserId, UserRole } from '../src/types';
-import { testTeam } from './testTeams/testTeam_1';
+import { configDotenv } from 'dotenv';
+import * as admin from 'firebase-admin';
+import { initializeApp } from 'firebase/app';
+import { FirebaseAuth } from './FirebaseAuth';
+import { FirebaseFirestore } from './FirebaseFirestore';
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { createFirebaseFunctions } from '@stevenkellner/firebase-function/client';
+import { BytesCoder } from '@stevenkellner/typescript-common-functionality';
+import * as ClientFunctions from './FirebaseFunctions';
+import { Configuration, User, UserRole } from '../src/types';
+import { testTeam1 } from './testTeams/testTeam1';
+import { createTestTeam, TestTeam } from './createTestTeam';
 
-dotenv.config({ path: 'test/.env.test' });
+export class FirebaseApp {
 
-export class FirebaseApp extends FirebaseAppBase<typeof firebaseFunctions> {
+    public readonly auth: FirebaseAuth;
+
+    public readonly firestore: FirebaseFirestore;
+
+    public readonly functions: ClientFunctions.ClientFunctions;
+
+    private _testTeam: TestTeam | null = null;
 
     private constructor() {
-        const macKeyBytesCoder = new HexBytesCoder();
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const macKey = macKeyBytesCoder.encode(process.env.FUNCTESTS_MAC_KEY!);
-        super({
-            macKey: macKey,
-            firebaseOptions: {
-                apiKey: process.env.FUNCTESTS_API_KEY,
-                authDomain: process.env.FUNCTESTS_AUTH_DOMAIN,
+        configDotenv({ path: 'test/.env.test' });
+        initializeApp({
+            apiKey: process.env.FUNCTESTS_API_KEY,
+            authDomain: process.env.FUNCTESTS_AUTH_DOMAIN,
+            databaseURL: process.env.FUNCTESTS_DATABASE_URL,
+            projectId: process.env.FUNCTESTS_PROJECT_ID,
+            storageBucket: process.env.FUNCTESTS_STORAGE_BUCKET,
+            messagingSenderId: process.env.FUNCTESTS_MESSAGING_SENDER_ID,
+            appId: process.env.FUNCTESTS_APP_ID,
+            measurementId: process.env.FUNCTESTS_MEASUREMENT_ID
+        });
+        admin.initializeApp({
+            credential: admin.credential.cert({
                 projectId: process.env.FUNCTESTS_PROJECT_ID,
-                storageBucket: process.env.FUNCTESTS_STORAGE_BUCKET,
-                messagingSenderId: process.env.FUNCTESTS_MESSAGING_SENDER_ID,
-                appId: process.env.FUNCTESTS_APP_ID,
-                measurementId: process.env.FUNCTESTS_MEASUREMENT_ID,
                 clientEmail: process.env.FUNCTESTS_CLIENT_EMAIL,
                 privateKey: process.env.FUNCTESTS_PRIVATE_KEY
+            }),
+            databaseURL: process.env.FUNCTESTS_DATABASE_URL
+        })
+        this.auth = new FirebaseAuth();
+        this.firestore = new FirebaseFirestore();
+        const functionsInstance = getFunctions(undefined, 'europe-west1');
+        connectFunctionsEmulator(functionsInstance, '127.0.0.1', 5001);
+        this.functions = createFirebaseFunctions(`http://127.0.0.1:5001/${process.env.FUNCTESTS_PROJECT_ID}`, 'europe-west1', BytesCoder.fromHex(process.env.FUNCTESTS_MAC_KEY!), builder => ({
+            team: {
+                new: builder.function(ClientFunctions.TeamNewClientFunction)
             },
-            region: 'europe-west1',
-            emulatorPorts: {
-                functions: 5001,
-                auth: 9099,
-                firestore: 8080
-            }
-        });
+                user: {
+                    login: builder.function(ClientFunctions.UserLoginClientFunction),
+                    roleEdit: builder.function(ClientFunctions.UserRoleEditClientFunction)
+                },
+                paypalMe: {
+                    edit: builder.function(ClientFunctions.PaypalMeEditClientFunction)
+                },
+                notification: {
+                    register: builder.function(ClientFunctions.NotificationRegisterClientFunction),
+                    subscribe: builder.function(ClientFunctions.NotificationSubscribeClientFunction)
+                },
+                invitation: {
+                    invite: builder.function(ClientFunctions.InvitationInviteClientFunction),
+                    withdraw: builder.function(ClientFunctions.InvitationWithdrawClientFunction),
+                    register: builder.function(ClientFunctions.InvitationRegisterClientFunction)
+                },
+                person: {
+                    add: builder.function(ClientFunctions.PersonAddClientFunction),
+                    update: builder.function(ClientFunctions.PersonUpdateClientFunction),
+                    delete: builder.function(ClientFunctions.PersonDeleteClientFunction)
+                },
+                fineTemplate: {
+                    add: builder.function(ClientFunctions.FineTemplateAddClientFunction),
+                    update: builder.function(ClientFunctions.FineTemplateUpdateClientFunction),
+                    delete: builder.function(ClientFunctions.FineTemplateDeleteClientFunction)
+                },
+                fine: {
+                    add: builder.function(ClientFunctions.FineAddClientFunction),
+                    update: builder.function(ClientFunctions.FineUpdateClientFunction),
+                    delete: builder.function(ClientFunctions.FineDeleteClientFunction)
+                }
+        }));
     }
 
     public static shared = new FirebaseApp();
 
-    private hashUserId(userId: string): UserId {
-        const userIdBytesCoder = new Utf8BytesCoder();
-        const hasher = new Sha512();
-        const hashedUserIdBytesCoder = new HexBytesCoder();
-        const userIdBytes = userIdBytesCoder.encode(userId);
-        const hashedUserIdBytes = hasher.hash(userIdBytes);
-        const rawId = hashedUserIdBytesCoder.decode(hashedUserIdBytes);
-        return new Tagged(rawId, 'user');
+    public async addTestTeam(roles: UserRole | UserRole[] = [], testTeam: TestTeam = testTeam1): Promise<User.Id> {
+        const userId = await this.auth.signIn();
+        await createTestTeam(testTeam, userId, typeof roles === 'string' ? [roles] : roles);
+        this._testTeam = testTeam;
+        return userId;
     }
 
-    public async signIn(): Promise<{ id: UserId, rawUid: string }> {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const userCredential = await this.auth.signIn(process.env.FUNCTESTS_USER_EMAIL!, process.env.FUNCTESTS_USER_PASSWORD!);
-        return {
-            id: this.hashUserId(userCredential.user.uid),
-            rawUid: userCredential.user.uid
-        };
+    public get testTeam(): TestTeam {
+        if (this._testTeam === null)
+            throw new Error('No test team created');
+        return this._testTeam;
     }
 
-    public async addTestTeam(...roles: UserRole[]): Promise<UserId> {
-        const authUser = await this.signIn();
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        await require('./createTestTeam').createTestTeam(testTeam, authUser.id, roles);
-        return authUser.id;
-    }
-
-    public async clearFirestore(): Promise<void> {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        await axios.delete(`http://127.0.0.1:8080/emulator/v1/projects/${process.env.FUNCTESTS_PROJECT_ID!}/databases/(default)/documents`);
+    public get testConfiguration(): Configuration {
+        return new Configuration('EUR', 'en');
     }
 }
