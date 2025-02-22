@@ -32,9 +32,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: cd functions
       - run: npm i -g firebase-tools
-      - run: npm ci
-      - run: npm run rebuild
-      - run: npm test
-      - run: npm run lint
+      - working-directory: functions
+        run: npm ci
+      - working-directory: functions
+        run: npm run rebuild
+      - working-directory: functions
+        run: npm test
+      - working-directory: functions
+        run: npm run lint

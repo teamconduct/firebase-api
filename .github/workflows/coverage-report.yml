@@ -34,11 +34,13 @@ jobs:
           node-version: 20
       - run: cd functions
       - run: npm i -g firebase-tools
-      - run: npm ci
-      - run: npm run test:coverage
+      - working-directory: functions
+        run: npm ci
+      - working-directory: functions
+        run: npm run test:coverage
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: coverage/
+          path: functions/coverage/
 
   deploy-coverage-report:
     name: "Deploy Coverage Report to Github Pages"
