@@ -27,6 +27,7 @@ jobs:
       FUNCTESTS_MAC_KEY: ${{ secrets.FUNCTESTS_MAC_KEY }}
       FUNCTESTS_USER_EMAIL: ${{ secrets.FUNCTESTS_USER_EMAIL }}
       FUNCTESTS_USER_PASSWORD: ${{ secrets.FUNCTESTS_USER_PASSWORD }}
+      MAC_KEY: ${{ secrets.MAC_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
