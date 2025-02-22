@@ -1,4 +1,4 @@
-name: Build, test and lint Node.js Package
+name: Run Test with Coverage Report and upload it to Github Pages
 
 on:
   push:
@@ -9,8 +9,8 @@ on:
       - '**'
 
 jobs:
-  build-test-lint:
-    name: "Build, Test and Lint Node.js Package"
+  test-coverage:
+    name: "Run Test with Coverage Report"
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -32,8 +32,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - run: cd functions
       - run: npm i -g firebase-tools
       - run: npm ci
-      - run: npm run rebuild
-      - run: npm test
-      - run: npm run lint
+      - run: npm run test:coverage
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: coverage/
+
+  deploy-coverage-report:
+    name: "Deploy Coverage Report to Github Pages"
+    needs: test-coverage
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
