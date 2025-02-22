@@ -1,8 +1,8 @@
 import { Configuration } from './../../types/Configuration';
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { pushNotification } from "../../pushNotification";
 import { Fine, Person, Team } from "../../types";
-import { Flattable, ObjectTypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
 import * as i18n from 'i18n';
@@ -26,12 +26,9 @@ export class FineUpdateFunction extends FirebaseFunction<FineUpdateFunction.Para
         configuration: Configuration.builder
     });
 
-    public constructor() {
-        super('FineUpdateFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: FineUpdateFunction.Parameters): Promise<void> {
-        this.logger.log('FineUpdateFunction.execute');
 
         await checkAuthentication(this.userId, parameters.teamId, 'fine-manager');
 

@@ -1,4 +1,4 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { checkAuthentication } from "../../checkAuthentication";
 import { Person, Team, UserRole } from "../../types";
 import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
@@ -21,12 +21,9 @@ export class UserRoleEditFunction extends FirebaseFunction<UserRoleEditFunction.
         roles: new ArrayTypeBuilder(new ValueTypeBuilder())
     });
 
-    public constructor() {
-        super('UserRoleEditFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: UserRoleEditFunction.Parameters): Promise<void> {
-        this.logger.log('UserRoleEditFunction.execute');
 
         const userId = await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
 

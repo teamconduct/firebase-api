@@ -1,4 +1,4 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { User } from "../../types";
 import { ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 import { Firestore } from "../../Firestore";
@@ -7,12 +7,10 @@ export class UserLoginFunction extends FirebaseFunction<null, User> {
 
     public parametersBuilder = new ValueTypeBuilder<null>();
 
-    public constructor() {
-        super('UserLoginFunction');
-    }
+
+    public returnTypeBuilder = User.builder;
 
     public async execute(): Promise<User> {
-        this.logger.log('UserLoginFunction.execute');
 
         if (this.userId === null)
             throw new FunctionsError('unauthenticated', 'User is not authenticated.');

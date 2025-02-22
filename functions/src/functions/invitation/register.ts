@@ -1,4 +1,4 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function/admin';
+import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Invitation, Person, PersonSignInProperties, Team, User } from '../../types';
 import { Firestore } from '../../Firestore';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
@@ -7,13 +7,9 @@ export class InvitationRegisterFunction extends FirebaseFunction<Invitation.Id, 
 
     public parametersBuilder = Invitation.Id.builder;
 
-    public constructor() {
-        super('InvitationRegisterFunction');
-    }
+    public returnTypeBuilder = User.builder;
 
     public async execute(invitationId: Invitation.Id): Promise<User> {
-        this.logger.log('InvitationRegisterFunction.execute');
-
 
         if (this.userId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');

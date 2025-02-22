@@ -1,6 +1,6 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { Person, PersonPrivateProperties, Team } from "../../types";
-import { Flattable, ObjectTypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 import { checkAuthentication } from "../../checkAuthentication";
 import { Firestore } from "../../Firestore";
 
@@ -21,12 +21,9 @@ export class PersonAddFunction extends FirebaseFunction<PersonAddFunction.Parame
         properties: PersonPrivateProperties.builder
     });
 
-    public constructor() {
-        super('PersonAddFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: PersonAddFunction.Parameters): Promise<void> {
-        this.logger.log('PersonAddFunction.execute');
 
         await checkAuthentication(this.userId, parameters.teamId, 'person-manager');
 

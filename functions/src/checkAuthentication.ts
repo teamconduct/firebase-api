@@ -1,4 +1,4 @@
-import { FunctionsError } from '@stevenkellner/firebase-function/admin';
+import { FunctionsError } from '@stevenkellner/firebase-function';
 import { Person, Team, User, UserRole } from './types';
 import { Firestore } from './Firestore';
 

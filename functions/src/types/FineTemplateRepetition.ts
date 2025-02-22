@@ -1,4 +1,4 @@
-import { Flattable, ITypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { Flattable, ITypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 
 export class FineTemplateRepetition implements Flattable<FineTemplateRepetition.Flatten> {
 
@@ -31,6 +31,8 @@ export namespace FineTemplateRepetition {
             'item',
             'count'
         ];
+
+        export const builder = new ValueTypeBuilder<Item>();
     }
 
     export type Flatten = {

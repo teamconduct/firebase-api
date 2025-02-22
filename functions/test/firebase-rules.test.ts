@@ -1,4 +1,4 @@
-import { FirestoreCollection } from '@stevenkellner/firebase-function/admin';
+import { FirestoreCollection } from '@stevenkellner/firebase-function';
 import { FirebaseApp } from './FirebaseApp';
 import { assert, expect } from '@assertive-ts/core'
 import { deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, collection, Firestore, getFirestore, connectFirestoreEmulator } from 'firebase/firestore';

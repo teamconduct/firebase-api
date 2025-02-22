@@ -1,6 +1,6 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { Configuration, Fine, FineAmount, Person, Team } from "../../types";
-import { Flattable, ObjectTypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 import { checkAuthentication } from "../../checkAuthentication";
 import { Firestore } from "../../Firestore";
 import { pushNotification } from "../../pushNotification";
@@ -25,12 +25,9 @@ export class FineDeleteFunction extends FirebaseFunction<FineDeleteFunction.Para
         configuration: Configuration.builder
     });
 
-    public constructor() {
-        super('FineDeleteFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: FineDeleteFunction.Parameters): Promise<void> {
-        this.logger.log('FineDeleteFunction.execute');
 
         await checkAuthentication(this.userId, parameters.teamId, 'fine-manager');
 

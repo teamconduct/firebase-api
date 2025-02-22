@@ -1,4 +1,4 @@
-import { FirestoreDocument } from '@stevenkellner/firebase-function/admin';
+import { FirestoreDocument } from '@stevenkellner/firebase-function';
 import { FirestoreScheme } from './FirestoreScheme';
 import { Fine, FineTemplate, Invitation, Person, User, Team } from './types';
 import { getFirestore } from 'firebase-admin/firestore';

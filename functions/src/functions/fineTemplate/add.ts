@@ -1,6 +1,6 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { FineTemplate, Team } from "../../types";
-import { Flattable, ObjectTypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 import { checkAuthentication } from "../../checkAuthentication";
 import { Firestore } from "../../Firestore";
 
@@ -19,12 +19,9 @@ export class FineTemplateAddFunction extends FirebaseFunction<FineTemplateAddFun
         fineTemplate: FineTemplate.builder
     });
 
-    public constructor() {
-        super('FineTemplateAddFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: FineTemplateAddFunction.Parameters): Promise<void> {
-        this.logger.log('FineTemplateAddFunction.execute');
 
         await checkAuthentication(this.userId, parameters.teamId, 'fineTemplate-manager');
 

@@ -47,6 +47,8 @@ export namespace NotificationProperties {
             'fine-reminder',
             'fine-state-change'
         ]
+
+        export const builder = new ValueTypeBuilder<Subscription>();
     }
 
     export type Flatten = {

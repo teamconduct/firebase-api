@@ -1,4 +1,4 @@
-import { FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FunctionsError } from "@stevenkellner/firebase-function";
 import { FirebaseApp } from "../../FirebaseApp";
 import { RandomData } from "../../RandomData";
 import { Result } from "@stevenkellner/typescript-common-functionality";

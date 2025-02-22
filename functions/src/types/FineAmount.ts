@@ -15,7 +15,6 @@ export namespace FineAmount {
             public amount: MoneyAmount
         ) {}
 
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         public formatted(configuration: Configuration): string {
             return this.amount.formatted(configuration.currency);
         }

@@ -1,6 +1,6 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { FineTemplate, Team } from "../../types";
-import { Flattable, ObjectTypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 import { checkAuthentication } from "../../checkAuthentication";
 import { Firestore } from "../../Firestore";
 
@@ -19,12 +19,9 @@ export class FineTemplateDeleteFunction extends FirebaseFunction<FineTemplateDel
         id: FineTemplate.Id.builder
     });
 
-    public constructor() {
-        super('FineTemplateDeleteFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: FineTemplateDeleteFunction.Parameters): Promise<void> {
-        this.logger.log('FineTemplateDeleteFunction.execute');
 
         await checkAuthentication(this.userId, parameters.teamId, 'fineTemplate-manager');
 

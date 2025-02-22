@@ -1,0 +1,51 @@
+name: Run Test with Coverage Report and upload it to Github Pages
+
+on:
+  push:
+    branches:
+     - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test-coverage:
+    name: "Run Test with Coverage Report"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      FUNCTESTS_API_KEY: ${{ secrets.FUNCTESTS_API_KEY }}
+      FUNCTESTS_DATABASE_URL: ${{ secrets.FUNCTESTS_DATABASE_URL }}
+      FUNCTESTS_AUTH_DOMAIN: ${{ secrets.FUNCTESTS_AUTH_DOMAIN }}
+      FUNCTESTS_PROJECT_ID: ${{ secrets.FUNCTESTS_PROJECT_ID }}
+      FUNCTESTS_STORAGE_BUCKET: ${{ secrets.FUNCTESTS_STORAGE_BUCKET }}
+      FUNCTESTS_MESSAGING_SENDER_ID: ${{ secrets.FUNCTESTS_MESSAGING_SENDER_ID }}
+      FUNCTESTS_APP_ID: ${{ secrets.FUNCTESTS_APP_ID }}
+      FUNCTESTS_MEASUREMENT_ID: ${{ secrets.FUNCTESTS_MEASUREMENT_ID }}
+      FUNCTESTS_CLIENT_EMAIL: ${{ secrets.FUNCTESTS_CLIENT_EMAIL }}
+      FUNCTESTS_PRIVATE_KEY: ${{ secrets.FUNCTESTS_PRIVATE_KEY }}
+      FUNCTESTS_MAC_KEY: ${{ secrets.FUNCTESTS_MAC_KEY }}
+      FUNCTESTS_USER_EMAIL: ${{ secrets.FUNCTESTS_USER_EMAIL }}
+      FUNCTESTS_USER_PASSWORD: ${{ secrets.FUNCTESTS_USER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm i -g firebase-tools
+      - run: npm ci
+      - run: npm run test:coverage
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: coverage/
+
+  deploy-coverage-report:
+    name: "Deploy Coverage Report to Github Pages"
+    needs: test-coverage
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

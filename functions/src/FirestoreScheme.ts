@@ -1,4 +1,4 @@
-import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function/admin';
+import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function';
 import { Fine, FineTemplate, Invitation, Person, Team, User } from './types';
 
 export type FirestoreScheme = FirestoreDocument<never, {

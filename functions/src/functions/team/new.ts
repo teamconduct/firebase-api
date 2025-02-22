@@ -1,5 +1,5 @@
 import { Flattable, ObjectTypeBuilder, UtcDate, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function/admin';
+import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Person, PersonPrivateProperties, PersonSignInProperties, User, UserRole, Team, NotificationProperties } from '../../types';
 import { Firestore } from '../../Firestore';
 
@@ -24,12 +24,9 @@ export class TeamNewFunction extends FirebaseFunction<TeamNewFunction.Parameters
         personProperties: PersonPrivateProperties.builder
     });
 
-    public constructor() {
-        super('TeamNewFunction');
-    }
+    public returnTypeBuilder = User.builder;
 
     public async execute(parameters: TeamNewFunction.Parameters): Promise<User> {
-        this.logger.log('TeamNewFunction.execute');
 
         if (this.userId === null)
             throw new FunctionsError('permission-denied', 'User is not authenticated');

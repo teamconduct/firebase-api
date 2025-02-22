@@ -1,5 +1,5 @@
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { Team } from "../../types";
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
@@ -19,12 +19,9 @@ export class PaypalMeEditFunction extends FirebaseFunction<PaypalMeEditFunction.
         paypalMeLink: new ValueTypeBuilder()
     });
 
-    public constructor() {
-        super('PaypalMeEditFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: PaypalMeEditFunction.Parameters): Promise<void> {
-        this.logger.log('PaypalMeEditFunction.execute');
 
         await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
 

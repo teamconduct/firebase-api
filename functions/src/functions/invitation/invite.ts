@@ -1,4 +1,4 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function/admin';
+import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Invitation } from '../../types';
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
@@ -7,12 +7,9 @@ export class InvitationInviteFunction extends FirebaseFunction<Invitation, Invit
 
     public parametersBuilder = Invitation.builder;
 
-    public constructor() {
-        super('InvitationInviteFunction');
-    }
+    public returnTypeBuilder = Invitation.Id.builder;
 
     public async execute(invitation: Invitation): Promise<Invitation.Id> {
-        this.logger.log('InvitationInviteFunction.execute');
 
         await checkAuthentication(this.userId, invitation.teamId, 'team-manager');
 

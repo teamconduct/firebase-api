@@ -3,13 +3,10 @@ import * as admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { FirebaseAuth } from './FirebaseAuth';
 import { FirebaseFirestore } from './FirebaseFirestore';
-import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-import { createFirebaseFunctions } from '@stevenkellner/firebase-function/client';
-import { BytesCoder } from '@stevenkellner/typescript-common-functionality';
-import * as ClientFunctions from './FirebaseFunctions';
 import { Configuration, User, UserRole } from '../src/types';
 import { testTeam1 } from './testTeams/testTeam1';
 import { createTestTeam, TestTeam } from './createTestTeam';
+import { FirebaseFunctions } from './FirebaseFunctions';
 
 export class FirebaseApp {
 
@@ -17,7 +14,7 @@ export class FirebaseApp {
 
     public readonly firestore: FirebaseFirestore;
 
-    public readonly functions: ClientFunctions.ClientFunctions;
+    public readonly functions: FirebaseFunctions['functions'];
 
     private _testTeam: TestTeam | null = null;
 
@@ -43,44 +40,7 @@ export class FirebaseApp {
         })
         this.auth = new FirebaseAuth();
         this.firestore = new FirebaseFirestore();
-        const functionsInstance = getFunctions(undefined, 'europe-west1');
-        connectFunctionsEmulator(functionsInstance, '127.0.0.1', 5001);
-        this.functions = createFirebaseFunctions(`http://127.0.0.1:5001/${process.env.FUNCTESTS_PROJECT_ID}`, 'europe-west1', BytesCoder.fromHex(process.env.FUNCTESTS_MAC_KEY!), builder => ({
-            team: {
-                new: builder.function(ClientFunctions.TeamNewClientFunction)
-            },
-                user: {
-                    login: builder.function(ClientFunctions.UserLoginClientFunction),
-                    roleEdit: builder.function(ClientFunctions.UserRoleEditClientFunction)
-                },
-                paypalMe: {
-                    edit: builder.function(ClientFunctions.PaypalMeEditClientFunction)
-                },
-                notification: {
-                    register: builder.function(ClientFunctions.NotificationRegisterClientFunction),
-                    subscribe: builder.function(ClientFunctions.NotificationSubscribeClientFunction)
-                },
-                invitation: {
-                    invite: builder.function(ClientFunctions.InvitationInviteClientFunction),
-                    withdraw: builder.function(ClientFunctions.InvitationWithdrawClientFunction),
-                    register: builder.function(ClientFunctions.InvitationRegisterClientFunction)
-                },
-                person: {
-                    add: builder.function(ClientFunctions.PersonAddClientFunction),
-                    update: builder.function(ClientFunctions.PersonUpdateClientFunction),
-                    delete: builder.function(ClientFunctions.PersonDeleteClientFunction)
-                },
-                fineTemplate: {
-                    add: builder.function(ClientFunctions.FineTemplateAddClientFunction),
-                    update: builder.function(ClientFunctions.FineTemplateUpdateClientFunction),
-                    delete: builder.function(ClientFunctions.FineTemplateDeleteClientFunction)
-                },
-                fine: {
-                    add: builder.function(ClientFunctions.FineAddClientFunction),
-                    update: builder.function(ClientFunctions.FineUpdateClientFunction),
-                    delete: builder.function(ClientFunctions.FineDeleteClientFunction)
-                }
-        }));
+        this.functions = new FirebaseFunctions().functions;
     }
 
     public static shared = new FirebaseApp();

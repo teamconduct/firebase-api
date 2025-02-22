@@ -1,4 +1,4 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function/admin";
+import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
 import { NotificationProperties, Person, Team } from "../../types";
 import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
 import { Firestore } from "../../Firestore";
@@ -20,12 +20,9 @@ export class NotificationSubscribeFunction extends FirebaseFunction<Notification
         subscriptions: new ArrayTypeBuilder(new ValueTypeBuilder())
     });
 
-    public constructor() {
-        super('NotificationSubscribeFunction');
-    }
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 
     public async execute(parameters: NotificationSubscribeFunction.Parameters): Promise<void> {
-        this.logger.log('NotificationSubscribeFunction.execute');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)
