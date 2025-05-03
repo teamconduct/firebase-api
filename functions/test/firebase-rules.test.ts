@@ -18,6 +18,7 @@ describe('Firebase Rules', () => {
         await FirebaseApp.shared.firestore.clear();
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async function expectPermissionDenied(fn: () => Promise<any>) {
         try {
             await fn();
@@ -31,6 +32,7 @@ describe('Firebase Rules', () => {
     }
 
     async function createTestDocuments() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const firestore = FirebaseApp.shared.firestore as { collection(key: string): FirestoreCollection<any> };
         await firestore.collection('users').document('123').set({ data: 'test' });
         await firestore.collection('users').document('123').collection('subCollection').document('456').set({ data: 'test' });

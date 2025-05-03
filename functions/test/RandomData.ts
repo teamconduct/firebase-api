@@ -3,9 +3,9 @@ import { MoneyAmount } from './../src/types/MoneyAmount';
 import { NotificationProperties } from './../src/types/NotificationProperties';
 import { PersonSignInProperties } from './../src/types/PersonSignInProperties';
 import { PersonPrivateProperties } from './../src/types/PersonPrivateProperties';
-import { Dictionary, Tagged, UtcDate } from "@stevenkellner/typescript-common-functionality";
-import { adjectives, animals, colors, names, starWars, uniqueNamesGenerator } from "unique-names-generator";
-import { Fine, FineAmount, FineTemplate, PayedState, Person, Team, User, UserRole } from "../src/types";
+import { Dictionary, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
+import { adjectives, animals, colors, names, starWars, uniqueNamesGenerator } from 'unique-names-generator';
+import { Fine, FineAmount, FineTemplate, PayedState, Person, Team, User, UserRole } from '../src/types';
 
 export class RandomData {
 

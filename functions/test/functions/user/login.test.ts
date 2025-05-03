@@ -1,8 +1,8 @@
-import { expect } from "@assertive-ts/core";
-import { FirebaseApp } from "../../FirebaseApp";
-import { Result } from "@stevenkellner/typescript-common-functionality";
-import { FunctionsError } from "@stevenkellner/firebase-function";
-import { User } from "../../../src/types";
+import { expect } from '@assertive-ts/core';
+import { FirebaseApp } from '../../FirebaseApp';
+import { Result } from '@stevenkellner/typescript-common-functionality';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { User } from '../../../src/types';
 
 describe('UserLoginFunction', () => {
 

@@ -4,7 +4,7 @@ export class PersonPrivateProperties implements Flattable<PersonPrivatePropertie
 
     constructor(
         public firstName: string,
-        public lastName: string | null,
+        public lastName: string | null
     ) {}
 
     public get flatten(): PersonPrivateProperties.Flatten {

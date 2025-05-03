@@ -1,9 +1,9 @@
-import { expect } from "@assertive-ts/core";
-import { FirebaseApp } from "../../FirebaseApp";
-import { Result } from "@stevenkellner/typescript-common-functionality";
-import { FunctionsError } from "@stevenkellner/firebase-function";
-import { RandomData } from "../../RandomData";
-import { Invitation } from "../../../src/types";
+import { expect } from '@assertive-ts/core';
+import { FirebaseApp } from '../../FirebaseApp';
+import { Result } from '@stevenkellner/typescript-common-functionality';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { RandomData } from '../../RandomData';
+import { Invitation } from '../../../src/types';
 
 describe('InvitationInviteFunction', () => {
 
@@ -17,8 +17,8 @@ describe('InvitationInviteFunction', () => {
 
     it('person not found', async () => {
         const result = await FirebaseApp.shared.functions.invitation.invite.executeWithResult(new Invitation(
-             FirebaseApp.shared.testTeam.id,
-             RandomData.shared.personId()
+            FirebaseApp.shared.testTeam.id,
+            RandomData.shared.personId()
         ));
         expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'Person not found')));
     });

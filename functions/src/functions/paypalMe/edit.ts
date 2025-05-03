@@ -1,6 +1,6 @@
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
-import { Team } from "../../types";
+import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { Team } from '../../types';
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
 

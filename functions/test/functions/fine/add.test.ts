@@ -15,7 +15,7 @@ describe('FineAddFunction', () => {
     });
 
     it('person does not exist', async () => {
-       const result = await FirebaseApp.shared.functions.fine.add.executeWithResult({
+        const result = await FirebaseApp.shared.functions.fine.add.executeWithResult({
             teamId: FirebaseApp.shared.testTeam.id,
             personId: RandomData.shared.personId(),
             fine: RandomData.shared.fine(),

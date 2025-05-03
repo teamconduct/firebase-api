@@ -1,8 +1,8 @@
 import { Configuration } from './../../types/Configuration';
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
-import { pushNotification } from "../../pushNotification";
-import { Fine, Person, Team } from "../../types";
-import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { pushNotification } from '../../pushNotification';
+import { Fine, Person, Team } from '../../types';
+import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
 import * as i18n from 'i18n';

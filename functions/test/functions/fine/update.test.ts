@@ -1,8 +1,8 @@
-import { expect } from "@assertive-ts/core";
-import { FirebaseApp } from "../../FirebaseApp";
-import { RandomData } from "../../RandomData";
-import { Result } from "@stevenkellner/typescript-common-functionality";
-import { FunctionsError } from "@stevenkellner/firebase-function";
+import { expect } from '@assertive-ts/core';
+import { FirebaseApp } from '../../FirebaseApp';
+import { RandomData } from '../../RandomData';
+import { Result } from '@stevenkellner/typescript-common-functionality';
+import { FunctionsError } from '@stevenkellner/firebase-function';
 
 describe('FineUpdateFunction', () => {
 

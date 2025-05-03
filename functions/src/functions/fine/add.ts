@@ -1,9 +1,9 @@
-import { FirebaseFunction, FunctionsError } from "@stevenkellner/firebase-function";
-import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
-import { Configuration, Fine, Person, Team } from "../../types";
-import { checkAuthentication } from "../../checkAuthentication";
-import { Firestore } from "../../Firestore";
-import { pushNotification } from "../../pushNotification";
+import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { Configuration, Fine, Person, Team } from '../../types';
+import { checkAuthentication } from '../../checkAuthentication';
+import { Firestore } from '../../Firestore';
+import { pushNotification } from '../../pushNotification';
 import * as i18n from 'i18n';
 
 export namespace FineAddFunction {

@@ -1,4 +1,4 @@
-import { Flattable, ITypeBuilder, ValueTypeBuilder } from "@stevenkellner/typescript-common-functionality";
+import { Flattable, ITypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
 export class FineTemplateRepetition implements Flattable<FineTemplateRepetition.Flatten> {
 

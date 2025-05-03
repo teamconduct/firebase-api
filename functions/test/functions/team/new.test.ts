@@ -1,9 +1,9 @@
-import { expect } from "@assertive-ts/core";
-import { FirebaseApp } from "../../FirebaseApp";
-import { Result } from "@stevenkellner/typescript-common-functionality";
-import { FunctionsError } from "@stevenkellner/firebase-function";
-import { RandomData } from "../../RandomData";
-import { User, UserRole } from "../../../src/types";
+import { expect } from '@assertive-ts/core';
+import { FirebaseApp } from '../../FirebaseApp';
+import { Result } from '@stevenkellner/typescript-common-functionality';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { RandomData } from '../../RandomData';
+import { User, UserRole } from '../../../src/types';
 
 describe('TeamNewFunction', () => {
 

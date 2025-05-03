@@ -1,9 +1,9 @@
-import { expect } from "@assertive-ts/core";
-import { FirebaseApp } from "../../FirebaseApp";
-import { Dictionary, Result, Tagged } from "@stevenkellner/typescript-common-functionality";
-import { FunctionsError } from "@stevenkellner/firebase-function";
-import { RandomData } from "../../RandomData";
-import { Invitation, Team, User } from "../../../src/types";
+import { expect } from '@assertive-ts/core';
+import { FirebaseApp } from '../../FirebaseApp';
+import { Dictionary, Result, Tagged } from '@stevenkellner/typescript-common-functionality';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { RandomData } from '../../RandomData';
+import { Invitation, Team, User } from '../../../src/types';
 
 describe('InvitationRegisterFunction', () => {
 
@@ -124,7 +124,7 @@ describe('InvitationRegisterFunction', () => {
             ...personSnapshot.data,
             signInProperties: {
                 userId: userId.value,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                 
                 signInDate: personSnapshot.data.signInProperties!.signInDate,
                 notificationProperties: {
                     tokens: {},
