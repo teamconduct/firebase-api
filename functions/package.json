@@ -20,6 +20,13 @@
         "test:coverage": "nyc npm run test",
         "coverage:report": "npx http-server -o ./coverage -p 8090"
     },
+    "dependencies": {
+        "@stevenkellner/firebase-function": "^1.4.133",
+        "@stevenkellner/typescript-common-functionality": "^1.0.49",
+        "firebase-admin": "^13.0.2",
+        "firebase-functions": "^6.2.0",
+        "i18n": "^0.15.1"
+    },
     "devDependencies": {
         "@assertive-ts/core": "^2.1.0",
         "@types/i18n": "^0.13.12",
@@ -38,13 +45,6 @@
         "ts-node": "^10.9.2",
         "typescript": "^5.7.2",
         "unique-names-generator": "^4.7.1"
-    },
-    "dependencies": {
-        "@stevenkellner/firebase-function": "^1.4.133",
-        "@stevenkellner/typescript-common-functionality": "^1.0.49",
-        "firebase-admin": "^13.0.2",
-        "firebase-functions": "^6.2.0",
-        "i18n": "^0.15.1"
     },
     "private": true
 }
