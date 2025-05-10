@@ -16,7 +16,7 @@ export namespace FineAmount {
         ) {}
 
         public formatted(configuration: Configuration): string {
-            return this.amount.formatted(configuration.currency);
+            return this.amount.formatted(configuration.currency, configuration);
         }
 
         public get flatten(): Money.Flatten {
