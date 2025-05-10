@@ -3,7 +3,7 @@ import { FirebaseApp } from '../../FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
 import { RandomData } from '../../RandomData';
-import { Person } from '../../../src/types';
+import { Person } from '@stevenkellner/team-conduct-api';
 
 describe('PersonAddFunction', () => {
 

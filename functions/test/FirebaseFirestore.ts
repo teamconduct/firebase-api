@@ -1,6 +1,6 @@
 import { FirestoreDocument } from '@stevenkellner/firebase-function';
-import { Firestore } from '../src/Firestore';
-import { FirestoreScheme } from '../src/FirestoreScheme';
+import { FirestoreScheme } from '@stevenkellner/team-conduct-api';
+import { Firestore } from '@stevenkellner/team-conduct-api/src/Firestore';
 import axios from 'axios';
 
 export class FirebaseFirestore extends Firestore {

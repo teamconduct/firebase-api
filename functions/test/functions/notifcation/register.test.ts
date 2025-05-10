@@ -1,4 +1,4 @@
-import { NotificationProperties } from './../../../src/types/NotificationProperties';
+import { NotificationProperties } from '@stevenkellner/team-conduct-api';
 import { expect } from '@assertive-ts/core';
 import { FirebaseApp } from '../../FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';

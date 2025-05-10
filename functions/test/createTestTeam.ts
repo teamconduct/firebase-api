@@ -1,5 +1,5 @@
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { Fine, FineTemplate, Person, PersonSignInProperties, User, UserRole, Team, NotificationProperties } from '../src/types';
+import { Fine, FineTemplate, Person, PersonSignInProperties, User, UserRole, Team, NotificationProperties } from '@stevenkellner/team-conduct-api';
 import { testTeam1 } from './testTeams/testTeam1';
 import { FirebaseApp } from './FirebaseApp';
 

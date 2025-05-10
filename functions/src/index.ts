@@ -4,13 +4,15 @@ configDotenv({ path: 'src/.env' });
 import * as admin from 'firebase-admin';
 admin.initializeApp();
 
-import { provideFirebaseFunctions } from '@stevenkellner/firebase-function';
+import { FirestoreDocument, provideFirebaseFunctions } from '@stevenkellner/firebase-function';
 import { firebaseFunctionCreators, Configuration, FirebaseConfiguration } from '@stevenkellner/team-conduct-api';
 import { BytesCoder } from '@stevenkellner/typescript-common-functionality';
+import { getFirestore } from 'firebase-admin/firestore';
 
-FirebaseConfiguration.shared.configure(
-
-);
+FirebaseConfiguration.shared.configure({
+    baseFirestoreDocument: FirestoreDocument.base(getFirestore()),
+    messaging: admin.messaging()
+});
 
 import * as i18n from 'i18n';
 i18n.configure({

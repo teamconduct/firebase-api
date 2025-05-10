@@ -3,7 +3,7 @@ import { FirebaseApp } from '../../FirebaseApp';
 import { Dictionary, Result, Tagged } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
 import { RandomData } from '../../RandomData';
-import { Invitation, Team, User } from '../../../src/types';
+import { Invitation, Team, User } from '@stevenkellner/team-conduct-api';
 
 describe('InvitationRegisterFunction', () => {
 
@@ -124,7 +124,7 @@ describe('InvitationRegisterFunction', () => {
             ...personSnapshot.data,
             signInProperties: {
                 userId: userId.value,
-                 
+
                 signInDate: personSnapshot.data.signInProperties!.signInDate,
                 notificationProperties: {
                     tokens: {},

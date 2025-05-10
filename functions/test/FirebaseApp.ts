@@ -3,10 +3,12 @@ import * as admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { FirebaseAuth } from './FirebaseAuth';
 import { FirebaseFirestore } from './FirebaseFirestore';
-import { Configuration, User, UserRole } from '../src/types';
+import { Configuration, User, UserRole, FirebaseConfiguration } from '@stevenkellner/team-conduct-api';
 import { testTeam1 } from './testTeams/testTeam1';
 import { createTestTeam, TestTeam } from './createTestTeam';
 import { FirebaseFunctions } from './FirebaseFunctions';
+import { getFirestore } from 'firebase-admin/firestore';
+import { FirestoreDocument } from '@stevenkellner/firebase-function';
 
 export class FirebaseApp {
 
@@ -37,6 +39,10 @@ export class FirebaseApp {
                 privateKey: process.env.FUNCTESTS_PRIVATE_KEY
             }),
             databaseURL: process.env.FUNCTESTS_DATABASE_URL
+        });
+        FirebaseConfiguration.shared.configure({
+            baseFirestoreDocument: FirestoreDocument.base(getFirestore()),
+            messaging: admin.messaging()
         })
         this.auth = new FirebaseAuth();
         this.firestore = new FirebaseFirestore();

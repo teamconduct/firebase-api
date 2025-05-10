@@ -2,7 +2,7 @@ import { expect } from '@assertive-ts/core';
 import { FirebaseApp } from '../../FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
-import { Invitation } from '../../../src/types';
+import { Invitation } from '@stevenkellner/team-conduct-api';
 
 describe('InvitationWithdrawFunction', () => {
 

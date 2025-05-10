@@ -1,5 +1,5 @@
 import { connectAuthEmulator, getAuth, Auth as AuthInstance, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from 'firebase/auth';
-import { User } from '../src/types';
+import { User } from '@stevenkellner/team-conduct-api';
 
 export class FirebaseAuth {
 

@@ -1,7 +1,7 @@
 import { connectFunctionsEmulator, getFunctions, Functions as FunctionsInstance } from 'firebase/functions';
 import { BytesCoder } from '@stevenkellner/typescript-common-functionality';
 import { createClientFirebaseFunctions } from '@stevenkellner/firebase-function';
-import { firebaseFunctionCreators } from '../src/firebaseFunctionCreators';
+import { firebaseFunctionCreators } from '@stevenkellner/team-conduct-api';
 
 export class FirebaseFunctions {
 

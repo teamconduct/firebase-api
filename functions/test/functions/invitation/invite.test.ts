@@ -3,7 +3,7 @@ import { FirebaseApp } from '../../FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
 import { RandomData } from '../../RandomData';
-import { Invitation } from '../../../src/types';
+import { Invitation } from '@stevenkellner/team-conduct-api';
 
 describe('InvitationInviteFunction', () => {
 
