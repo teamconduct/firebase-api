@@ -1,5 +1,4 @@
 import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import * as i18n from 'i18n';
 import { Configuration } from './Configuration';
 
 export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
@@ -13,8 +12,20 @@ export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
         return new MoneyAmount(0, 0);
     }
 
-    public formatted(currency: Configuration.Currency): string {
-        const numberFormat = Intl.NumberFormat(i18n.getLocale(), {
+    public added(amount: MoneyAmount): MoneyAmount {
+        const subunitValue = this.subunitValue + amount.subunitValue;
+        const value = this.value + amount.value + Math.floor(subunitValue / 100);
+        return new MoneyAmount(value, subunitValue % 100);
+    }
+
+    public multiplied(factor: number): MoneyAmount {
+        const subunitValue = this.subunitValue * factor;
+        const value = this.value * factor + Math.floor(subunitValue / 100);
+        return new MoneyAmount(value, subunitValue % 100);
+    }
+
+    public formatted(currency: Configuration.Currency, configuration: Configuration): string {
+        const numberFormat = Intl.NumberFormat(configuration.locale, {
             style: 'currency',
             currency: currency
         });
