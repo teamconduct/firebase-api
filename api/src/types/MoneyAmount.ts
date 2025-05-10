@@ -32,6 +32,10 @@ export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
         return numberFormat.format(this.value + this.subunitValue / 100);
     }
 
+    public get completeValue(): number {
+        return this.value + this.subunitValue / 100;
+    }
+
     public get flatten(): MoneyAmount.Flatten {
         return this.value + this.subunitValue / 100;
     }
