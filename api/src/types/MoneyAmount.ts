@@ -9,7 +9,7 @@ export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
         public subunitValue: number
     ) {}
 
-    public static zero(): MoneyAmount {
+    public static get zero(): MoneyAmount {
         return new MoneyAmount(0, 0);
     }
 

@@ -9,8 +9,7 @@
         "strict": true,
         "target": "ESNext",
         "resolveJsonModule": true,
-        "skipLibCheck": true,
-        "declaration": true
+        "skipLibCheck": true
     },
     "compileOnSave": true,
     "include": [
