@@ -13,14 +13,14 @@ export class FirebaseConfiguration {
 
     private constructor() {}
 
-    public configure(
+    public configure(configuration: {
         baseFirestoreDocument: FirestoreScheme,
         messaging: Messaging
-    ) {
+    }) {
         if (this.configured)
             throw new Error('Configuration is already configured');
-        this._baseFirestoreDocument = baseFirestoreDocument;
-        this._messaging = messaging;
+        this._baseFirestoreDocument = configuration.baseFirestoreDocument;
+        this._messaging = configuration.messaging;
         this.configured = true;
     }
 

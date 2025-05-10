@@ -5,11 +5,14 @@ import * as admin from 'firebase-admin';
 admin.initializeApp();
 
 import { provideFirebaseFunctions } from '@stevenkellner/firebase-function';
-import { firebaseFunctionCreators } from './firebaseFunctionCreators';
-import * as i18n from 'i18n';
+import { firebaseFunctionCreators, Configuration, FirebaseConfiguration } from '@stevenkellner/team-conduct-api';
 import { BytesCoder } from '@stevenkellner/typescript-common-functionality';
-import { Configuration } from './types';
 
+FirebaseConfiguration.shared.configure(
+
+);
+
+import * as i18n from 'i18n';
 i18n.configure({
     locales: Configuration.Locale.all,
     defaultLocale: 'en',
