@@ -1,6 +1,11 @@
 {
-    "name": "functions",
-    "main": "lib/src/index.js",
+    "name": "@stevenkellner/team-conduct-api",
+    "version": "1.0.0",
+    "description": "Firebase API for Team Conduct",
+    "author": "Steven Kellner",
+    "license": "MIT",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "engines": {
         "node": "18"
     },
@@ -10,7 +15,6 @@
         "build:watch": "tsc --watch",
         "lint": "eslint --ext .js,.ts .",
         "lint:fix": "eslint --ext .js,.ts . --fix",
-        "upgrade": "ncu --upgrade --install always",
         "serve": "firebase emulators:start --inspect-functions",
         "logs": "firebase functions:log",
         "deploy": "firebase deploy --only functions",
@@ -19,7 +23,9 @@
         "emulator:end": "kill-port 5001 8080",
         "test": "concurrently \"npm run emulator:start || true\" \"npm run emulator:wait && mocha && npm run emulator:end\"",
         "test:coverage": "nyc npm run test",
-        "coverage:report": "npx http-server -o ./coverage -p 8090"
+        "coverage:report": "npx http-server -o ./coverage -p 8090",
+        "upgrade": "ncu --upgrade --install always",
+        "release": "npm run rebuild && npm run test && npm run lint && npm version patch && npm push --follow-tags"
     },
     "dependencies": {
         "@stevenkellner/firebase-function": "^1.4.134",
@@ -52,6 +58,5 @@
         "ts-node": "^10.9.2",
         "typescript": "^5.8.3",
         "unique-names-generator": "^4.7.1"
-    },
-    "private": true
+    }
 }

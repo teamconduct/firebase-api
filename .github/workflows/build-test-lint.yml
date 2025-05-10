@@ -9,9 +9,16 @@ on:
       - '**'
 
 jobs:
+  is-release-commit:
+    uses: ./.github/workflows/is-release-commit.yml
+    with:
+      commit-message: ${{ github.event.head_commit.message }}
+
   build-test-lint:
     name: "Build, Test and Lint Node.js Package"
     runs-on: ubuntu-latest
+    needs: is-release-commit
+    if: needs.is-release-commit.outputs.is_release_commit == 'false'
     timeout-minutes: 5
     env:
       FUNCTESTS_API_KEY: ${{ secrets.FUNCTESTS_API_KEY }}

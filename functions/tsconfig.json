@@ -4,16 +4,18 @@
         "esModuleInterop": true,
         "noImplicitReturns": true,
         "noUnusedLocals": true,
-        "outDir": "lib",
+        "outDir": "./lib",
         "sourceMap": true,
         "strict": true,
         "target": "ESNext",
         "resolveJsonModule": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "declaration": true
     },
     "compileOnSave": true,
     "include": [
-        "src",
-        "test"
+        "index.ts",
+        "src/**/*.ts",
+        "test/**/*.ts",
     ]
 }
