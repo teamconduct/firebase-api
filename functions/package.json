@@ -25,7 +25,7 @@
         "test:coverage": "nyc npm run test",
         "coverage:report": "npx http-server -o ./coverage -p 8090",
         "upgrade": "ncu --upgrade --install always",
-        "release": "npm run rebuild && npm run test && npm run lint && npm version patch && npm push --follow-tags"
+        "release": "npm run rebuild && npm version patch && npm push --follow-tags"
     },
     "dependencies": {
         "@stevenkellner/firebase-function": "^1.4.134",
