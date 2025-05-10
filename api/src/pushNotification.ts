@@ -1,8 +1,7 @@
-import * as admin from 'firebase-admin';
-import { BatchResponse, Notification } from 'firebase-admin/lib/messaging/messaging-api';
+import { Dictionary } from '@stevenkellner/typescript-common-functionality';
 import { Firestore } from './Firestore';
 import { NotificationProperties, Person, Team } from './types';
-import { Dictionary } from '@stevenkellner/typescript-common-functionality';
+import { FirebaseConfiguration, BatchResponse, Notification } from './firebase';
 
 function successfulTokens(response: BatchResponse, tokens: string[]): Dictionary<NotificationProperties.TokenId, string> {
     const successfulTokens = response.responses
@@ -29,7 +28,7 @@ export async function pushNotification(teamId: Team.Id, personId: Person.Id, top
         return;
 
     const tokens = person.signInProperties.notificationProperties.tokens.values;
-    const response = await admin.messaging().sendEachForMulticast({
+    const response = await FirebaseConfiguration.shared.messaging.sendEachForMulticast({
         tokens: tokens,
         notification: notification
     });

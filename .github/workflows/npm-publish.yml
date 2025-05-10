@@ -15,11 +15,11 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - working-directory: functions
+      - working-directory: api
         run: npm ci
-      - working-directory: functions
+      - working-directory: api
         run: npm run rebuild
-      - working-directory: functions
+      - working-directory: api
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

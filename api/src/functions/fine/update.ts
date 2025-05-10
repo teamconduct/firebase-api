@@ -1,4 +1,4 @@
-import { Configuration } from './../../types/Configuration';
+import { Configuration } from '../../types/Configuration';
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { pushNotification } from '../../pushNotification';
 import { Fine, Person, Team } from '../../types';

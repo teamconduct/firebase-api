@@ -9,6 +9,10 @@ export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
         public subunitValue: number
     ) {}
 
+    public static zero(): MoneyAmount {
+        return new MoneyAmount(0, 0);
+    }
+
     public formatted(currency: Configuration.Currency): string {
         const numberFormat = Intl.NumberFormat(i18n.getLocale(), {
             style: 'currency',

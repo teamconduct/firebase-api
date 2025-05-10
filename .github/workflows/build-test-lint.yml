@@ -49,3 +49,9 @@ jobs:
         run: npm test
       - working-directory: functions
         run: npm run lint
+      - working-directory: api
+        run: npm ci
+      - working-directory: api
+        run: npm run rebuild
+      - working-directory: api
+        run: npm run lint
