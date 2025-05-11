@@ -1,9 +1,9 @@
 import { NotificationProperties } from '@stevenkellner/team-conduct-api';
 import { expect } from '@assertive-ts/core';
-import { FirebaseApp } from '../../FirebaseApp';
+import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
-import { RandomData } from '../../RandomData';
+import { RandomData } from '../../utils/RandomData';
 
 describe('NotificationRegisterFunction', () => {
 

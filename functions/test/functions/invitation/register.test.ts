@@ -1,8 +1,8 @@
 import { expect } from '@assertive-ts/core';
-import { FirebaseApp } from '../../FirebaseApp';
+import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { Dictionary, Result, Tagged } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
-import { RandomData } from '../../RandomData';
+import { RandomData } from '../../utils/RandomData';
 import { Invitation, Team, User } from '@stevenkellner/team-conduct-api';
 
 describe('InvitationRegisterFunction', () => {

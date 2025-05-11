@@ -1,62 +1,40 @@
 import { configDotenv } from 'dotenv';
 import * as admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
-// import { FirebaseAuth } from './FirebaseAuth';
-//import { FirebaseFirestore } from './FirebaseFirestore';
-// import { Configuration, User, UserRole, FirebaseConfiguration, firebaseFunctionsContext, PersonSignInProperties, Team, NotificationProperties } from '@stevenkellner/team-conduct-api';
-import { FirebaseConfiguration } from '@stevenkellner/team-conduct-api';
+import { FirebaseAuth } from './FirebaseAuth';
+import { FirebaseFirestore } from './FirebaseFirestore';
+import { Configuration, User, UserRole, FirebaseConfiguration, PersonSignInProperties, Team, NotificationProperties, firebaseFunctionsContext } from '@stevenkellner/team-conduct-api';
 import { getFirestore } from 'firebase-admin/firestore';
-// import { FirestoreDocument, createCallableClientFirebaseFunctions } from '@stevenkellner/firebase-function';
-import { FirestoreDocument } from '@stevenkellner/firebase-function';
-// import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
-// import { BytesCoder, UtcDate } from '@stevenkellner/typescript-common-functionality';
+import { FirestoreDocument, createCallableClientFirebaseFunctions } from '@stevenkellner/firebase-function';
+import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
+import { BytesCoder, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { testTeam1 } from '../testTeams/testTeam1';
-// import { TestTeam } from '../testTeams/TestTeam';
-
-import { FirestoreScheme } from '@stevenkellner/team-conduct-api';
-import { Firestore } from '@stevenkellner/team-conduct-api/src/Firestore';
-import axios from 'axios';
-
-export class FirebaseFirestore extends Firestore {
-
-    public constructor() {
-        process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080';
-        super();
-    }
-
-    public collection<Key extends keyof FirestoreDocument.SubCollectionsOf<FirestoreScheme> & string>(key: Key): FirestoreDocument.SubCollectionsOf<FirestoreScheme>[Key] {
-        return null as any;
-        // return this.base.collection(key);
-    }
-
-    public async clear(): Promise<void> {
-        await axios.delete(`http://127.0.0.1:8080/emulator/v1/projects/${process.env.FUNCTESTS_PROJECT_ID!}/databases/(default)/documents`);
-    }
-}
+import { TestTeam } from '../testTeams/TestTeam';
 
 export class FirebaseApp {
 
     public static shared = new FirebaseApp();
 
-    // public readonly auth: FirebaseAuth;
+    public readonly auth: FirebaseAuth;
 
     public readonly firestore: FirebaseFirestore;
 
-    // public readonly functions: ReturnType<typeof createCallableClientFirebaseFunctions<typeof firebaseFunctionsContext>>;
+    public readonly functions: ReturnType<typeof createCallableClientFirebaseFunctions<typeof firebaseFunctionsContext>>;
 
-    // private _testTeam: TestTeam | null = null;
+    private _testTeam: TestTeam | null = null;
 
     private constructor() {
         this.initialize();
-        // this.auth = new FirebaseAuth();
+        this.auth = new FirebaseAuth();
         this.firestore = new FirebaseFirestore();
-        // const functionsInstance = getFunctions(undefined, 'europe-west1');
-        // connectFunctionsEmulator(functionsInstance, '127.0.0.1', 5001);
-        // this.functions = createCallableClientFirebaseFunctions(firebaseFunctionsContext, functionsInstance, `http://127.0.0.1:5001/${process.env.FUNCTESTS_PROJECT_ID}`, 'europe-west1', BytesCoder.fromHex(process.env.FUNCTESTS_MAC_KEY!));
+        const functionsInstance = getFunctions(undefined, 'europe-west1');
+        connectFunctionsEmulator(functionsInstance, '127.0.0.1', 5001);
+        this.functions = createCallableClientFirebaseFunctions(firebaseFunctionsContext, functionsInstance, `http://127.0.0.1:5001/${process.env.FUNCTESTS_PROJECT_ID}`, 'europe-west1', BytesCoder.fromHex(process.env.FUNCTESTS_MAC_KEY!));
     }
 
     private initialize() {
         configDotenv({ path: 'test/.env.test' });
+        process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080';
         initializeApp({
             apiKey: process.env.FUNCTESTS_API_KEY,
             authDomain: process.env.FUNCTESTS_AUTH_DOMAIN,
@@ -81,7 +59,6 @@ export class FirebaseApp {
         });
     }
 
-    /*
     private* internal_createTestTeam(testTeam: TestTeam, userId: User.Id, roles: UserRole[]): Generator<Promise<unknown>> {
         const user = new User(userId);
         user.teams.set(testTeam.id, new User.TeamProperties(testTeam.name, testTeam.persons[0].id));
@@ -113,11 +90,5 @@ export class FirebaseApp {
 
     public get testConfiguration(): Configuration {
         return new Configuration('EUR', 'en');
-    }
-    */
-
-    public async addTestTeam(): Promise<void> {
-        console.log(testTeam1);
-        return new Promise<void>(resolve => setTimeout(resolve, 1000));
     }
 }

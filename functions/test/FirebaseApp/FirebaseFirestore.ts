@@ -1,12 +1,10 @@
 import { FirestoreDocument } from '@stevenkellner/firebase-function';
-import { FirestoreScheme } from '@stevenkellner/team-conduct-api';
-import { Firestore } from '@stevenkellner/team-conduct-api/src/Firestore';
+import { FirestoreScheme, Firestore } from '@stevenkellner/team-conduct-api';
 import axios from 'axios';
 
 export class FirebaseFirestore extends Firestore {
 
     public constructor() {
-        process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080';
         super();
     }
 

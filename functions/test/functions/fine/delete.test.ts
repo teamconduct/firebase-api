@@ -1,6 +1,6 @@
 import { FunctionsError } from '@stevenkellner/firebase-function';
-import { FirebaseApp } from '../../FirebaseApp';
-import { RandomData } from '../../RandomData';
+import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
+import { RandomData } from '../../utils/RandomData';
 import { Result } from '@stevenkellner/typescript-common-functionality';
 import { expect } from '@assertive-ts/core';
 
