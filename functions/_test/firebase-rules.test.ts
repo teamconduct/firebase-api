@@ -1,5 +1,5 @@
 import { FirestoreCollection } from '@stevenkellner/firebase-function';
-import { FirebaseApp } from './FirebaseApp';
+import { FirebaseApp } from '../test/FirebaseApp/FirebaseApp';
 import { assert, expect } from '@assertive-ts/core'
 import { deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, collection, Firestore, getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { Team, User } from '@stevenkellner/team-conduct-api';

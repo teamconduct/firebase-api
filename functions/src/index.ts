@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 admin.initializeApp();
 
 import { FirestoreDocument, provideFirebaseFunctions } from '@stevenkellner/firebase-function';
-import { firebaseFunctionCreators, Configuration, FirebaseConfiguration } from '@stevenkellner/team-conduct-api';
+import { firebaseFunctionsContext, Configuration, FirebaseConfiguration } from '@stevenkellner/team-conduct-api';
 import { BytesCoder } from '@stevenkellner/typescript-common-functionality';
 import { getFirestore } from 'firebase-admin/firestore';
 
@@ -26,4 +26,4 @@ if (!process.env.MAC_KEY)
     throw new Error('MAC_KEY environment variable is required');
 const macKey = BytesCoder.fromHex(process.env.MAC_KEY);
 
-export = provideFirebaseFunctions(firebaseFunctionCreators, macKey, ['europe-west1'])
+export = provideFirebaseFunctions(firebaseFunctionsContext, macKey, ['europe-west1'])

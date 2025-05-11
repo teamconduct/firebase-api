@@ -1,6 +1,6 @@
 import { Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { MoneyAmount, Fine, FineAmount, Person, PersonPrivateProperties, FineTemplate, FineTemplateRepetition } from '@stevenkellner/team-conduct-api';
-import { TestTeam } from '../createTestTeam';
+import { TestTeam } from './TestTeam';
 
 const fineIds: [Fine.Id, Fine.Id, Fine.Id] = [
     Tagged.generate('fine'),

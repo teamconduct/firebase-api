@@ -14,8 +14,7 @@ module.exports = {
         'test/**/*.test.ts'
     ],
     require: [
-        'ts-node/register',
-        'ts-node/esm'
+        'ts-node/register'
     ],
     'register-option': {
         maxDiffSize: 0
