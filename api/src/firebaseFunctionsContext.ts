@@ -1,4 +1,4 @@
-import { createFirebaseFunctionCreators } from '@stevenkellner/firebase-function';
+import { FirebaseFunctionsContext } from '@stevenkellner/firebase-function';
 import { TeamNewFunction } from './functions/team/new';
 import { UserLoginFunction } from './functions/user/login';
 import { UserRoleEditFunction } from './functions/user/roleEdit';
@@ -18,7 +18,7 @@ import { FineTemplateAddFunction } from './functions/fineTemplate/add';
 import { FineTemplateUpdateFunction } from './functions/fineTemplate/update';
 import { FineTemplateDeleteFunction } from './functions/fineTemplate/delete';
 
-export const firebaseFunctionCreators = createFirebaseFunctionCreators(builder => ({
+export const firebaseFunctionsContext = FirebaseFunctionsContext.build(builder => ({
     team: {
         new: builder.function(TeamNewFunction)
     },
