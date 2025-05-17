@@ -1,10 +1,10 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Configuration, Fine, Person, Team } from '../../types';
+import { Configuration, Fine, Localization, Person, Team } from '../../types';
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
 import { pushNotification } from '../../pushNotification';
-import * as i18n from 'i18n';
+
 
 export namespace FineAddFunction {
 
@@ -45,10 +45,10 @@ export class FineAddFunction extends FirebaseFunction<FineAddFunction.Parameters
         person.fineIds.push(parameters.fine.id);
         await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
 
-        i18n.setLocale(parameters.configuration.locale);
+        Localization.shared.setLocale(parameters.configuration.locale);
         await pushNotification(parameters.teamId, parameters.personId, 'new-fine', {
-            title: i18n.__('notification.fine.new.title', parameters.fine.reason),
-            body: i18n.__('notification.fine.new.body', parameters.fine.amount.formatted(parameters.configuration))
+            title: Localization.shared.get(key => key.notification.fine.new.title, parameters.fine.reason),
+            body: Localization.shared.get(key => key.notification.fine.new.body, parameters.fine.amount.formatted(parameters.configuration))
         });
     }
 }

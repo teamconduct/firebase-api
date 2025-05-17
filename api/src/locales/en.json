@@ -6,25 +6,60 @@
                 "body": "You have a new fine of %s. Please pay it as soon as possible."
             },
             "reminder": {
-                "title": "You still have outstanding penalties",
+                "title": "You still have outstanding fines",
                 "body": "You still have %s outstanding. Please pay as soon as possible."
             },
             "state-change": {
-                "title": "One of your penalties has changed",
-                "body-paid": "You have paid a penalty of %1$s (%2$s).",
-                "body-unpayed": "%1$s, %2$s are still outstanding.",
+                "title": "One of your fines has changed",
+                "body-payed": "You have paid a fine of %1$s (%2$s).",
+                "body-unpayed": "%1$s, %2$s is still outstanding.",
                 "body-deleted": "%1$s, %2$s has been deleted."
             }
         }
     },
-    "FineAmount": {
-        "Item": {
-            "Type": {
-                "crateOfBeer": {
-                    "singular": "One Crate of Beer",
-                    "plural": "%s Crates of Beer"
-                }
-            }
-        }
-    }
+	"fineAmount": {
+		"item": {
+			"type": {
+				"crateOfBeer": "Crate of Beer",
+				"crateOfBeer?count=%s": {
+					"one": "a crate of beer",
+					"other": "%s crates of beer"
+				}
+			}
+		}
+	},
+	"fineTemplateRepetition": {
+		"item": {
+			"minute": "Minute",
+			"minute?count=%s": {
+				"one": "1 minute",
+				"other": "%s minutes"
+			},
+			"day": "Day",
+			"day?count=%s": {
+				"one": "1 day",
+				"other": "%s days"
+			},
+			"item": "Item",
+			"item?count=%s": {
+				"one": "1 item",
+				"other": "%s items"
+			},
+			"count": "Count",
+			"count?count=%s": {
+				"one": "1 time",
+				"other": "%s times"
+			}
+		}
+	},
+	"payedState": {
+		"payed": "Paid",
+		"notPayed": "Outstanding"
+	},
+	"userRole": {
+		"personManager": "Person Manager",
+		"fineTemplateManager": "Fine Template Manager",
+		"fineManager": "Fine Manager",
+		"teamManager": "Team Manager"
+	}
 }

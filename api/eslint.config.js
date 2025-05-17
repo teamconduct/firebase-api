@@ -67,6 +67,6 @@ module.exports = defineConfig([{
         "arrow-parens": ["error", "as-needed"],
         "@typescript-eslint/no-floating-promises": "error",
         "new-cap": "off",
-        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-inferrable-types": "off"
     },
 }, globalIgnores(["lib/**/*", "generated/**/*", "coverage/**/*", ".nyc_output/**/*", "eslint.config.js", ".mocharc.js"])]);

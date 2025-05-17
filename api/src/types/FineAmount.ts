@@ -1,7 +1,7 @@
 import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { MoneyAmount } from './MoneyAmount';
-import * as i18n from 'i18n';
 import { Configuration } from './Configuration';
+import { Localization } from './Localization';
 
 export type FineAmount =
     | FineAmount.Money
@@ -51,14 +51,8 @@ export namespace FineAmount {
             public count: number
         ) {}
 
-        public formatted(configuration: Configuration): string {
-            const numberFormat = Intl.NumberFormat(configuration.locale, {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            });
-            if (this.count === 1)
-                return i18n.__(`FineAmount.Item.Type.${this.item}.singular`, numberFormat.format(this.count));
-            return i18n.__(`FineAmount.Item.Type.${this.item}.plural`, numberFormat.format(this.count));
+        public formatted(): string {
+            return Localization.shared.getN(key => key.fineAmount.item.type[this.item], this.count);
         }
 
         public get flatten(): Item.Flatten {
@@ -78,6 +72,10 @@ export namespace FineAmount {
         export namespace Type {
 
             export const all: Type[] = ['crateOfBeer'];
+
+            export function formatted(type: Type): string {
+                return Localization.shared.get(key => key.fineAmount.item.type[type]);
+            }
         }
 
         export type Flatten = {

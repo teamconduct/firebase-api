@@ -4,6 +4,7 @@ export * from './FineAmount';
 export * from './FineTemplate';
 export * from './FineTemplateRepetition';
 export * from './Invitation';
+export * from './Localization';
 export * from './MoneyAmount';
 export * from './NotificationProperties';
 export * from './PayedState';

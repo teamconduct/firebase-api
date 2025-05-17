@@ -1,30 +1,65 @@
 {
-    "notification": {
-        "fine": {
-            "new": {
-                "title": "%s",
-                "body": "Du hast eine neue Strafe von %s. Bitte so schnell wie möglich zahlen."
-            },
-            "reminder": {
-                "title": "Du hast noch offene Strafen",
-                "body": "Bei dir sind noch %s offen. Bitte so schnell wie möglich zahlen."
-            },
-            "state-change": {
-                "title": "Eine deiner Strafen hat sich geändert",
-                "body-payed": "Du hast eine Strafe von %1$s bezahlt (%2$s).",
-                "body-unpayed": "%1$s, %2$s ist noch offen.",
-                "body-deleted": "%1$s, %2$s wurde gelöscht."
-            }
-        }
-    },
-    "FineAmount": {
-        "Item": {
-            "Type": {
-                "crateOfBeer": {
-                    "singular": "Ein Kasten Bier",
-                    "plural": "%s Kästen Bier"
-                }
-            }
-        }
-    }
+	"notification": {
+		"fine": {
+			"new": {
+				"title": "%s",
+				"body": "Du hast eine neue Strafe von %s. Bitte so schnell wie möglich zahlen."
+			},
+			"reminder": {
+				"title": "Du hast noch offene Strafen",
+				"body": "Bei dir sind noch %s offen. Bitte so schnell wie möglich zahlen."
+			},
+			"state-change": {
+				"title": "Eine deiner Strafen hat sich geändert",
+				"body-payed": "Du hast eine Strafe von %1$s bezahlt (%2$s).",
+				"body-unpayed": "%1$s, %2$s ist noch offen.",
+				"body-deleted": "%1$s, %2$s wurde gelöscht."
+			}
+		}
+	},
+	"fineAmount": {
+		"item": {
+			"type": {
+				"crateOfBeer": "Kasten Bier",
+				"crateOfBeer?count=%s": {
+					"one": "Ein Kasten Bier",
+					"other": "%s Kästen Bier"
+				}
+			}
+		}
+	},
+	"fineTemplateRepetition": {
+		"item": {
+			"minute": "Minute",
+			"minute?count=%s": {
+				"one": "1 Minute",
+				"other": "%s Minuten"
+			},
+			"day": "Tag",
+			"day?count=%s": {
+				"one": "1 Tag",
+				"other": "%s Tage"
+			},
+			"item": "Teil",
+			"item?count=%s": {
+				"one": "1 Teil",
+				"other": "%s Teile"
+			},
+			"count": "Anzahl",
+			"count?count=%s": {
+				"one": "1 mal",
+				"other": "%s mal"
+			}
+		}
+	},
+	"payedState": {
+		"payed": "Bezahlt",
+		"notPayed": "Offen"
+	},
+	"userRole": {
+		"personManager": "Personenmanager",
+		"fineTemplateManager": "Strafvorlagenmanager",
+		"fineManager": "Strafenmanager",
+		"teamManager": "Teammanager"
+	}
 }

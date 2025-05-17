@@ -1,10 +1,9 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Configuration, Fine, FineAmount, Person, Team } from '../../types';
+import { Configuration, Fine, FineAmount, Localization, Person, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
 import { pushNotification } from '../../pushNotification';
-import * as i18n from 'i18n';
 
 export namespace FineDeleteFunction {
 
@@ -45,10 +44,10 @@ export class FineDeleteFunction extends FirebaseFunction<FineDeleteFunction.Para
         person.fineIds = person.fineIds.filter(id => id.guidString !== parameters.id.guidString);
         await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
 
-        i18n.setLocale(parameters.configuration.locale);
+        Localization.shared.setLocale(parameters.configuration.locale);
         await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
-            title: i18n.__('notification.fine.state-change.title'),
-            body: i18n.__('notification.fine.state-change.body-deleted', fineSnapshot.data.reason, FineAmount.builder.build(fineSnapshot.data.amount).formatted(parameters.configuration))
+            title: Localization.shared.get(key => key.notification.fine.stateChange.title),
+            body: Localization.shared.get(key => key.notification.fine.stateChange.bodyDeleted, fineSnapshot.data.reason, FineAmount.builder.build(fineSnapshot.data.amount).formatted(parameters.configuration))
         });
     }
 }
