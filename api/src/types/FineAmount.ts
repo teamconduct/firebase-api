@@ -19,6 +19,10 @@ export namespace FineAmount {
             return this.amount.formatted(configuration.currency, configuration);
         }
 
+        public multiplied(factor: number): Money {
+            return new Money(this.amount.multiplied(factor));
+        }
+
         public get flatten(): Money.Flatten {
             return {
                 type: 'money',
@@ -57,6 +61,10 @@ export namespace FineAmount {
 
         public formattedWithoutCount(): string {
             return Localization.shared.getN(key => key.fineAmount.item.type[`${this.item}WithoutCount`], this.count);
+        }
+
+        public multiplied(factor: number): Item {
+            return new Item(this.item, this.count * factor);
         }
 
         public get flatten(): Item.Flatten {
