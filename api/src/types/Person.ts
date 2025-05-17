@@ -20,6 +20,12 @@ export class Person implements Flattable<Person.Flatten> {
             signInProperties: this.signInProperties?.flatten ?? null
         };
     }
+
+    public get name(): string {
+        if (this.properties.lastName === null)
+            return this.properties.firstName;
+        return `${this.properties.firstName} ${this.properties.lastName}`;
+    }
 }
 
 export namespace Person {
