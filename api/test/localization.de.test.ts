@@ -46,12 +46,16 @@ describe('Localization for de', () => {
             testedKeys.test(key => key.fineAmount.item.type.crateOfBeer, 'Kasten Bier');
             testedKeys.testN(key => key.fineAmount.item.type.crateOfBeer, 1, 'Ein Kasten Bier');
             testedKeys.testN(key => key.fineAmount.item.type.crateOfBeer, 4, '4 Kästen Bier');
+            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeerWithoutCount, 1, 'Kasten Bier');
+            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeerWithoutCount, 4, 'Kästen Bier');
         });
 
         it('fineAmount.item.type.crateOfBeer should be formatted correctly', () => {
             expect(FineAmount.Item.Type.formatted('crateOfBeer')).toBeEqual('Kasten Bier');
             expect(new FineAmount.Item('crateOfBeer', 1).formatted()).toBeEqual('Ein Kasten Bier');
             expect(new FineAmount.Item('crateOfBeer', 4).formatted()).toBeEqual('4 Kästen Bier');
+            expect(new FineAmount.Item('crateOfBeer', 1).formattedWithoutCount()).toBeEqual('Kasten Bier');
+            expect(new FineAmount.Item('crateOfBeer', 4).formattedWithoutCount()).toBeEqual('Kästen Bier');
         });
     });
 

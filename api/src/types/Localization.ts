@@ -51,7 +51,8 @@ export const localizationNKey = {
     fineAmount: {
         item: {
             type: {
-                crateOfBeer: 'fineAmount.item.type.crateOfBeer?count=%s'
+                crateOfBeer: 'fineAmount.item.type.crateOfBeer?count=%s',
+                crateOfBeerWithoutCount: 'fineAmount.item.type.crateOfBeerWithoutCount?count=%s'
             }
         }
     },

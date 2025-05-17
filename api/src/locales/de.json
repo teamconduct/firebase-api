@@ -24,6 +24,10 @@
 				"crateOfBeer?count=%s": {
 					"one": "Ein Kasten Bier",
 					"other": "%s Kästen Bier"
+				},
+				"crateOfBeerWithoutCount?count=%s": {
+					"one": "Kasten Bier",
+					"other": "Kästen Bier"
 				}
 			}
 		}

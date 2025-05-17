@@ -41,12 +41,16 @@ describe('Localization for en', () => {
             testedKeys.test(key => key.fineAmount.item.type.crateOfBeer, 'Crate of Beer');
             testedKeys.testN(key => key.fineAmount.item.type.crateOfBeer, 1, 'a crate of beer');
             testedKeys.testN(key => key.fineAmount.item.type.crateOfBeer, 4, '4 crates of beer');
+            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeerWithoutCount, 1, 'Crate of Beer');
+            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeerWithoutCount, 4, 'Crates of Beer');
         });
 
         it('fineAmount.item.type.crateOfBeer should be formatted correctly', () => {
             expect(FineAmount.Item.Type.formatted('crateOfBeer')).toBeEqual('Crate of Beer');
             expect(new FineAmount.Item('crateOfBeer', 1).formatted()).toBeEqual('a crate of beer');
             expect(new FineAmount.Item('crateOfBeer', 4).formatted()).toBeEqual('4 crates of beer');
+            expect(new FineAmount.Item('crateOfBeer', 1).formattedWithoutCount()).toBeEqual('Crate of Beer');
+            expect(new FineAmount.Item('crateOfBeer', 4).formattedWithoutCount()).toBeEqual('Crates of Beer');
         });
     });
 

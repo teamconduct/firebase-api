@@ -55,6 +55,10 @@ export namespace FineAmount {
             return Localization.shared.getN(key => key.fineAmount.item.type[this.item], this.count);
         }
 
+        public formattedWithoutCount(): string {
+            return Localization.shared.getN(key => key.fineAmount.item.type[`${this.item}WithoutCount`], this.count);
+        }
+
         public get flatten(): Item.Flatten {
             return {
                 type: 'item',
