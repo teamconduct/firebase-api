@@ -107,6 +107,25 @@ export namespace FineAmount {
         return new Item(item, count);
     }
 
+    export function compare(lhs: FineAmount, rhs: FineAmount): 'less' | 'equal' | 'greater' {
+        if (lhs instanceof Money) {
+            if (!(rhs instanceof Money))
+                return 'greater';
+            const lhsAmount = lhs.amount.completeValue;
+            const rhsAmount = rhs.amount.completeValue;
+            if (lhsAmount !== rhsAmount)
+                return lhsAmount < rhsAmount ? 'less' : 'greater';
+        }
+        if (lhs instanceof Item) {
+            if (!(rhs instanceof Item))
+                return 'less';
+            if (lhs.count === rhs.count)
+                return 'equal';
+            return lhs.count < rhs.count ? 'less' : 'greater';
+        }
+        return 'equal';
+    }
+
     export type Flatten = Money.Flatten | Item.Flatten;
 
     export class TypeBuilder implements ITypeBuilder<Flatten, FineAmount> {
