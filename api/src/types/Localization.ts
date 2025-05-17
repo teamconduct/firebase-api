@@ -59,9 +59,13 @@ export const localizationNKey = {
     fineTemplateRepetition: {
         item: {
             minute: 'fineTemplateRepetition.item.minute?count=%s',
+            minuteWithoutCount: 'fineTemplateRepetition.item.minuteWithoutCount?count=%s',
             day: 'fineTemplateRepetition.item.day?count=%s',
+            dayWithoutCount: 'fineTemplateRepetition.item.dayWithoutCount?count=%s',
             item: 'fineTemplateRepetition.item.item?count=%s',
-            count: 'fineTemplateRepetition.item.count?count=%s'
+            itemWithoutCount: 'fineTemplateRepetition.item.itemWithoutCount?count=%s',
+            count: 'fineTemplateRepetition.item.count?count=%s',
+            countWithoutCount: 'fineTemplateRepetition.item.countWithoutCount?count=%s'
         }
     }
 }

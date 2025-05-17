@@ -60,48 +60,64 @@ describe('Localization for en', () => {
             testedKeys.test(key => key.fineTemplateRepetition.item.minute, 'Minute');
             testedKeys.testN(key => key.fineTemplateRepetition.item.minute, 1, '1 minute');
             testedKeys.testN(key => key.fineTemplateRepetition.item.minute, 4, '4 minutes');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.minuteWithoutCount, 1, 'Minute');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.minuteWithoutCount, 4, 'Minutes');
         });
 
         it('fineTemplateRepetition.item.minute should be formatted correctly', () => {
             expect(FineTemplateRepetition.Item.formatted('minute')).toBeEqual('Minute');
             expect(new FineTemplateRepetition('minute', null).formatted(1)).toBeEqual('1 minute');
             expect(new FineTemplateRepetition('minute', null).formatted(4)).toBeEqual('4 minutes');
+            expect(new FineTemplateRepetition('minute', null).formattedWithoutCount(1)).toBeEqual('Minute');
+            expect(new FineTemplateRepetition('minute', null).formattedWithoutCount(4)).toBeEqual('Minutes');
         });
 
         it('fineTemplateRepetition.item.day should be tested', () => {
             testedKeys.test(key => key.fineTemplateRepetition.item.day, 'Day');
             testedKeys.testN(key => key.fineTemplateRepetition.item.day, 1, '1 day');
             testedKeys.testN(key => key.fineTemplateRepetition.item.day, 4, '4 days');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.dayWithoutCount, 1, 'Day');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.dayWithoutCount, 4, 'Days');
         });
 
         it('fineTemplateRepetition.item.day should be formatted correctly', () => {
             expect(FineTemplateRepetition.Item.formatted('day')).toBeEqual('Day');
             expect(new FineTemplateRepetition('day', null).formatted(1)).toBeEqual('1 day');
             expect(new FineTemplateRepetition('day', null).formatted(4)).toBeEqual('4 days');
+            expect(new FineTemplateRepetition('day', null).formattedWithoutCount(1)).toBeEqual('Day');
+            expect(new FineTemplateRepetition('day', null).formattedWithoutCount(4)).toBeEqual('Days');
         });
 
         it('fineTemplateRepetition.item.item should be tested', () => {
             testedKeys.test(key => key.fineTemplateRepetition.item.item, 'Item');
             testedKeys.testN(key => key.fineTemplateRepetition.item.item, 1, '1 item');
             testedKeys.testN(key => key.fineTemplateRepetition.item.item, 4, '4 items');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.itemWithoutCount, 1, 'Item');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.itemWithoutCount, 4, 'Items');
         });
 
         it('fineTemplateRepetition.item.item should be formatted correctly', () => {
             expect(FineTemplateRepetition.Item.formatted('item')).toBeEqual('Item');
             expect(new FineTemplateRepetition('item', null).formatted(1)).toBeEqual('1 item');
             expect(new FineTemplateRepetition('item', null).formatted(4)).toBeEqual('4 items');
+            expect(new FineTemplateRepetition('item', null).formattedWithoutCount(1)).toBeEqual('Item');
+            expect(new FineTemplateRepetition('item', null).formattedWithoutCount(4)).toBeEqual('Items');
         });
 
         it('fineTemplateRepetition.item.count should be tested', () => {
             testedKeys.test(key => key.fineTemplateRepetition.item.count, 'Count');
             testedKeys.testN(key => key.fineTemplateRepetition.item.count, 1, '1 time');
             testedKeys.testN(key => key.fineTemplateRepetition.item.count, 4, '4 times');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.countWithoutCount, 1, 'time');
+            testedKeys.testN(key => key.fineTemplateRepetition.item.countWithoutCount, 4, 'times');
         });
 
         it('fineTemplateRepetition.item.count should be formatted correctly', () => {
             expect(FineTemplateRepetition.Item.formatted('count')).toBeEqual('Count');
             expect(new FineTemplateRepetition('count', null).formatted(1)).toBeEqual('1 time');
             expect(new FineTemplateRepetition('count', null).formatted(4)).toBeEqual('4 times');
+            expect(new FineTemplateRepetition('count', null).formattedWithoutCount(1)).toBeEqual('time');
+            expect(new FineTemplateRepetition('count', null).formattedWithoutCount(4)).toBeEqual('times');
         });
     });
 

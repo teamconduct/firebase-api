@@ -12,6 +12,10 @@ export class FineTemplateRepetition implements Flattable<FineTemplateRepetition.
         return Localization.shared.getN(key => key.fineTemplateRepetition.item[this.item], count);
     }
 
+    public formattedWithoutCount(count: number): string {
+        return Localization.shared.getN(key => key.fineTemplateRepetition.item[`${this.item}WithoutCount`], count);
+    }
+
     public get flatten(): FineTemplateRepetition.Flatten {
         return {
             item: this.item,

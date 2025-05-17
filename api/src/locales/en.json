@@ -39,21 +39,37 @@
 				"one": "1 minute",
 				"other": "%s minutes"
 			},
+            "minuteWithoutCount?count=%s": {
+                "one": "Minute",
+                "other": "Minutes"
+            },
 			"day": "Day",
 			"day?count=%s": {
 				"one": "1 day",
 				"other": "%s days"
 			},
+            "dayWithoutCount?count=%s": {
+                "one": "Day",
+                "other": "Days"
+            },
 			"item": "Item",
 			"item?count=%s": {
 				"one": "1 item",
 				"other": "%s items"
 			},
+            "itemWithoutCount?count=%s": {
+                "one": "Item",
+                "other": "Items"
+            },
 			"count": "Count",
 			"count?count=%s": {
 				"one": "1 time",
 				"other": "%s times"
-			}
+			},
+            "countWithoutCount?count=%s": {
+                "one": "time",
+                "other": "times"
+            }
 		}
 	},
 	"payedState": {
