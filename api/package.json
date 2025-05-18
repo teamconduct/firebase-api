@@ -22,8 +22,8 @@
         "release": "npm run rebuild && npm run lint && npm version patch && git push --follow-tags"
     },
     "dependencies": {
-        "@stevenkellner/firebase-function": "^1.4.139",
-        "@stevenkellner/typescript-common-functionality": "^1.0.55"
+        "@stevenkellner/firebase-function": "^1.4.140",
+        "@stevenkellner/typescript-common-functionality": "^1.0.56"
     },
     "devDependencies": {
         "@assertive-ts/core": "^2.1.0",
