@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@stevenkellner/firebase-function": "^1.4.138",
-        "@stevenkellner/team-conduct-api": "^1.0.24",
+        "@stevenkellner/team-conduct-api": "^1.0.25",
         "firebase-admin": "^13.4.0",
         "firebase-functions": "^6.3.2"
     },
