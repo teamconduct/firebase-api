@@ -20,7 +20,7 @@
         "test": "concurrently \"npm run emulator:start || true\" \"npm run emulator:wait && mocha && npm run emulator:end\"",
         "test:coverage": "nyc npm run test",
         "coverage:report": "npx http-server -o ./coverage -p 8090",
-        "upgrade": "ncu --upgrade --install always"
+        "upgrade": "npm cache clean --force && ncu --upgrade --install always"
     },
     "dependencies": {
         "@stevenkellner/firebase-function": "^1.4.137",

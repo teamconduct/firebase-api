@@ -18,22 +18,22 @@
         "lint": "eslint --ext .js,.ts .",
         "lint:fix": "eslint --ext .js,.ts . --fix",
         "test": "mocha",
-        "upgrade": "ncu --upgrade --install always",
+        "upgrade": "npm cache clean --force && ncu --upgrade --install always",
         "release": "npm run rebuild && npm run lint && npm version patch && git push --follow-tags"
     },
     "dependencies": {
-        "@stevenkellner/firebase-function": "^1.4.137",
-        "@stevenkellner/typescript-common-functionality": "^1.0.49"
+        "@stevenkellner/firebase-function": "^1.4.138",
+        "@stevenkellner/typescript-common-functionality": "^1.0.54"
     },
     "devDependencies": {
         "@assertive-ts/core": "^2.1.0",
         "@eslint/compat": "^1.2.9",
         "@eslint/eslintrc": "^3.3.1",
-        "@eslint/js": "^9.26.0",
+        "@eslint/js": "^9.27.0",
         "@types/mocha": "^10.0.10",
-        "@typescript-eslint/eslint-plugin": "^8.32.0",
-        "@typescript-eslint/parser": "^8.32.0",
-        "eslint": "^9.26.0",
+        "@typescript-eslint/eslint-plugin": "^8.32.1",
+        "@typescript-eslint/parser": "^8.32.1",
+        "eslint": "^9.27.0",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-import": "^2.31.0",
         "mocha": "^11.3.0",
