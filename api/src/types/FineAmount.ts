@@ -56,11 +56,11 @@ export namespace FineAmount {
         ) {}
 
         public formatted(): string {
-            return Localization.shared.getN(key => key.fineAmount.item.type[this.item], this.count);
+            return Localization.shared.fineAmount.item.type[this.item].withCount.value(this.count);
         }
 
         public formattedWithoutCount(): string {
-            return Localization.shared.getN(key => key.fineAmount.item.type[`${this.item}WithoutCount`], this.count);
+            return Localization.shared.fineAmount.item.type[this.item].withoutCount.value(this.count);
         }
 
         public multiplied(factor: number): Item {
@@ -86,7 +86,7 @@ export namespace FineAmount {
             export const all: Type[] = ['crateOfBeer'];
 
             export function formatted(type: Type): string {
-                return Localization.shared.get(key => key.fineAmount.item.type[type]);
+                return Localization.shared.fineAmount.item.type[type].name.value();
             }
         }
 

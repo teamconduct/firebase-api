@@ -1,7 +1,7 @@
 import { Configuration } from '../../types/Configuration';
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { pushNotification } from '../../pushNotification';
-import { Fine, Localization, Person, Team } from '../../types';
+import { Fine, Localization, Person, Team, ValueLocalization } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
@@ -37,16 +37,19 @@ export class FineUpdateFunction extends FirebaseFunction<FineUpdateFunction.Para
 
         await Firestore.shared.fine(parameters.teamId, parameters.fine.id).set(parameters.fine);
 
-        Localization.shared.setLocale(parameters.configuration.locale);
+        Localization.locale = parameters.configuration.locale;
         if (parameters.fine.payedState !== fineSnapshot.data.payedState) {
-            let body: string;
+            let bodyLocalization: ValueLocalization;
             if (parameters.fine.payedState === 'payed')
-                body = Localization.shared.get(key => key.notification.fine.stateChange.bodyPayed, parameters.fine.amount.formatted(parameters.configuration), parameters.fine.reason);
+                bodyLocalization = Localization.shared.notification.fine.stateChange.bodyPayed;
             else
-                body = Localization.shared.get(key => key.notification.fine.stateChange.bodyUnpayed, parameters.fine.reason, parameters.fine.amount.formatted(parameters.configuration));
+                bodyLocalization = Localization.shared.notification.fine.stateChange.bodyUnpayed;
             await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
-                title: Localization.shared.get(key => key.notification.fine.stateChange.title),
-                body: body
+                title: Localization.shared.notification.fine.stateChange.title.value(),
+                body: bodyLocalization.value({
+                    reason: parameters.fine.reason,
+                    amount: parameters.fine.amount.formatted(parameters.configuration)
+                })
             });
 
         }

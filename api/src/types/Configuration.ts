@@ -1,4 +1,5 @@
-import { Flattable, ITypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { localizations } from './Localization';
+import { Flattable, ITypeBuilder, keys, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
 export class Configuration implements Flattable<Configuration.Flatten> {
 
@@ -26,11 +27,11 @@ export namespace Configuration {
         export const builder = new ValueTypeBuilder<Currency>();
     }
 
-    export type Locale = 'de' | 'en';
+    export type Locale = keyof typeof localizations;
 
     export namespace Locale {
 
-        export const all: Locale[] = ['de', 'en'];
+        export const all: Locale[] = keys(localizations);
 
         export const builder = new ValueTypeBuilder<Locale>();
     }

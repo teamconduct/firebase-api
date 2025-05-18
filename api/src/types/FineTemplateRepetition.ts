@@ -9,11 +9,11 @@ export class FineTemplateRepetition implements Flattable<FineTemplateRepetition.
     ) {}
 
     public formatted(count: number): string {
-        return Localization.shared.getN(key => key.fineTemplateRepetition.item[this.item], count);
+        return Localization.shared.fineTemplateRepetition.item[this.item].withCount.value(count);
     }
 
     public formattedWithoutCount(count: number): string {
-        return Localization.shared.getN(key => key.fineTemplateRepetition.item[`${this.item}WithoutCount`], count);
+        return Localization.shared.fineTemplateRepetition.item[this.item].withoutCount.value(count);
     }
 
     public get flatten(): FineTemplateRepetition.Flatten {
@@ -42,7 +42,7 @@ export namespace FineTemplateRepetition {
         ];
 
         export function formatted(item: Item): string {
-            return Localization.shared.get(key => key.fineTemplateRepetition.item[item]);
+            return Localization.shared.fineTemplateRepetition.item[item].name.value();
         }
 
         export const builder = new ValueTypeBuilder<Item>();

@@ -10,7 +10,7 @@ export namespace PayedState {
     export const all: PayedState[] = ['payed', 'notPayed'];
 
     export function formatted(state: PayedState): string {
-        return Localization.shared.get(key => key.payedState[state]);
+        return Localization.shared.payedState[state].value();
     }
 
     export function toggled(state: PayedState): PayedState {

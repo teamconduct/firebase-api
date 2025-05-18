@@ -9,8 +9,6 @@ typings/
 node_modules/
 *.local
 
-/src/locales
-
 /.env
 /test/.env.test
 /test/team-conduct-firebase-adminsdk*.json

@@ -11,6 +11,7 @@ export * from './PayedState';
 export * from './Person';
 export * from './PersonPrivateProperties';
 export * from './PersonSignInProperties';
+export * from './Pluralization';
 export * from './Team';
 export * from './User';
 export * from './UserRole';

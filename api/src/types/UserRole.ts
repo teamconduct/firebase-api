@@ -1,5 +1,5 @@
 import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Localization, localizationKey } from './Localization';
+import { Localization, localizations } from './Localization';
 
 export type UserRole =
     | 'person-manager'
@@ -17,13 +17,13 @@ export namespace UserRole {
     ];
 
     export function formatted(role: UserRole): string {
-        const localizationKeyMap: Record<UserRole, keyof typeof localizationKey.userRole> = {
+        const localizationKeyMap: Record<UserRole, keyof (typeof localizations)[keyof typeof localizations]['userRole']> = {
             'person-manager': 'personManager',
             'fineTemplate-manager': 'fineTemplateManager',
             'fine-manager': 'fineManager',
             'team-manager': 'teamManager'
         }
-        return Localization.shared.get(key => key.userRole[localizationKeyMap[role]]);
+        return Localization.shared.userRole[localizationKeyMap[role]].value();
     }
 
     export const builder = new ValueTypeBuilder<UserRole>();

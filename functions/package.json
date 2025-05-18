@@ -23,8 +23,8 @@
         "upgrade": "ncu --upgrade --install always"
     },
     "dependencies": {
-        "@stevenkellner/firebase-function": "^1.4.136",
-        "@stevenkellner/team-conduct-api": "^1.0.21",
+        "@stevenkellner/firebase-function": "^1.4.137",
+        "@stevenkellner/team-conduct-api": "^1.0.22",
         "firebase-admin": "^13.3.0",
         "firebase-functions": "^6.3.2"
     },
@@ -33,7 +33,6 @@
         "@eslint/compat": "^1.2.9",
         "@eslint/eslintrc": "^3.3.1",
         "@eslint/js": "^9.26.0",
-        "@types/i18n": "^0.13.12",
         "@types/mocha": "^10.0.10",
         "@types/tcp-port-used": "^1.0.4",
         "@typescript-eslint/eslint-plugin": "^8.32.0",

@@ -1,48 +1,40 @@
 import { expect } from '@assertive-ts/core';
-import * as localizationEN from '../src/locales/en.json';
 import { FineAmount, FineTemplateRepetition, Localization, PayedState, UserRole } from '../src/types';
-import { localizationWithoutDefault, TestedKeys } from './localization-utils';
 
 describe('Localization for en', () => {
 
-    const testedKeys = new TestedKeys(localizationWithoutDefault(localizationEN));
-
     before(() => {
-        Localization.shared.setLocale('en');
-    });
-
-    after('all values should be tested', () => {
-        testedKeys.checkAllTested();
+        Localization.locale = 'en';
     });
 
     describe('notification.fine should be tested', () => {
 
         it('notification.fine.new should be tested', () => {
-            testedKeys.testArgs(key => key.notification.fine.new.title, ['fine-reason'], 'fine-reason');
-            testedKeys.testArgs(key => key.notification.fine.new.body, ['10.50 €'], 'You have a new fine of 10.50 €. Please pay it as soon as possible.');
+            expect(Localization.shared.notification.fine.new.title.value({ reason: 'fine-reason' })).toBeEqual('fine-reason');
+            expect(Localization.shared.notification.fine.new.body.value({ amount: '10.50 €' })).toBeEqual('You have a new fine of 10.50 €. Please pay it as soon as possible.');
         });
 
         it('notification.fine.reminder should be tested', () => {
-            testedKeys.test(key => key.notification.fine.reminder.title, 'You still have outstanding fines');
-            testedKeys.testArgs(key => key.notification.fine.reminder.body, ['10.50 €'], 'You still have 10.50 € outstanding. Please pay as soon as possible.');
+            expect(Localization.shared.notification.fine.reminder.title.value()).toBeEqual('You still have outstanding fines');
+            expect(Localization.shared.notification.fine.reminder.body.value({ amount: '10.50 €' })).toBeEqual('You still have 10.50 € outstanding. Please pay as soon as possible.');
         });
 
         it('notification.fine.stateChange should be tested', () => {
-            testedKeys.test(key => key.notification.fine.stateChange.title, 'One of your fines has changed');
-            testedKeys.testArgs(key => key.notification.fine.stateChange.bodyPayed, ['10.50 €', 'fine-reason'], 'You have paid a fine of 10.50 € (fine-reason).');
-            testedKeys.testArgs(key => key.notification.fine.stateChange.bodyUnpayed, ['10.50 €', 'fine-reason'], '10.50 €, fine-reason is still outstanding.');
-            testedKeys.testArgs(key => key.notification.fine.stateChange.bodyDeleted, ['10.50 €', 'fine-reason'], '10.50 €, fine-reason has been deleted.');
+            expect(Localization.shared.notification.fine.stateChange.title.value()).toBeEqual('One of your fines has changed');
+            expect(Localization.shared.notification.fine.stateChange.bodyPayed.value({ amount: '10.50 €', reason: 'fine-reason' })).toBeEqual('You have paid a fine of 10.50 € (fine-reason).');
+            expect(Localization.shared.notification.fine.stateChange.bodyUnpayed.value({ amount: '10.50 €', reason: 'fine-reason' })).toBeEqual('fine-reason, 10.50 € is still outstanding.');
+            expect(Localization.shared.notification.fine.stateChange.bodyDeleted.value({ amount: '10.50 €', reason: 'fine-reason' })).toBeEqual('fine-reason, 10.50 € has been deleted.');
         });
     });
 
     describe('fineAmount should be tested', () => {
 
         it('fineAmount.item.type.crateOfBeer should be tested', () => {
-            testedKeys.test(key => key.fineAmount.item.type.crateOfBeer, 'Crate of Beer');
-            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeer, 1, 'a crate of beer');
-            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeer, 4, '4 crates of beer');
-            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeerWithoutCount, 1, 'Crate of Beer');
-            testedKeys.testN(key => key.fineAmount.item.type.crateOfBeerWithoutCount, 4, 'Crates of Beer');
+            expect(Localization.shared.fineAmount.item.type.crateOfBeer.name.value()).toBeEqual('Crate of Beer');
+            expect(Localization.shared.fineAmount.item.type.crateOfBeer.withCount.value(1)).toBeEqual('a crate of beer');
+            expect(Localization.shared.fineAmount.item.type.crateOfBeer.withCount.value(4)).toBeEqual('4 crates of beer');
+            expect(Localization.shared.fineAmount.item.type.crateOfBeer.withoutCount.value(1)).toBeEqual('Crate of Beer');
+            expect(Localization.shared.fineAmount.item.type.crateOfBeer.withoutCount.value(4)).toBeEqual('Crates of Beer');
         });
 
         it('fineAmount.item.type.crateOfBeer should be formatted correctly', () => {
@@ -57,59 +49,59 @@ describe('Localization for en', () => {
     describe('fineTemplateRepetition should be tested', () => {
 
         it('fineTemplateRepetition.item.minute should be tested', () => {
-            testedKeys.test(key => key.fineTemplateRepetition.item.minute, 'Minute');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.minute, 1, '1 minute');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.minute, 4, '4 minutes');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.minuteWithoutCount, 1, 'Minute');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.minuteWithoutCount, 4, 'Minutes');
+            expect(Localization.shared.fineTemplateRepetition.item.minute.name.value()).toBeEqual('Minute');
+            expect(Localization.shared.fineTemplateRepetition.item.minute.withCount.value(1)).toBeEqual('1 minute');
+            expect(Localization.shared.fineTemplateRepetition.item.minute.withCount.value(4)).toBeEqual('4 minutes');
+            expect(Localization.shared.fineTemplateRepetition.item.minute.withoutCount.value(1)).toBeEqual('minute');
+            expect(Localization.shared.fineTemplateRepetition.item.minute.withoutCount.value(4)).toBeEqual('minutes');
         });
 
         it('fineTemplateRepetition.item.minute should be formatted correctly', () => {
             expect(FineTemplateRepetition.Item.formatted('minute')).toBeEqual('Minute');
             expect(new FineTemplateRepetition('minute', null).formatted(1)).toBeEqual('1 minute');
             expect(new FineTemplateRepetition('minute', null).formatted(4)).toBeEqual('4 minutes');
-            expect(new FineTemplateRepetition('minute', null).formattedWithoutCount(1)).toBeEqual('Minute');
-            expect(new FineTemplateRepetition('minute', null).formattedWithoutCount(4)).toBeEqual('Minutes');
+            expect(new FineTemplateRepetition('minute', null).formattedWithoutCount(1)).toBeEqual('minute');
+            expect(new FineTemplateRepetition('minute', null).formattedWithoutCount(4)).toBeEqual('minutes');
         });
 
         it('fineTemplateRepetition.item.day should be tested', () => {
-            testedKeys.test(key => key.fineTemplateRepetition.item.day, 'Day');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.day, 1, '1 day');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.day, 4, '4 days');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.dayWithoutCount, 1, 'Day');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.dayWithoutCount, 4, 'Days');
+            expect(Localization.shared.fineTemplateRepetition.item.day.name.value()).toBeEqual('Day');
+            expect(Localization.shared.fineTemplateRepetition.item.day.withCount.value(1)).toBeEqual('1 day');
+            expect(Localization.shared.fineTemplateRepetition.item.day.withCount.value(4)).toBeEqual('4 days');
+            expect(Localization.shared.fineTemplateRepetition.item.day.withoutCount.value(1)).toBeEqual('day');
+            expect(Localization.shared.fineTemplateRepetition.item.day.withoutCount.value(4)).toBeEqual('days');
         });
 
         it('fineTemplateRepetition.item.day should be formatted correctly', () => {
             expect(FineTemplateRepetition.Item.formatted('day')).toBeEqual('Day');
             expect(new FineTemplateRepetition('day', null).formatted(1)).toBeEqual('1 day');
             expect(new FineTemplateRepetition('day', null).formatted(4)).toBeEqual('4 days');
-            expect(new FineTemplateRepetition('day', null).formattedWithoutCount(1)).toBeEqual('Day');
-            expect(new FineTemplateRepetition('day', null).formattedWithoutCount(4)).toBeEqual('Days');
+            expect(new FineTemplateRepetition('day', null).formattedWithoutCount(1)).toBeEqual('day');
+            expect(new FineTemplateRepetition('day', null).formattedWithoutCount(4)).toBeEqual('days');
         });
 
         it('fineTemplateRepetition.item.item should be tested', () => {
-            testedKeys.test(key => key.fineTemplateRepetition.item.item, 'Item');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.item, 1, '1 item');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.item, 4, '4 items');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.itemWithoutCount, 1, 'Item');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.itemWithoutCount, 4, 'Items');
+            expect(Localization.shared.fineTemplateRepetition.item.item.name.value()).toBeEqual('Item');
+            expect(Localization.shared.fineTemplateRepetition.item.item.withCount.value(1)).toBeEqual('1 item');
+            expect(Localization.shared.fineTemplateRepetition.item.item.withCount.value(4)).toBeEqual('4 items');
+            expect(Localization.shared.fineTemplateRepetition.item.item.withoutCount.value(1)).toBeEqual('item');
+            expect(Localization.shared.fineTemplateRepetition.item.item.withoutCount.value(4)).toBeEqual('items');
         });
 
         it('fineTemplateRepetition.item.item should be formatted correctly', () => {
             expect(FineTemplateRepetition.Item.formatted('item')).toBeEqual('Item');
             expect(new FineTemplateRepetition('item', null).formatted(1)).toBeEqual('1 item');
             expect(new FineTemplateRepetition('item', null).formatted(4)).toBeEqual('4 items');
-            expect(new FineTemplateRepetition('item', null).formattedWithoutCount(1)).toBeEqual('Item');
-            expect(new FineTemplateRepetition('item', null).formattedWithoutCount(4)).toBeEqual('Items');
+            expect(new FineTemplateRepetition('item', null).formattedWithoutCount(1)).toBeEqual('item');
+            expect(new FineTemplateRepetition('item', null).formattedWithoutCount(4)).toBeEqual('items');
         });
 
         it('fineTemplateRepetition.item.count should be tested', () => {
-            testedKeys.test(key => key.fineTemplateRepetition.item.count, 'Count');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.count, 1, '1 time');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.count, 4, '4 times');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.countWithoutCount, 1, 'time');
-            testedKeys.testN(key => key.fineTemplateRepetition.item.countWithoutCount, 4, 'times');
+            expect(Localization.shared.fineTemplateRepetition.item.count.name.value()).toBeEqual('Count');
+            expect(Localization.shared.fineTemplateRepetition.item.count.withCount.value(1)).toBeEqual('1 time');
+            expect(Localization.shared.fineTemplateRepetition.item.count.withCount.value(4)).toBeEqual('4 times');
+            expect(Localization.shared.fineTemplateRepetition.item.count.withoutCount.value(1)).toBeEqual('time');
+            expect(Localization.shared.fineTemplateRepetition.item.count.withoutCount.value(4)).toBeEqual('times');
         });
 
         it('fineTemplateRepetition.item.count should be formatted correctly', () => {
@@ -124,7 +116,7 @@ describe('Localization for en', () => {
     describe('payedState should be tested', () => {
 
         it('payedState.payed should be tested', () => {
-            testedKeys.test(key => key.payedState.payed, 'Paid');
+            expect(Localization.shared.payedState.payed.value()).toBeEqual('Paid');
         });
 
         it('payedState.payed should be formatted correctly', () => {
@@ -132,7 +124,7 @@ describe('Localization for en', () => {
         });
 
         it('payedState.notPayed should be tested', () => {
-            testedKeys.test(key => key.payedState.notPayed, 'Outstanding');
+            expect(Localization.shared.payedState.notPayed.value()).toBeEqual('Outstanding');
         });
 
         it('payedState.notPayed should be formatted correctly', () => {
@@ -143,7 +135,7 @@ describe('Localization for en', () => {
     describe('userRole should be tested', () => {
 
         it('userRole.personManager should be tested', () => {
-            testedKeys.test(key => key.userRole.personManager, 'Person Manager');
+            expect(Localization.shared.userRole.personManager.value()).toBeEqual('Person Manager');
         });
 
         it('userRole.personManager should be formatted correctly', () => {
@@ -151,7 +143,7 @@ describe('Localization for en', () => {
         });
 
         it('userRole.fineTemplateManager should be tested', () => {
-            testedKeys.test(key => key.userRole.fineTemplateManager, 'Fine Template Manager');
+            expect(Localization.shared.userRole.fineTemplateManager.value()).toBeEqual('Fine Template Manager');
         });
 
         it('userRole.fineTemplateManager should be formatted correctly', () => {
@@ -159,7 +151,7 @@ describe('Localization for en', () => {
         });
 
         it('userRole.fineManager should be tested', () => {
-            testedKeys.test(key => key.userRole.fineManager, 'Fine Manager');
+            expect(Localization.shared.userRole.fineManager.value()).toBeEqual('Fine Manager');
         });
 
         it('userRole.fineManager should be formatted correctly', () => {
@@ -167,7 +159,7 @@ describe('Localization for en', () => {
         });
 
         it('userRole.teamManager should be tested', () => {
-            testedKeys.test(key => key.userRole.teamManager, 'Team Manager');
+            expect(Localization.shared.userRole.teamManager.value()).toBeEqual('Team Manager');
         });
 
         it('userRole.teamManager should be formatted correctly', () => {
