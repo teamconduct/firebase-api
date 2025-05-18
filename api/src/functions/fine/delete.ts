@@ -48,7 +48,8 @@ export class FineDeleteFunction extends FirebaseFunction<FineDeleteFunction.Para
         await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
             title: Localization.shared.notification.fine.stateChange.title.value(),
             body: Localization.shared.notification.fine.stateChange.bodyDeleted.value({
-                amount: FineAmount.builder.build(fineSnapshot.data.amount).formatted(parameters.configuration)
+                amount: FineAmount.builder.build(fineSnapshot.data.amount).formatted(parameters.configuration),
+                reason: fineSnapshot.data.reason
             })
         });
     }
