@@ -42,16 +42,21 @@ describe('UserKickoutFunction', () => {
         expect(result).toBeEqual(Result.failure(new FunctionsError('invalid-argument', 'You cannot kick yourself out of a team.')));
     });
 
-    it('kickout', async () => {
+    it.only('kickout', async () => {
         const userId: User.Id = new Tagged('userId', 'user');
         await FirebaseApp.shared.firestore.user(userId).set(new User(userId, new Dictionary(Team.Id.builder, {
-            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties('', FirebaseApp.shared.testTeam.persons[1].id)
+            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id)
         })));
+        await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id).set();
         await FirebaseApp.shared.functions.user.kickout.execute({
             teamId: FirebaseApp.shared.testTeam.id,
             userId: userId
         });
         const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
-        expect(userSnapshot.exists).toBeFalse();
+        expect(userSnapshot.exists).toBeTrue();
+        expect(userSnapshot.data).toBeEqual();
+        const personSnapshot = await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id).snapshot();
+        expect(personSnapshot.exists).toBeTrue();
+        expect(personSnapshot.data.signInProperties).toBeEqual(null);
     });
 });

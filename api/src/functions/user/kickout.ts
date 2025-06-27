@@ -37,6 +37,16 @@ export class UserKickoutFunction extends FirebaseFunction<UserKickoutFunction.Pa
         if (userTeamProperties === null)
             throw new FunctionsError('not-found', 'User is not a member of the team.');
 
-        await Firestore.shared.person(parameters.teamId, userTeamProperties.personId).remove();
+        await Firestore.shared.person(parameters.teamId, userTeamProperties.personId).set();
+
+        user.teams.delete(parameters.teamId);
+        await Firestore.shared.user(parameters.userId).set(user);
+
+
+        // user.teams.set(invitation.teamId, new User.TeamProperties(team.name, invitation.personId));
+        // await Firestore.shared.user(userId).set(user);
+
+        // person.signInProperties = new PersonSignInProperties(userId, UtcDate.now);
+        // await Firestore.shared.person(invitation.teamId, invitation.personId).set(person);
     }
 }
