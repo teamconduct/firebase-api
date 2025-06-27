@@ -1,24 +1,24 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Invitation, Person, PersonSignInProperties, Team, User } from '../../types';
+import { UserInvitation, Person, PersonSignInProperties, Team, User } from '../../types';
 import { Firestore } from '../../Firestore';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
-export class InvitationRegisterFunction extends FirebaseFunction<Invitation.Id, User> {
+export class UserInvitationRegisterFunction extends FirebaseFunction<UserInvitation.Id, User> {
 
-    public parametersBuilder = Invitation.Id.builder;
+    public parametersBuilder = UserInvitation.Id.builder;
 
     public returnTypeBuilder = User.builder;
 
-    public async execute(invitationId: Invitation.Id): Promise<User> {
+    public async execute(invitationId: UserInvitation.Id): Promise<User> {
 
         if (this.userId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
         const userId = User.Id.builder.build(this.userId);
 
-        const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();
+        const invitationSnapshot = await Firestore.shared.userInvitation(invitationId).snapshot();
         if (!invitationSnapshot.exists)
             throw new FunctionsError('not-found', 'Invitation not found');
-        const invitation = Invitation.builder.build(invitationSnapshot.data);
+        const invitation = UserInvitation.builder.build(invitationSnapshot.data);
 
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         let user = new User(userId);
@@ -41,7 +41,7 @@ export class InvitationRegisterFunction extends FirebaseFunction<Invitation.Id, 
         if (person.signInProperties !== null)
             throw new FunctionsError('already-exists', 'Person already registered');
 
-        await Firestore.shared.invitation(invitationId).remove();
+        await Firestore.shared.userInvitation(invitationId).remove();
 
         user.teams.set(invitation.teamId, new User.TeamProperties(team.name, invitation.personId));
         await Firestore.shared.user(userId).set(user);

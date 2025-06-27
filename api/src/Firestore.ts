@@ -1,6 +1,6 @@
 import { FirestoreDocument } from '@stevenkellner/firebase-function';
 import { FirestoreScheme } from './FirestoreScheme';
-import { Fine, FineTemplate, Invitation, Person, User, Team } from './types';
+import { Fine, FineTemplate, UserInvitation, Person, User, Team } from './types';
 import { FirebaseConfiguration } from './firebase';
 
 export class Firestore {
@@ -31,9 +31,9 @@ export class Firestore {
             .document(id.value);
     }
 
-    public invitation(id: Invitation.Id): FirestoreDocument<Invitation> {
+    public userInvitation(id: UserInvitation.Id): FirestoreDocument<UserInvitation> {
         return this.base
-            .collection('invitations')
+            .collection('userInvitations')
             .document(id.value);
     }
 

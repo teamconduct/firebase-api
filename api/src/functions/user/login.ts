@@ -7,7 +7,6 @@ export class UserLoginFunction extends FirebaseFunction<null, User> {
 
     public parametersBuilder = new ValueTypeBuilder<null>();
 
-
     public returnTypeBuilder = User.builder;
 
     public async execute(): Promise<User> {

@@ -1,15 +1,15 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Invitation } from '../../types';
+import { UserInvitation } from '../../types';
 import { checkAuthentication } from '../../checkAuthentication';
 import { Firestore } from '../../Firestore';
 
-export class InvitationInviteFunction extends FirebaseFunction<Invitation, Invitation.Id> {
+export class UserInvitationInviteFunction extends FirebaseFunction<UserInvitation, UserInvitation.Id> {
 
-    public parametersBuilder = Invitation.builder;
+    public parametersBuilder = UserInvitation.builder;
 
-    public returnTypeBuilder = Invitation.Id.builder;
+    public returnTypeBuilder = UserInvitation.Id.builder;
 
-    public async execute(invitation: Invitation): Promise<Invitation.Id> {
+    public async execute(invitation: UserInvitation): Promise<UserInvitation.Id> {
 
         await checkAuthentication(this.userId, invitation.teamId, 'team-manager');
 
@@ -21,7 +21,7 @@ export class InvitationInviteFunction extends FirebaseFunction<Invitation, Invit
             throw new FunctionsError('already-exists', 'Person already has an account');
 
         const invitationId = invitation.createId();
-        await Firestore.shared.invitation(invitationId).set(invitation);
+        await Firestore.shared.userInvitation(invitationId).set(invitation);
 
         return invitationId;
     }

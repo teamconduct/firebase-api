@@ -1,12 +1,12 @@
 import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function';
-import { Fine, FineTemplate, Invitation, Person, Team, User } from './types';
+import { Fine, FineTemplate, UserInvitation, Person, Team, User } from './types';
 
 export type FirestoreScheme = FirestoreDocument<never, {
     users: FirestoreCollection<{
         [UserId in string]: FirestoreDocument<User>
     }>
-    invitations: FirestoreCollection<{
-        [InvitationId in string]: FirestoreDocument<Invitation>
+    userInvitations: FirestoreCollection<{
+        [UserInvitationId in string]: FirestoreDocument<UserInvitation>
     }>
     teams: FirestoreCollection<{
         [TeamId in string]: FirestoreDocument<Team, {
