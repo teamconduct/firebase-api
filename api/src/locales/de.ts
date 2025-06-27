@@ -92,6 +92,7 @@ export const localizationDE = {
         personManager: 'Personenmanager',
         fineTemplateManager: 'Strafvorlagenmanager',
         fineManager: 'Strafenmanager',
+        fineCanAdd: 'Kann Strafen hinzufügen',
         teamManager: 'Teammanager'
     }
 }

@@ -49,4 +49,23 @@ describe('FineAddFunction', () => {
         expect(personSnapshot.exists).toBeTrue();
         expect(personSnapshot.data.fineIds).toContainAll(fine.id.guidString);
     });
+
+    it('should add fine with fine-can-add role', async () => {
+        await FirebaseApp.shared.firestore.clear();
+        await FirebaseApp.shared.addTestTeam('fine-can-add');
+
+        const fine = RandomData.shared.fine();
+        await FirebaseApp.shared.functions.fine.add.execute({
+            teamId: FirebaseApp.shared.testTeam.id,
+            personId: FirebaseApp.shared.testTeam.persons[0].id,
+            fine: fine,
+            configuration: FirebaseApp.shared.testConfiguration
+        });
+        const fineSnapshot = await FirebaseApp.shared.firestore.fine(FirebaseApp.shared.testTeam.id, fine.id).snapshot();
+        expect(fineSnapshot.exists).toBeTrue();
+        expect(fineSnapshot.data).toBeEqual(fine.flatten);
+        const personSnapshot = await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[0].id).snapshot();
+        expect(personSnapshot.exists).toBeTrue();
+        expect(personSnapshot.data.fineIds).toContainAll(fine.id.guidString);
+    });
 });

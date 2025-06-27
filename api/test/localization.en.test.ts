@@ -158,6 +158,14 @@ describe('Localization for en', () => {
             expect(UserRole.formatted('fine-manager')).toBeEqual('Fine Manager');
         });
 
+        it('userRole.fineCanAdd should be tested', () => {
+            expect(Localization.shared.userRole.fineCanAdd.value()).toBeEqual('Can add fines');
+        });
+
+        it('userRole.fineCanAdd should be formatted correctly', () => {
+            expect(UserRole.formatted('fine-can-add')).toBeEqual('Can add fines');
+        });
+
         it('userRole.teamManager should be tested', () => {
             expect(Localization.shared.userRole.teamManager.value()).toBeEqual('Team Manager');
         });

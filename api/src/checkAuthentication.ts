@@ -2,11 +2,24 @@ import { FunctionsError } from '@stevenkellner/firebase-function';
 import { Person, Team, User, UserRole } from './types';
 import { Firestore } from './Firestore';
 
-function includesAll<T>(array: T[], ...values: T[]): boolean {
-    return values.every(value => array.includes(value));
+type ExpectedUserRoles =
+    | UserRole
+    | ExpectedUserRoles[]
+    | {
+        anyOf: ExpectedUserRoles[];
+    }
+
+function hasUserRoles(userRoles: UserRole[], expectedRoles: ExpectedUserRoles): boolean {
+    if (Array.isArray(expectedRoles))
+        return expectedRoles.every(expectedRole => hasUserRoles(userRoles, expectedRole));
+    else if (typeof expectedRoles === 'object' && 'anyOf' in expectedRoles)
+        return expectedRoles.anyOf.some(role => hasUserRoles(userRoles, role));
+    else
+        return userRoles.includes(expectedRoles);
+
 }
 
-export async function checkAuthentication(rawUserId: string | null, teamId: Team.Id, ...roles: UserRole[]): Promise<User.Id> {
+export async function checkAuthentication(rawUserId: string | null, teamId: Team.Id, roles: ExpectedUserRoles): Promise<User.Id> {
     if (rawUserId === null)
         throw new FunctionsError('unauthenticated', 'User is not authenticated');
     const userId = User.Id.builder.build(rawUserId);
@@ -28,7 +41,7 @@ export async function checkAuthentication(rawUserId: string | null, teamId: Team
     if (person.signInProperties === null)
         throw new FunctionsError('permission-denied', 'Person is not signed in');
 
-    const userHasRoles = includesAll(person.signInProperties.roles, ...roles);
+    const userHasRoles = hasUserRoles(person.signInProperties.roles, roles);
     if (!userHasRoles)
         throw new FunctionsError('permission-denied', 'User does not have the required roles');
 

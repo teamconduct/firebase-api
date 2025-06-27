@@ -92,6 +92,7 @@ export const localizationEN = {
         personManager: 'Person Manager',
         fineTemplateManager: 'Fine Template Manager',
         fineManager: 'Fine Manager',
+        fineCanAdd: 'Can add fines',
         teamManager: 'Team Manager'
     }
 }

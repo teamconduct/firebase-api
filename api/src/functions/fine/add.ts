@@ -29,7 +29,9 @@ export class FineAddFunction extends FirebaseFunction<FineAddFunction.Parameters
 
     public async execute(parameters: FineAddFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(this.userId, parameters.teamId, 'fine-manager');
+        await checkAuthentication(this.userId, parameters.teamId, {
+            anyOf: ['fine-manager', 'fine-can-add']
+        });
 
         const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.fine.id).snapshot();
         if (fineSnapshot.exists)

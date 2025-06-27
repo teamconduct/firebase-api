@@ -5,6 +5,7 @@ export type UserRole =
     | 'person-manager'
     | 'fineTemplate-manager'
     | 'fine-manager'
+    | 'fine-can-add'
     | 'team-manager';
 
 export namespace UserRole {
@@ -13,6 +14,7 @@ export namespace UserRole {
         'person-manager',
         'fineTemplate-manager',
         'fine-manager',
+        'fine-can-add',
         'team-manager'
     ];
 
@@ -21,6 +23,7 @@ export namespace UserRole {
             'person-manager': 'personManager',
             'fineTemplate-manager': 'fineTemplateManager',
             'fine-manager': 'fineManager',
+            'fine-can-add': 'fineCanAdd',
             'team-manager': 'teamManager'
         }
         return Localization.shared.userRole[localizationKeyMap[role]].value();

@@ -165,6 +165,14 @@ describe('Localization for de', () => {
             expect(UserRole.formatted('fine-manager')).toBeEqual('Strafenmanager');
         });
 
+        it('userRole.fineCanAdd should be tested', () => {
+            expect(Localization.shared.userRole.fineCanAdd.value()).toBeEqual('Kann Strafen hinzufügen');
+        });
+
+        it('userRole.fineCanAdd should be formatted correctly', () => {
+            expect(UserRole.formatted('fine-can-add')).toBeEqual('Kann Strafen hinzufügen');
+        });
+
         it('userRole.teamManager should be tested', () => {
             expect(Localization.shared.userRole.teamManager.value()).toBeEqual('Teammanager');
         });
