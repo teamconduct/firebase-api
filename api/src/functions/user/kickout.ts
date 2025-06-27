@@ -1,5 +1,5 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Team, User } from '../../types';
+import { Person, Team, User } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { Firestore } from '../../Firestore';
 import { checkAuthentication } from '../../checkAuthentication';
@@ -37,16 +37,15 @@ export class UserKickoutFunction extends FirebaseFunction<UserKickoutFunction.Pa
         if (userTeamProperties === null)
             throw new FunctionsError('not-found', 'User is not a member of the team.');
 
-        await Firestore.shared.person(parameters.teamId, userTeamProperties.personId).set();
+        const personSnapshot = await Firestore.shared.person(parameters.teamId, userTeamProperties.personId).snapshot();
+        if (!personSnapshot.exists)
+            throw new FunctionsError('not-found', 'Person not found.');
+        const person = Person.builder.build(personSnapshot.data);
+
+        person.signInProperties = null;
+        await Firestore.shared.person(parameters.teamId, userTeamProperties.personId).set(person);
 
         user.teams.delete(parameters.teamId);
         await Firestore.shared.user(parameters.userId).set(user);
-
-
-        // user.teams.set(invitation.teamId, new User.TeamProperties(team.name, invitation.personId));
-        // await Firestore.shared.user(userId).set(user);
-
-        // person.signInProperties = new PersonSignInProperties(userId, UtcDate.now);
-        // await Firestore.shared.person(invitation.teamId, invitation.personId).set(person);
     }
 }
