@@ -2,9 +2,9 @@ import { expect } from '@assertive-ts/core';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
-import { Invitation } from '@stevenkellner/team-conduct-api';
+import { UserInvitation } from '@stevenkellner/team-conduct-api';
 
-describe('InvitationWithdrawFunction', () => {
+describe('UserInvitationWithdrawFunction', () => {
 
     beforeEach(async () => {
         await FirebaseApp.shared.addTestTeam('team-manager');
@@ -15,7 +15,7 @@ describe('InvitationWithdrawFunction', () => {
     });
 
     it('invitation not found', async () => {
-        const result = await FirebaseApp.shared.functions.invitation.withdraw.executeWithResult(new Invitation(
+        const result = await FirebaseApp.shared.functions.userInvitation.withdraw.executeWithResult(new UserInvitation(
             FirebaseApp.shared.testTeam.id,
             FirebaseApp.shared.testTeam.persons[1].id
         ));
@@ -23,11 +23,11 @@ describe('InvitationWithdrawFunction', () => {
     });
 
     it('should withdraw', async () => {
-        const invitation = new Invitation(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id);
+        const invitation = new UserInvitation(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id);
         const invitationId = invitation.createId();
-        await FirebaseApp.shared.firestore.invitation(invitationId).set(invitation);
-        await FirebaseApp.shared.functions.invitation.withdraw.execute(invitation);
-        const invitationSnapshot = await FirebaseApp.shared.firestore.invitation(invitationId).snapshot();
+        await FirebaseApp.shared.firestore.userInvitation(invitationId).set(invitation);
+        await FirebaseApp.shared.functions.userInvitation.withdraw.execute(invitation);
+        const invitationSnapshot = await FirebaseApp.shared.firestore.userInvitation(invitationId).snapshot();
         expect(invitationSnapshot.exists).toBeFalse();
     });
 });

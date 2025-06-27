@@ -25,7 +25,7 @@ export class UserKickoutFunction extends FirebaseFunction<UserKickoutFunction.Pa
 
         const userId = await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
 
-        if (userId === parameters.userId)
+        if (userId.guidString === parameters.userId.guidString)
             throw new FunctionsError('invalid-argument', 'You cannot kick yourself out of a team.');
 
         const userSnapshot = await Firestore.shared.user(parameters.userId).snapshot();
