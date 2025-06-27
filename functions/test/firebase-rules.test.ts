@@ -11,7 +11,7 @@ describe('Firebase Rules', () => {
 
     before(async () => {
         firestore = getFirestore();
-        connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
+        connectFirestoreEmulator(firestore, '192.168.178.47', 8080);
     });
 
     afterEach(async () => {

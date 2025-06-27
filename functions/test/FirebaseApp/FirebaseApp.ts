@@ -28,13 +28,13 @@ export class FirebaseApp {
         this.auth = new FirebaseAuth();
         this.firestore = new FirebaseFirestore();
         const functionsInstance = getFunctions(undefined, 'europe-west1');
-        connectFunctionsEmulator(functionsInstance, '127.0.0.1', 5001);
-        this.functions = createCallableClientFirebaseFunctions(firebaseFunctionsContext, functionsInstance, `http://127.0.0.1:5001/${process.env.FUNCTESTS_PROJECT_ID}`, 'europe-west1', BytesCoder.fromHex(process.env.FUNCTESTS_MAC_KEY!));
+        connectFunctionsEmulator(functionsInstance, '192.168.178.47', 5001);
+        this.functions = createCallableClientFirebaseFunctions(firebaseFunctionsContext, functionsInstance, `http://192.168.178.47:5001/${process.env.FUNCTESTS_PROJECT_ID}`, 'europe-west1', BytesCoder.fromHex(process.env.FUNCTESTS_MAC_KEY!));
     }
 
     private initialize() {
         configDotenv({ path: 'test/.env.test' });
-        process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080';
+        process.env.FIRESTORE_EMULATOR_HOST = '192.168.178.47:8080';
         initializeApp({
             apiKey: process.env.FUNCTESTS_API_KEY,
             authDomain: process.env.FUNCTESTS_AUTH_DOMAIN,

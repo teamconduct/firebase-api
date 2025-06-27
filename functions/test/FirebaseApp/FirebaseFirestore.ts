@@ -13,6 +13,6 @@ export class FirebaseFirestore extends Firestore {
     }
 
     public async clear(): Promise<void> {
-        await axios.delete(`http://127.0.0.1:8080/emulator/v1/projects/${process.env.FUNCTESTS_PROJECT_ID!}/databases/(default)/documents`);
+        await axios.delete(`http://192.168.178.47:8080/emulator/v1/projects/${process.env.FUNCTESTS_PROJECT_ID!}/databases/(default)/documents`);
     }
 }

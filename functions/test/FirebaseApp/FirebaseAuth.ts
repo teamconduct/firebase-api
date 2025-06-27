@@ -7,7 +7,7 @@ export class FirebaseAuth {
 
     public constructor() {
         this.authInstance = getAuth();
-        connectAuthEmulator(this.authInstance, 'http://127.0.0.1:9099');
+        connectAuthEmulator(this.authInstance, 'http://192.168.178.47:9099');
     }
 
     public async signIn(email: string | null = null, password: string | null = null): Promise<User.Id> {
