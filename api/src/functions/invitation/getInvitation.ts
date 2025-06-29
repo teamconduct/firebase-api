@@ -19,8 +19,13 @@ export class InvitationGetInvitationFunction extends FirebaseFunction<Invitation
             throw new FunctionsError('not-found', 'Invitation not found');
         const invitation = Invitation.builder.build(invitationSnapshot.data);
 
+        const teamSnapshot = await Firestore.shared.team(invitation.teamId).snapshot();
+        if (!teamSnapshot.exists)
+            throw new FunctionsError('not-found', 'Team not found');
+        const team = Team.builder.build(teamSnapshot.data);
+
         if (invitation.personId !== null)
-            return InvitationGetInvitationFunction.ReturnType.from(invitation.teamId, invitation.personId);
+            return InvitationGetInvitationFunction.ReturnType.from(invitation.teamId, team.name, invitation.personId);
 
         const personSnapshots = await Firestore.shared.persons(invitation.teamId).documentSnapshots();
         const persons = compactMap(personSnapshots, personSnapshot => {
@@ -34,7 +39,7 @@ export class InvitationGetInvitationFunction extends FirebaseFunction<Invitation
                 properties: person.properties
             };
         });
-        return InvitationGetInvitationFunction.ReturnType.from(invitation.teamId, persons);
+        return InvitationGetInvitationFunction.ReturnType.from(invitation.teamId, team.name, persons);
     }
 }
 
@@ -65,18 +70,19 @@ export namespace InvitationGetInvitationFunction {
 
         private constructor(
             public teamId: Team.Id,
+            public teamName: string,
             private personIdOrPersons: PersonIdOrPersons
         ) {}
 
-        public static from(teamId: Team.Id, personId: Person.Id): ReturnType;
-        public static from(teamId: Team.Id, persons: { id: Person.Id, properties: PersonPrivateProperties }[]): ReturnType;
-        public static from(teamId: Team.Id, personIdOrPersons: Person.Id | { id: Person.Id, properties: PersonPrivateProperties }[]): ReturnType {
+        public static from(teamId: Team.Id, teamName: string, personId: Person.Id): ReturnType;
+        public static from(teamId: Team.Id, teamName: string, persons: { id: Person.Id, properties: PersonPrivateProperties }[]): ReturnType;
+        public static from(teamId: Team.Id, teamName: string, personIdOrPersons: Person.Id | { id: Person.Id, properties: PersonPrivateProperties }[]): ReturnType {
             if (Array.isArray(personIdOrPersons)) {
-                return new ReturnType(teamId, {
+                return new ReturnType(teamId, teamName, {
                     persons: personIdOrPersons
                 });
             }
-            return new ReturnType(teamId, {
+            return new ReturnType(teamId, teamName, {
                 personId: personIdOrPersons
             });
         }
@@ -100,11 +106,13 @@ export namespace InvitationGetInvitationFunction {
             if ('personId' in this.personIdOrPersons) {
                 return {
                     teamId: this.teamId.flatten,
+                    teamName: this.teamName,
                     personId: this.personIdOrPersons.personId.flatten
                 };
             }
             return {
                 teamId: this.teamId.flatten,
+                teamName: this.teamName,
                 persons: this.personIdOrPersons.persons.map(person => ({
                     id: person.id.flatten,
                     properties: person.properties.flatten
@@ -116,7 +124,8 @@ export namespace InvitationGetInvitationFunction {
     export namespace ReturnType {
 
         export type Flatten = {
-            teamId: Team.Id.Flatten
+            teamId: Team.Id.Flatten,
+            teamName: string
         } & InvitationGetInvitationFunction.PersonIdOrPersons.Flatten;
 
         export class TypeBuilder implements ITypeBuilder<Flatten, ReturnType> {
@@ -125,11 +134,13 @@ export namespace InvitationGetInvitationFunction {
                 if ('personId' in value) {
                     return ReturnType.from(
                         Team.Id.builder.build(value.teamId),
+                        value.teamName,
                         Person.Id.builder.build(value.personId)
                     );
                 }
                 return ReturnType.from(
                     Team.Id.builder.build(value.teamId),
+                    value.teamName,
                     value.persons.map(person => ({
                         id: Person.Id.builder.build(person.id),
                         properties: PersonPrivateProperties.builder.build(person.properties)
