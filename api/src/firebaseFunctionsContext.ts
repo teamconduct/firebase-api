@@ -2,7 +2,7 @@ import { FirebaseFunctionsContext } from '@stevenkellner/firebase-function';
 import { TeamNewFunction,
     UserKickoutFunction, UserLoginFunction, UserRoleEditFunction,
     PaypalMeEditFunction, NotificationRegisterFunction, NotificationSubscribeFunction,
-    UserInvitationInviteFunction, UserInvitationRegisterFunction, UserInvitationWithdrawFunction,
+    InvitationInviteFunction, InvitationWithdrawFunction, InvitationGetInvitationFunction, InvitationRegisterFunction,
     PersonAddFunction, PersonDeleteFunction, PersonUpdateFunction,
     FineTemplateAddFunction, FineTemplateDeleteFunction, FineTemplateUpdateFunction,
     FineAddFunction, FineDeleteFunction, FineUpdateFunction
@@ -24,10 +24,11 @@ export const firebaseFunctionsContext = FirebaseFunctionsContext.build(builder =
         register: builder.function(NotificationRegisterFunction),
         subscribe: builder.function(NotificationSubscribeFunction)
     },
-    userInvitation: {
-        invite: builder.function(UserInvitationInviteFunction),
-        withdraw: builder.function(UserInvitationWithdrawFunction),
-        register: builder.function(UserInvitationRegisterFunction)
+    invitation: {
+        invite: builder.function(InvitationInviteFunction),
+        withdraw: builder.function(InvitationWithdrawFunction),
+        getInvitation: builder.function(InvitationGetInvitationFunction),
+        register: builder.function(InvitationRegisterFunction)
     },
     person: {
         add: builder.function(PersonAddFunction),

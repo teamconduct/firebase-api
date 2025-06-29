@@ -1,8 +1,8 @@
 import { expect } from '@assertive-ts/core';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
-import { Dictionary, Result, Tagged } from '@stevenkellner/typescript-common-functionality';
+import { Dictionary, Guid, Result, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
-import { Team, User } from '@stevenkellner/team-conduct-api';
+import { PersonSignInProperties, Team, User } from '@stevenkellner/team-conduct-api';
 
 describe('UserKickoutFunction', () => {
 
@@ -34,6 +34,18 @@ describe('UserKickoutFunction', () => {
         expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'User is not a member of the team.')));
     });
 
+    it('person not found', async () => {
+        const userId: User.Id = new Tagged('userId', 'user');
+        await FirebaseApp.shared.firestore.user(userId).set(new User(userId, new Dictionary(Team.Id.builder, {
+            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, new Tagged(Guid.generate(), 'person'))
+        })));
+        const result = await FirebaseApp.shared.functions.user.kickout.executeWithResult({
+            teamId: FirebaseApp.shared.testTeam.id,
+            userId: userId
+        });
+        expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'Person not found.')));
+    });
+
     it('kickout self', async () => {
         const result = await FirebaseApp.shared.functions.user.kickout.executeWithResult({
             teamId: FirebaseApp.shared.testTeam.id,
@@ -42,20 +54,23 @@ describe('UserKickoutFunction', () => {
         expect(result).toBeEqual(Result.failure(new FunctionsError('invalid-argument', 'You cannot kick yourself out of a team.')));
     });
 
-    it.only('kickout', async () => {
+    it('kickout', async () => {
         const userId: User.Id = new Tagged('userId', 'user');
+        const person = FirebaseApp.shared.testTeam.persons[1];
         await FirebaseApp.shared.firestore.user(userId).set(new User(userId, new Dictionary(Team.Id.builder, {
-            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id)
+            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, person.id)
         })));
-        await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id).set();
+        person.signInProperties = new PersonSignInProperties(userId, UtcDate.now);
+        await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, person.id).set(person);
         await FirebaseApp.shared.functions.user.kickout.execute({
             teamId: FirebaseApp.shared.testTeam.id,
             userId: userId
         });
         const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
         expect(userSnapshot.exists).toBeTrue();
-        expect(userSnapshot.data).toBeEqual();
-        const personSnapshot = await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id).snapshot();
+        const isUserInTeam = User.builder.build(userSnapshot.data).teams.has(FirebaseApp.shared.testTeam.id);
+        expect(isUserInTeam).toBeFalse();
+        const personSnapshot = await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, person.id).snapshot();
         expect(personSnapshot.exists).toBeTrue();
         expect(personSnapshot.data.signInProperties).toBeEqual(null);
     });

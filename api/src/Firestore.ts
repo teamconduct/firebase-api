@@ -1,6 +1,6 @@
-import { FirestoreDocument } from '@stevenkellner/firebase-function';
+import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function';
 import { FirestoreScheme } from './FirestoreScheme';
-import { Fine, FineTemplate, UserInvitation, Person, User, Team } from './types';
+import { Fine, FineTemplate, Invitation, Person, User, Team } from './types';
 import { FirebaseConfiguration } from './firebase';
 
 export class Firestore {
@@ -31,33 +31,45 @@ export class Firestore {
             .document(id.value);
     }
 
-    public userInvitation(id: UserInvitation.Id): FirestoreDocument<UserInvitation> {
+    public invitation(id: Invitation.Id): FirestoreDocument<Invitation> {
         return this.base
-            .collection('userInvitations')
+            .collection('invitations')
             .document(id.value);
     }
 
-    public person(teamId: Team.Id, id: Person.Id): FirestoreDocument<Person> {
+    public persons(teamId: Team.Id): FirestoreCollection<{ [x: string]: FirestoreDocument<Person, never>; }> {
         return this.base
             .collection('teams')
             .document(teamId.guidString)
-            .collection('persons')
+            .collection('persons');
+    }
+
+    public person(teamId: Team.Id, id: Person.Id): FirestoreDocument<Person> {
+        return this.persons(teamId)
             .document(id.guidString);
+    }
+
+    public fineTemplates(teamId: Team.Id): FirestoreCollection<{ [x: string]: FirestoreDocument<FineTemplate, never>; }> {
+        return this.base
+            .collection('teams')
+            .document(teamId.guidString)
+            .collection('fineTemplates');
     }
 
     public fineTemplate(teamId: Team.Id, id: FineTemplate.Id): FirestoreDocument<FineTemplate> {
-        return this.base
-            .collection('teams')
-            .document(teamId.guidString)
-            .collection('fineTemplates')
+        return this.fineTemplates(teamId)
             .document(id.guidString);
     }
 
-    public fine(teamId: Team.Id, id: Fine.Id): FirestoreDocument<Fine> {
+    public fines(teamId: Team.Id): FirestoreCollection<{ [x: string]: FirestoreDocument<Fine, never>; }> {
         return this.base
             .collection('teams')
             .document(teamId.guidString)
-            .collection('fines')
+            .collection('fines');
+    }
+
+    public fine(teamId: Team.Id, id: Fine.Id): FirestoreDocument<Fine> {
+        return this.fines(teamId)
             .document(id.guidString);
     }
 }
