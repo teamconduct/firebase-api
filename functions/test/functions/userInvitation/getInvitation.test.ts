@@ -5,7 +5,7 @@ import { FunctionsError } from '@stevenkellner/firebase-function';
 import { RandomData } from '../../utils/RandomData';
 import { Invitation, InvitationGetInvitationFunction } from '@stevenkellner/team-conduct-api';
 
-describe.only('InvitationGetInvitationFunction', () => {
+describe('InvitationGetInvitationFunction', () => {
 
     beforeEach(async () => {
         await FirebaseApp.shared.addTestTeam('team-manager');
