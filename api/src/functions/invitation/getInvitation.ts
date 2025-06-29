@@ -87,10 +87,13 @@ export namespace InvitationGetInvitationFunction {
             return this.personIdOrPersons.personId;
         }
 
-        public get persons(): Person.Id[] | null {
+        public get persons(): {
+                id: Person.Id,
+                properties: PersonPrivateProperties,
+            }[] | null {
             if (!('persons' in this.personIdOrPersons))
                 return null;
-            return this.personIdOrPersons.persons.map(person => person.id);
+            return this.personIdOrPersons.persons;
         }
 
         public get flatten(): ReturnType.Flatten {

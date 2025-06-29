@@ -51,6 +51,12 @@ describe.only('InvitationGetInvitationFunction', () => {
         const invitation = new Invitation(FirebaseApp.shared.testTeam.id, null);
         const invitationId = await FirebaseApp.shared.functions.invitation.invite.execute(invitation);
         const result = await FirebaseApp.shared.functions.invitation.getInvitation.execute(invitationId);
-        expect(result).toBeEqual(InvitationGetInvitationFunction.ReturnType.from(FirebaseApp.shared.testTeam.id, []));
+        expect(result.teamId).toBeEqual(FirebaseApp.shared.testTeam.id);
+        expect(result.persons).not.toBeNull();
+        expect(result.persons!.length).toBeEqual(1);
+        expect(result.persons![0]).toBeEqual({
+            id: person.id,
+            properties: person.properties
+        });
     });
 });
