@@ -27,6 +27,8 @@ export class InvitationGetInvitationFunction extends FirebaseFunction<Invitation
             if (!personSnapshot.exists)
                 return null;
             const person = Person.builder.build(personSnapshot.data);
+            if (person.signInProperties !== null)
+                return null;
             return {
                 id: person.id,
                 properties: person.properties

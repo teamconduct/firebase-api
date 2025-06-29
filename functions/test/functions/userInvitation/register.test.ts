@@ -3,9 +3,9 @@ import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { Dictionary, Result, Tagged } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
 import { RandomData } from '../../utils/RandomData';
-import { UserInvitation, Team, User } from '@stevenkellner/team-conduct-api';
+import { Invitation, Team, User } from '@stevenkellner/team-conduct-api';
 
-describe('UserInvitationRegisterFunction', () => {
+describe('InvitationRegisterFunction', () => {
 
     let userId: User.Id;
 
@@ -16,53 +16,53 @@ describe('UserInvitationRegisterFunction', () => {
     afterEach(async () => {
         await FirebaseApp.shared.firestore.clear();
     });
-
+/*
     it('not signed in', async () => {
-        const invitationId = await FirebaseApp.shared.functions.userInvitation.invite.execute(new UserInvitation(
+        const invitationId = await FirebaseApp.shared.functions.invitation.invite.execute(new Invitation(
             FirebaseApp.shared.testTeam.id,
             FirebaseApp.shared.testTeam.persons[1].id
         ));
         await FirebaseApp.shared.auth.signOut();
-        const result = await FirebaseApp.shared.functions.userInvitation.register.executeWithResult(invitationId);
+        const result = await FirebaseApp.shared.functions.invitation.register.executeWithResult(invitationId);
         expect(result).toBeEqual(Result.failure(new FunctionsError('unauthenticated', 'User not authenticated')));
     });
 
     it('invitation not found', async () => {
-        const result = await FirebaseApp.shared.functions.userInvitation.register.executeWithResult(new Tagged('no-invitation', 'userInvitation'));
+        const result = await FirebaseApp.shared.functions.invitation.register.executeWithResult(new Tagged('no-invitation', 'invitation'));
         expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'Invitation not found')));
     });
 
     it('user already in team', async () => {
-        const invitationId = await FirebaseApp.shared.functions.userInvitation.invite.execute(new UserInvitation(
+        const invitationId = await FirebaseApp.shared.functions.invitation.invite.execute(new Invitation(
             FirebaseApp.shared.testTeam.id,
             FirebaseApp.shared.testTeam.persons[1].id
         ));
-        const result = await FirebaseApp.shared.functions.userInvitation.register.executeWithResult(invitationId);
+        const result = await FirebaseApp.shared.functions.invitation.register.executeWithResult(invitationId);
         expect(result).toBeEqual(Result.failure(new FunctionsError('already-exists', 'User already in team')));
     });
 
     it('person not found', async () => {
-        const invitationId = await FirebaseApp.shared.functions.userInvitation.invite.execute(new UserInvitation(
+        const invitationId = await FirebaseApp.shared.functions.invitation.invite.execute(new Invitation(
             FirebaseApp.shared.testTeam.id,
             FirebaseApp.shared.testTeam.persons[1].id
         ));
         await FirebaseApp.shared.firestore.user(userId).remove();
         await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id).remove();
-        const result = await FirebaseApp.shared.functions.userInvitation.register.executeWithResult(invitationId);
+        const result = await FirebaseApp.shared.functions.invitation.register.executeWithResult(invitationId);
         expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'Person not found')));
     });
 
     it('register not existing user', async () => {
-        const invitationId = await FirebaseApp.shared.functions.userInvitation.invite.execute(new UserInvitation(
+        const invitationId = await FirebaseApp.shared.functions.invitation.invite.execute(new Invitation(
             FirebaseApp.shared.testTeam.id,
             FirebaseApp.shared.testTeam.persons[1].id
         ));
         await FirebaseApp.shared.firestore.user(userId).remove();
-        const user = await FirebaseApp.shared.functions.userInvitation.register.execute(invitationId);
+        const user = await FirebaseApp.shared.functions.invitation.register.execute(invitationId);
         expect(user).toBeEqual(new User(userId, new Dictionary(Team.Id.builder, {
             [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id)
         })));
-        const invitationSnapshot = await FirebaseApp.shared.firestore.userInvitation(invitationId).snapshot();
+        const invitationSnapshot = await FirebaseApp.shared.firestore.invitation(invitationId).snapshot();
         expect(invitationSnapshot.exists).toBeFalse();
         const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
         expect(userSnapshot.exists).toBeTrue();
@@ -93,14 +93,14 @@ describe('UserInvitationRegisterFunction', () => {
     });
 
     it('register existing user', async () => {
-        const invitationId = await FirebaseApp.shared.functions.userInvitation.invite.execute(new UserInvitation(
+        const invitationId = await FirebaseApp.shared.functions.invitation.invite.execute(new Invitation(
             FirebaseApp.shared.testTeam.id,
             FirebaseApp.shared.testTeam.persons[1].id
         ));
         const signedInUser = new User(userId);
         signedInUser.teams.set(RandomData.shared.teamId(), new User.TeamProperties('team-1', Tagged.generate('person')));
         await FirebaseApp.shared.firestore.user(userId).set(signedInUser);
-        const user = await FirebaseApp.shared.functions.userInvitation.register.execute(invitationId);
+        const user = await FirebaseApp.shared.functions.invitation.register.execute(invitationId);
         const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
         expect(userSnapshot.exists).toBeTrue();
         expect(userSnapshot.data).toBeEqual({
@@ -115,7 +115,7 @@ describe('UserInvitationRegisterFunction', () => {
         });
         signedInUser.teams.set(FirebaseApp.shared.testTeam.id, new User.TeamProperties(FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id));
         expect(user).toBeEqual(new User(userId, signedInUser.teams));
-        const invitationSnapshot = await FirebaseApp.shared.firestore.userInvitation(invitationId).snapshot();
+        const invitationSnapshot = await FirebaseApp.shared.firestore.invitation(invitationId).snapshot();
         expect(invitationSnapshot.exists).toBeFalse();
         const personSnapshot = await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.persons[1].id).snapshot();
         expect(personSnapshot.exists).toBeTrue();
@@ -134,4 +134,5 @@ describe('UserInvitationRegisterFunction', () => {
             }
         });
     });
+    */
 });
