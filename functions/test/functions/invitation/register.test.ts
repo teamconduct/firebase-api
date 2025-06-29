@@ -5,7 +5,7 @@ import { FunctionsError } from '@stevenkellner/firebase-function';
 import { RandomData } from '../../utils/RandomData';
 import { Invitation, PersonSignInProperties, Team, User } from '@stevenkellner/team-conduct-api';
 
-describe.only('InvitationRegisterFunction', () => {
+describe('InvitationRegisterFunction', () => {
 
     let userId: User.Id;
 
