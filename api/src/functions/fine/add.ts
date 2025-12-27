@@ -1,24 +1,17 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Configuration, Fine, Localization, Person, Team } from '../../types';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Firestore } from '../../firebase/Firestore';
-import { pushNotification } from '../../firebase/pushNotification';
+import { Configuration, Fine, Person, Team } from '../../types';
 
+export type FineAddFunctionParameters = {
+    teamId: Team.Id,
+    personId: Person.Id,
+    fine: Fine,
+    configuration: Configuration
+};
 
-export namespace FineAddFunction {
+export abstract class FineAddFunctionBase extends FirebaseFunction<FineAddFunctionParameters, void> {
 
-    export type Parameters = {
-        teamId: Team.Id,
-        personId: Person.Id,
-        fine: Fine,
-        configuration: Configuration
-    };
-}
-
-export class FineAddFunction extends FirebaseFunction<FineAddFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<FineAddFunction.Parameters>, FineAddFunction.Parameters>({
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<FineAddFunctionParameters>, FineAddFunctionParameters>({
         teamId: Team.Id.builder,
         personId: Person.Id.builder,
         fine: Fine.builder,
@@ -26,35 +19,4 @@ export class FineAddFunction extends FirebaseFunction<FineAddFunction.Parameters
     });
 
     public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: FineAddFunction.Parameters): Promise<void> {
-
-        await checkAuthentication(this.userId, parameters.teamId, {
-            anyOf: ['fine-manager', 'fine-can-add']
-        });
-
-        const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.fine.id).snapshot();
-        if (fineSnapshot.exists)
-            throw new FunctionsError('already-exists', 'Fine already exists');
-
-        const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
-        if (!personSnapshot.exists)
-            throw new FunctionsError('not-found', 'Person not found');
-        const person = Person.builder.build(personSnapshot.data);
-
-        await Firestore.shared.fine(parameters.teamId, parameters.fine.id).set(parameters.fine);
-
-        person.fineIds.push(parameters.fine.id);
-        await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
-
-        const localization = Localization.shared(parameters.configuration.locale);
-        await pushNotification(parameters.teamId, parameters.personId, 'new-fine', {
-            title: localization.notification.fine.new.title.value({
-                reason: parameters.fine.reason
-            }),
-            body: localization.notification.fine.new.body.value({
-                amount: parameters.fine.amount.formatted(parameters.configuration)
-            })
-        });
-    }
 }

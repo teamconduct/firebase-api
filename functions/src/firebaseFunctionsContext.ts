@@ -6,7 +6,7 @@ import { TeamNewFunction,
     PersonAddFunction, PersonDeleteFunction, PersonUpdateFunction,
     FineTemplateAddFunction, FineTemplateDeleteFunction, FineTemplateUpdateFunction,
     FineAddFunction, FineDeleteFunction, FineUpdateFunction
-} from '.';
+} from './functions';
 
 export const firebaseFunctionsContext = FirebaseFunctionsContext.build(builder => ({
     team: {
