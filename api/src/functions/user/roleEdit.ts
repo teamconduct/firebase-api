@@ -1,8 +1,8 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { checkAuthentication } from '../../checkAuthentication';
+import { checkAuthentication } from '../../firebase/checkAuthentication';
 import { Person, Team, UserRole } from '../../types';
 import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../Firestore';
+import { Firestore } from '../../firebase/Firestore';
 
 export namespace UserRoleEditFunction {
 

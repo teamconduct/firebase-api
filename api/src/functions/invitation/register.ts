@@ -1,6 +1,6 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Person, PersonSignInProperties, Team, User, Invitation } from '../../types';
-import { Firestore } from '../../Firestore';
+import { Firestore } from '../../firebase/Firestore';
 import { Flattable, ObjectTypeBuilder, UtcDate } from '@stevenkellner/typescript-common-functionality';
 
 export namespace InvitationRegisterFunction {

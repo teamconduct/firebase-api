@@ -1,7 +1,7 @@
 import { Flattable, ObjectTypeBuilder, UtcDate, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Person, PersonPrivateProperties, PersonSignInProperties, User, UserRole, Team, NotificationProperties } from '../../types';
-import { Firestore } from '../../Firestore';
+import { Firestore } from '../../firebase/Firestore';
 
 export namespace TeamNewFunction {
 

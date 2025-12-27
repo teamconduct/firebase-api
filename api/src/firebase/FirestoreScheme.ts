@@ -1,6 +1,20 @@
 import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function';
-import { Fine, FineTemplate, Invitation, Person, Team, User } from './types';
+import { Fine, FineTemplate, Invitation, Person, Team, User } from '../types';
 
+/**
+ * Type definition for the Firestore database schema.
+ *
+ * Defines the hierarchical structure of the Firestore database:
+ * - **users**: Collection of user documents indexed by User.Id
+ * - **invitations**: Collection of invitation documents indexed by Invitation.Id
+ * - **teams**: Collection of team documents indexed by Team.Id, each containing:
+ *   - **persons**: Subcollection of person documents indexed by Person.Id
+ *   - **fineTemplates**: Subcollection of fine template documents indexed by FineTemplate.Id
+ *   - **fines**: Subcollection of fine documents indexed by Fine.Id
+ *
+ * This type ensures type-safe access to Firestore collections and documents
+ * throughout the application.
+ */
 export type FirestoreScheme = FirestoreDocument<never, {
     users: FirestoreCollection<{
         [UserId in string]: FirestoreDocument<User>

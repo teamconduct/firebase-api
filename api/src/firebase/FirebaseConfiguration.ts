@@ -1,8 +1,17 @@
-import { FirestoreScheme } from '../FirestoreScheme';
+import { FirestoreScheme } from './FirestoreScheme';
 import { Messaging } from './Messaging';
 
+/**
+ * Singleton configuration manager for Firebase services.
+ *
+ * Provides centralized access to Firestore document reference and Firebase Cloud Messaging.
+ * Must be configured once before accessing services.
+ */
 export class FirebaseConfiguration {
 
+    /**
+     * Singleton instance of FirebaseConfiguration.
+     */
     public static readonly shared = new FirebaseConfiguration();
 
     private configured: boolean = false;
@@ -11,8 +20,20 @@ export class FirebaseConfiguration {
 
     private _messaging: Messaging | null = null;
 
+    /**
+     * Private constructor to enforce singleton pattern.
+     */
     private constructor() {}
 
+    /**
+     * Configures the Firebase services.
+     *
+     * Must be called exactly once before accessing any Firebase services.
+     * Subsequent calls will throw an error.
+     *
+     * @param configuration - Configuration object containing Firestore and Messaging services
+     * @throws Error if already configured
+     */
     public configure(configuration: {
         baseFirestoreDocument: FirestoreScheme,
         messaging: Messaging
@@ -24,12 +45,39 @@ export class FirebaseConfiguration {
         this.configured = true;
     }
 
+    /**
+     * Reconfigures the Firebase services.
+     *
+     * Allows updating the configuration with new services.
+     *
+     * @param configuration - New configuration object containing Firestore and Messaging services
+     */
+    public reconfigure(configuration: {
+        baseFirestoreDocument: FirestoreScheme,
+        messaging: Messaging
+    }) {
+        this.configured = false;
+        this.configure(configuration);
+    }
+
+    /**
+     * Gets the base Firestore document reference.
+     *
+     * @returns The configured Firestore document scheme
+     * @throws Error if not yet configured
+     */
     public get baseFirestoreDocument(): FirestoreScheme {
         if (!this.configured || !this._baseFirestoreDocument)
             throw new Error('Configuration.baseFirestoreDocument is not configured');
         return this._baseFirestoreDocument;
     }
 
+    /**
+     * Gets the Firebase Cloud Messaging service.
+     *
+     * @returns The configured Messaging service
+     * @throws Error if not yet configured
+     */
     public get messaging(): Messaging {
         if (!this.configured || !this._messaging)
             throw new Error('Configuration.messaging is not configured');

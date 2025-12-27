@@ -1,7 +1,7 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { User } from '../../types';
 import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../Firestore';
+import { Firestore } from '../../firebase/Firestore';
 
 export class UserLoginFunction extends FirebaseFunction<null, User> {
 

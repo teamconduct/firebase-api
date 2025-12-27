@@ -1,8 +1,8 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { FineTemplate, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { checkAuthentication } from '../../checkAuthentication';
-import { Firestore } from '../../Firestore';
+import { checkAuthentication } from '../../firebase/checkAuthentication';
+import { Firestore } from '../../firebase/Firestore';
 
 export namespace FineTemplateDeleteFunction {
 

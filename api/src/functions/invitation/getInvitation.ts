@@ -1,6 +1,6 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Invitation, Person, PersonPrivateProperties, Team } from '../../types';
-import { Firestore } from '../../Firestore';
+import { Firestore } from '../../firebase/Firestore';
 import { compactMap, Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
 export class InvitationGetInvitationFunction extends FirebaseFunction<Invitation.Id, InvitationGetInvitationFunction.ReturnType> {

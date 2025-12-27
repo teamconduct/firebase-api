@@ -1,10 +1,10 @@
 import { Configuration } from '../../types/Configuration';
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { pushNotification } from '../../pushNotification';
+import { pushNotification } from '../../firebase/pushNotification';
 import { Fine, Localization, Person, Team, ValueLocalization } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { checkAuthentication } from '../../checkAuthentication';
-import { Firestore } from '../../Firestore';
+import { checkAuthentication } from '../../firebase/checkAuthentication';
+import { Firestore } from '../../firebase/Firestore';
 
 export namespace FineUpdateFunction {
 

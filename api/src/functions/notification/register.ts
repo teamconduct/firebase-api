@@ -2,7 +2,7 @@ import { NotificationProperties } from '../../types/NotificationProperties';
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Person, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../Firestore';
+import { Firestore } from '../../firebase/Firestore';
 
 export namespace NotificationRegisterFunction {
 

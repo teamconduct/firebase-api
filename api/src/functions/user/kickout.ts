@@ -1,8 +1,8 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Person, Team, User } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../Firestore';
-import { checkAuthentication } from '../../checkAuthentication';
+import { Firestore } from '../../firebase/Firestore';
+import { checkAuthentication } from '../../firebase/checkAuthentication';
 
 export namespace UserKickoutFunction {
 

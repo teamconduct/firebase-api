@@ -1,9 +1,9 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Configuration, Fine, FineAmount, Localization, Person, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { checkAuthentication } from '../../checkAuthentication';
-import { Firestore } from '../../Firestore';
-import { pushNotification } from '../../pushNotification';
+import { checkAuthentication } from '../../firebase/checkAuthentication';
+import { Firestore } from '../../firebase/Firestore';
+import { pushNotification } from '../../firebase/pushNotification';
 
 export namespace FineDeleteFunction {
 

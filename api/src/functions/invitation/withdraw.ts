@@ -1,7 +1,7 @@
 import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
 import { Invitation } from '../../types';
-import { checkAuthentication } from '../../checkAuthentication';
-import { Firestore } from '../../Firestore';
+import { checkAuthentication } from '../../firebase/checkAuthentication';
+import { Firestore } from '../../firebase/Firestore';
 import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
 export class InvitationWithdrawFunction extends FirebaseFunction<Invitation, void> {

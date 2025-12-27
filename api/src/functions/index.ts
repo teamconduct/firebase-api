@@ -19,3 +19,4 @@ export * from './fine/delete';
 export * from './fineTemplate/add';
 export * from './fineTemplate/update';
 export * from './fineTemplate/delete';
+export * from './firebaseFunctionsContext';
