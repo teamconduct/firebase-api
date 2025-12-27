@@ -45,7 +45,7 @@ export class InvitationRegisterFunction extends FirebaseFunction<InvitationRegis
 
         await this.removeUserInvitation(parameters.teamId, parameters.personId);
 
-        user.teams.set(parameters.teamId, new User.TeamProperties(team.name, parameters.personId));
+        user.teams.set(parameters.teamId, new User.TeamProperties(parameters.teamId, team.name, parameters.personId));
         await Firestore.shared.user(userId).set(user);
 
         person.signInProperties = new PersonSignInProperties(userId, UtcDate.now);

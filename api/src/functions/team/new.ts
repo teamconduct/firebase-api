@@ -41,12 +41,12 @@ export class TeamNewFunction extends FirebaseFunction<TeamNewFunction.Parameters
         if (userSnapshot.exists)
             user = User.builder.build(userSnapshot.data);
 
-        user.teams.set(parameters.id, new User.TeamProperties(parameters.name, parameters.personId));
+        user.teams.set(parameters.id, new User.TeamProperties(parameters.id, parameters.name, parameters.personId));
         await Firestore.shared.user(userId).set(user);
 
         await Firestore.shared.team(parameters.id).set(new Team(parameters.id, parameters.name, parameters.paypalMeLink));
 
-        const signInProperties = new PersonSignInProperties(userId, UtcDate.now, new NotificationProperties(), UserRole.all);
+        const signInProperties = new PersonSignInProperties(userId, UtcDate.now, new NotificationProperties(), [...UserRole.all]);
         await Firestore.shared.person(parameters.id, parameters.personId).set(new Person(parameters.personId, parameters.personProperties, [], signInProperties));
 
         return user;

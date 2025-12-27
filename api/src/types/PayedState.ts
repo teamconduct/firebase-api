@@ -2,41 +2,35 @@ import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality
 import { Localization } from './Localization';
 import { Locale } from './Locale';
 
-export type PayedState =
-    | 'payed'
-    | 'notPayed';
+const payedStates = ['payed', 'notPayed'] as const;
+
+/**
+ * Represents the payment status of a fine.
+ *
+ * Can be either 'payed' (fine has been paid) or 'notPayed' (fine is unpaid).
+ */
+export type PayedState = typeof payedStates[number];
 
 export namespace PayedState {
 
-    export const all: PayedState[] = ['payed', 'notPayed'];
+    /**
+     * Array containing all possible payment states.
+     */
+    export const all: readonly PayedState[] = payedStates;
 
+    /**
+     * Returns the localized display string for a payment state.
+     *
+     * @param state - The payment state to format
+     * @param locale - The locale to use for formatting
+     * @returns Localized string representation of the payment state
+     */
     export function formatted(state: PayedState, locale: Locale): string {
         return Localization.shared(locale).payedState[state].value();
     }
 
-    export function toggled(state: PayedState): PayedState {
-        switch (state) {
-        case 'payed':
-            return 'notPayed';
-        case 'notPayed':
-            return 'payed';
-        }
-    }
-
-    export function payedTag(state: PayedState, locale: Locale): { value: string; severity: 'secondary' | 'danger' } {
-        switch (state) {
-        case 'payed':
-            return {
-                value: formatted(state, locale),
-                severity: 'secondary'
-            };
-        case 'notPayed':
-            return {
-                value: formatted(state, locale),
-                severity: 'danger'
-            };
-        }
-    }
-
+    /**
+     * Type builder for PayedState serialization/deserialization.
+     */
     export const builder = new ValueTypeBuilder<PayedState>();
 }

@@ -25,7 +25,8 @@ describe('Currency', () => {
 
         it('should contain all available currencies', () => {
             expect(Currency.all.length).toBeEqual(2);
-            expect(Currency.all).toContainAll('EUR', 'USD');
+            expect(Currency.all.includes('EUR')).toBeTrue();
+            expect(Currency.all.includes('USD')).toBeTrue();
         });
     });
 
