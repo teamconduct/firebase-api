@@ -1,26 +1,100 @@
-import { keys, mapRecord, values } from '@stevenkellner/typescript-common-functionality';
+import { mapRecord } from '@stevenkellner/typescript-common-functionality';
 import { localizationEN } from '../locales/en';
 import { localizationDE } from '../locales/de';
 import { Pluralization } from './Pluralization';
+import { Locale } from './Locale';
 
-export const localizations = {
+/**
+ * Type representing the structure of a localization dictionary.
+ * Derived from the English localization as the base template.
+ */
+export type LocalizationDict = typeof localizationEN;
+
+/**
+ * Helper function to ensure a record satisfies the localization structure
+ * while preserving its concrete type.
+ */
+const satisfiesLocalizationRecord = <T extends Record<string, LocalizationDict>>(value: T): T => value;
+
+/**
+ * Record of all available localizations keyed by locale.
+ * Each localization must match the structure of LocalizationDict.
+ */
+export const localizations = satisfiesLocalizationRecord({
     en: localizationEN,
     de: localizationDE
-};
+});
 
+/**
+ * Recursive type definition for localization values.
+ * Can be nested objects, strings with template variables, or Pluralization instances.
+ */
 export type SubLocalizationType = { [Key in string]: SubLocalizationType } | string | Pluralization;
 
+/**
+ * Mapped type that transforms SubLocalizationType into corresponding localization classes.
+ * - Objects become nested SubLocalization structures
+ * - Strings become ValueLocalization instances
+ * - Pluralization instances become PluralLocalization instances
+ */
 export type SubLocalization<T extends SubLocalizationType> =
     T extends { [Key in string]: SubLocalizationType } ? { [Key in keyof T]: SubLocalization<T[Key]> } :
         T extends string ? ValueLocalization :
         T extends Pluralization ? PluralLocalization : never;
 
+/**
+ * Main localization class that provides access to localized strings.
+ * Transforms raw localization data into type-safe localization objects.
+ */
+export class Localization {
+
+    /**
+     * Returns the localization structure for the specified locale.
+     * Transforms the raw localization data into ValueLocalization and PluralLocalization instances.
+     * @param locale - The locale to retrieve localizations for
+     * @returns The complete localization structure with type-safe access
+     */
+    public static shared(locale: Locale): SubLocalization<LocalizationDict> {
+        return Localization.mapSubLocalization(localizations[locale]);
+    }
+
+    /**
+     * Recursively maps raw localization data to localization class instances.
+     * @param localization - The raw localization value to transform
+     * @returns The transformed localization with proper class instances
+     */
+    private static mapSubLocalization<T extends SubLocalizationType>(localization: T): SubLocalization<T> {
+        if (typeof localization === 'object' && ! (localization instanceof Pluralization))
+            return mapRecord(localization as Record<string, SubLocalizationType>, subLocalization => Localization.mapSubLocalization(subLocalization)) as SubLocalization<T>;
+        if (typeof localization === 'string')
+            return new ValueLocalization(localization) as SubLocalization<T>;
+        if (localization instanceof Pluralization)
+            return new PluralLocalization(localization) as SubLocalization<T>;
+        throw new Error('Invalid localization structure');
+    }
+}
+
+/**
+ * Handles localization strings with template variable substitution.
+ * Supports {{variableName}} syntax for runtime value replacement.
+ */
 export class ValueLocalization {
 
-    constructor(private readonly rawValues: Record<keyof typeof localizations, string>) {}
+    /**
+     * Creates a new ValueLocalization instance.
+     * @param rawValue - The template string with {{variable}} placeholders
+     */
+    constructor(private readonly rawValue: string) {}
 
+    /**
+     * Returns the localized string with variables substituted.
+     * Template variables in the format {{key}} are replaced with provided argument values.
+     * @param args - Record of variable names to their replacement values
+     * @returns The localized string with all variables replaced
+     * @throws Error if a required template variable is not provided in args
+     */
     public value(args: Record<string, string> = {}): string {
-        let rawValue = this.rawValues[Localization.locale];
+        let rawValue = this.rawValue;
         const regex = /\{\{(?<key>.*?)\}\}/;
         while (true) {
             const match = regex.exec(rawValue);
@@ -35,49 +109,30 @@ export class ValueLocalization {
     }
 }
 
+/**
+ * Handles pluralized localization strings that vary based on count.
+ * Combines Pluralization logic with template variable substitution.
+ */
 export class PluralLocalization {
 
-    constructor(private readonly pluralizations: Record<keyof typeof localizations, Pluralization>) {}
+    /**
+     * Creates a new PluralLocalization instance.
+     * @param pluralization - The Pluralization instance containing plural forms
+     */
+    constructor(private readonly pluralization: Pluralization) {}
 
+    /**
+     * Returns the appropriate pluralized string for the given count with variables substituted.
+     * Automatically includes 'count' in the template variables.
+     * @param count - The count to determine which plural form to use
+     * @param args - Additional template variables to substitute (count is added automatically)
+     * @returns The localized plural string with all variables replaced
+     */
     public value(count: number, args: Record<string, string> = {}): string {
-        const valueLocalization = new ValueLocalization(mapRecord(this.pluralizations, pluralization => pluralization.get(count)));
+        const valueLocalization = new ValueLocalization(this.pluralization.get(count));
         return valueLocalization.value({
             count: `${count}`,
             ...args
         });
-    }
-}
-
-function swap1stAnd2ndLevel<Level1Key extends string, Level2Key extends string, T>(record: Record<Level1Key, Record<Level2Key, T>>): Record<Level2Key, Record<Level1Key, T>> {
-    const swapped = {} as Record<Level2Key, Record<Level1Key, T>>;
-    for (const key1 of keys(record)) {
-        for (const key2 of keys(record[key1]) as Level2Key[]) {
-            if (!(key2 in swapped))
-                swapped[key2] = {} as Record<Level1Key, T>;
-            swapped[key2][key1] = record[key1][key2];
-        }
-    }
-    return swapped;
-}
-
-export class Localization {
-
-    public static locale: keyof typeof localizations = 'en';
-
-    public static readonly shared = Localization.getSubLocalization(localizations);
-
-    private static getSubLocalization<T extends SubLocalizationType>(_localizations: Record<keyof typeof localizations, T>): SubLocalization<T> {
-        const _localizationValue = values(_localizations);
-        if (_localizationValue.length === 0)
-            return {} as SubLocalization<T>;
-        if (typeof _localizationValue[0] === 'object' && !(_localizationValue[0] instanceof Pluralization)) {
-            const swapped = swap1stAnd2ndLevel(_localizations as Record<string, Record<string, SubLocalizationType>>);
-            return mapRecord(swapped, subLocalization => Localization.getSubLocalization(subLocalization)) as SubLocalization<T>;
-        }
-        if (typeof _localizationValue[0] === 'string')
-            return new ValueLocalization(_localizations as Record<keyof typeof localizations, string>) as SubLocalization<T>;
-        if (_localizationValue[0] instanceof Pluralization)
-            return new PluralLocalization(_localizations as Record<keyof typeof localizations, Pluralization>) as SubLocalization<T>;
-        throw new Error('Invalid localization structure');
     }
 }

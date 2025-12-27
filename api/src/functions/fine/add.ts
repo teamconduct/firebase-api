@@ -47,12 +47,12 @@ export class FineAddFunction extends FirebaseFunction<FineAddFunction.Parameters
         person.fineIds.push(parameters.fine.id);
         await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
 
-        Localization.locale = parameters.configuration.locale;
+        const localization = Localization.shared(parameters.configuration.locale);
         await pushNotification(parameters.teamId, parameters.personId, 'new-fine', {
-            title: Localization.shared.notification.fine.new.title.value({
+            title: localization.notification.fine.new.title.value({
                 reason: parameters.fine.reason
             }),
-            body: Localization.shared.notification.fine.new.body.value({
+            body: localization.notification.fine.new.body.value({
                 amount: parameters.fine.amount.formatted(parameters.configuration)
             })
         });

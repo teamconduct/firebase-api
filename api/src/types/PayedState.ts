@@ -1,5 +1,6 @@
 import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { Localization } from './Localization';
+import { Locale } from './Locale';
 
 export type PayedState =
     | 'payed'
@@ -9,8 +10,8 @@ export namespace PayedState {
 
     export const all: PayedState[] = ['payed', 'notPayed'];
 
-    export function formatted(state: PayedState): string {
-        return Localization.shared.payedState[state].value();
+    export function formatted(state: PayedState, locale: Locale): string {
+        return Localization.shared(locale).payedState[state].value();
     }
 
     export function toggled(state: PayedState): PayedState {
@@ -22,16 +23,16 @@ export namespace PayedState {
         }
     }
 
-    export function payedTag(state: PayedState): { value: string; severity: 'secondary' | 'danger' } {
+    export function payedTag(state: PayedState, locale: Locale): { value: string; severity: 'secondary' | 'danger' } {
         switch (state) {
         case 'payed':
             return {
-                value: formatted(state),
+                value: formatted(state, locale),
                 severity: 'secondary'
             };
         case 'notPayed':
             return {
-                value: formatted(state),
+                value: formatted(state, locale),
                 severity: 'danger'
             };
         }

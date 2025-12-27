@@ -1,6 +1,25 @@
 import { Pluralization } from '../types/Pluralization';
+import { SubLocalizationType } from '../types/Localization';
 
-export const localizationEN = {
+/**
+ * Helper function to ensure a value satisfies the Localization structure
+ * while preserving its concrete type (as const) for type inference.
+ * @param value - The localization object to validate
+ * @returns The same value with its inferred type preserved
+ */
+const satisfiesLocalization = <T extends { [Key in string]: SubLocalizationType }>(value: T): T => value;
+
+/**
+ * English (en) localization strings for the application.
+ * Contains translations for notifications, fine amounts, fine template repetitions,
+ * payment states, and user roles.
+ *
+ * Supports template variables using {{variableName}} syntax that will be replaced
+ * at runtime with actual values.
+ *
+ * This serves as the base localization - other locales should match this structure.
+ */
+export const localizationEN = satisfiesLocalization({
     notification: {
         fine: {
             new: {
@@ -95,4 +114,4 @@ export const localizationEN = {
         fineCanAdd: 'Can add fines',
         teamManager: 'Team Manager'
     }
-}
+});

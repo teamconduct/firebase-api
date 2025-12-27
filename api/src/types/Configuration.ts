@@ -1,13 +1,27 @@
-import { localizations } from './Localization';
-import { Flattable, ITypeBuilder, keys, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { Currency } from './Currency';
+import { Locale } from './Locale';
 
+/**
+ * Represents the configuration settings that will be passed to the functions parameters.
+ * Contains currency and locale preferences.
+ */
 export class Configuration implements Flattable<Configuration.Flatten> {
 
+    /**
+     * Creates a new Configuration instance.
+     * @param currency - The currency to use for monetary values (EUR, USD, ...)
+     * @param locale - The locale for localization (language/region)
+     */
     public constructor(
-        public currency: Configuration.Currency,
-        public locale: Configuration.Locale
+        public currency: Currency,
+        public locale: Locale
     ) {}
 
+    /**
+     * Returns the flattened representation of the configuration.
+     * @returns The flattened configuration object
+     */
     public get flatten(): Configuration.Flatten {
         return {
             currency: this.currency,
@@ -18,31 +32,24 @@ export class Configuration implements Flattable<Configuration.Flatten> {
 
 export namespace Configuration {
 
-    export type Currency = 'EUR' | 'USD';
-
-    export namespace Currency {
-
-        export const all: Currency[] = ['EUR', 'USD'];
-
-        export const builder = new ValueTypeBuilder<Currency>();
-    }
-
-    export type Locale = keyof typeof localizations;
-
-    export namespace Locale {
-
-        export const all: Locale[] = keys(localizations);
-
-        export const builder = new ValueTypeBuilder<Locale>();
-    }
-
+    /**
+     * Flattened representation of Configuration for serialization.
+     */
     export type Flatten = {
         currency: Currency,
         locale: Locale
     };
 
+    /**
+     * TypeBuilder for constructing Configuration instances from flattened data.
+     */
     export class TypeBuilder implements ITypeBuilder<Flatten, Configuration> {
 
+        /**
+         * Builds a Configuration instance from flattened data.
+         * @param flatten - The flattened configuration data
+         * @returns A new Configuration instance
+         */
         public build(flatten: Flatten): Configuration {
             return new Configuration(
                 flatten.currency,
@@ -51,5 +58,8 @@ export namespace Configuration {
         }
     }
 
+    /**
+     * Singleton builder instance for Configuration.
+     */
     export const builder = new TypeBuilder();
 }

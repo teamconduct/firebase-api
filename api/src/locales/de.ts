@@ -1,6 +1,15 @@
 import { Pluralization } from '../types/Pluralization';
+import { LocalizationDict } from '../types/Localization';
 
-export const localizationDE = {
+/**
+ * German (de) localization strings for the application.
+ * Contains translations for notifications, fine amounts, fine template repetitions,
+ * payment states, and user roles.
+ *
+ * Supports template variables using {{variableName}} syntax that will be replaced
+ * at runtime with actual values.
+ */
+export const localizationDE: LocalizationDict = {
     notification: {
         fine: {
             new: {

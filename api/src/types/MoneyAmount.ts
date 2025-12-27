@@ -1,5 +1,6 @@
 import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { Configuration } from './Configuration';
+import { Currency } from './Currency';
 
 export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
 
@@ -24,7 +25,7 @@ export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
         return new MoneyAmount(value, subunitValue % 100);
     }
 
-    public formatted(currency: Configuration.Currency, configuration: Configuration): string {
+    public formatted(currency: Currency, configuration: Configuration): string {
         const numberFormat = Intl.NumberFormat(configuration.locale, {
             style: 'currency',
             currency: currency

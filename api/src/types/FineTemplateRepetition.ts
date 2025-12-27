@@ -1,5 +1,6 @@
 import { Flattable, ITypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { Localization } from './Localization';
+import { Locale } from './Locale';
 
 export class FineTemplateRepetition implements Flattable<FineTemplateRepetition.Flatten> {
 
@@ -8,12 +9,12 @@ export class FineTemplateRepetition implements Flattable<FineTemplateRepetition.
         public maxCount: number | null
     ) {}
 
-    public formatted(count: number): string {
-        return Localization.shared.fineTemplateRepetition.item[this.item].withCount.value(count);
+    public formatted(count: number, locale: Locale): string {
+        return Localization.shared(locale).fineTemplateRepetition.item[this.item].withCount.value(count);
     }
 
-    public formattedWithoutCount(count: number): string {
-        return Localization.shared.fineTemplateRepetition.item[this.item].withoutCount.value(count);
+    public formattedWithoutCount(count: number, locale: Locale): string {
+        return Localization.shared(locale).fineTemplateRepetition.item[this.item].withoutCount.value(count);
     }
 
     public get flatten(): FineTemplateRepetition.Flatten {
@@ -41,8 +42,8 @@ export namespace FineTemplateRepetition {
             'count'
         ];
 
-        export function formatted(item: Item): string {
-            return Localization.shared.fineTemplateRepetition.item[item].name.value();
+        export function formatted(item: Item, locale: Locale): string {
+            return Localization.shared(locale).fineTemplateRepetition.item[item].name.value();
         }
 
         export const builder = new ValueTypeBuilder<Item>();

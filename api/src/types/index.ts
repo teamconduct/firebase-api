@@ -15,3 +15,5 @@ export * from './Pluralization';
 export * from './Team';
 export * from './User';
 export * from './UserRole';
+export * from './Currency';
+export * from './Locale';

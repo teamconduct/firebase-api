@@ -2,6 +2,7 @@ import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functi
 import { MoneyAmount } from './MoneyAmount';
 import { Configuration } from './Configuration';
 import { Localization } from './Localization';
+import { Locale } from './Locale';
 
 export type FineAmount =
     | FineAmount.Money
@@ -55,12 +56,15 @@ export namespace FineAmount {
             public count: number
         ) {}
 
-        public formatted(): string {
-            return Localization.shared.fineAmount.item.type[this.item].withCount.value(this.count);
+        public formatted(locale: Locale): string;
+        public formatted(configuration: Configuration): string;
+        public formatted(configurationOrLocale: Configuration | Locale): string {
+            const locale = configurationOrLocale instanceof Configuration ? configurationOrLocale.locale : configurationOrLocale;
+            return Localization.shared(locale).fineAmount.item.type[this.item].withCount.value(this.count);
         }
 
-        public formattedWithoutCount(): string {
-            return Localization.shared.fineAmount.item.type[this.item].withoutCount.value(this.count);
+        public formattedWithoutCount(locale: Locale): string {
+            return Localization.shared(locale).fineAmount.item.type[this.item].withoutCount.value(this.count);
         }
 
         public multiplied(factor: number): Item {
@@ -85,8 +89,8 @@ export namespace FineAmount {
 
             export const all: Type[] = ['crateOfBeer'];
 
-            export function formatted(type: Type): string {
-                return Localization.shared.fineAmount.item.type[type].name.value();
+            export function formatted(type: Type, locale: Locale): string {
+                return Localization.shared(locale).fineAmount.item.type[type].name.value();
             }
         }
 

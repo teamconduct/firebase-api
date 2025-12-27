@@ -37,15 +37,15 @@ export class FineUpdateFunction extends FirebaseFunction<FineUpdateFunction.Para
 
         await Firestore.shared.fine(parameters.teamId, parameters.fine.id).set(parameters.fine);
 
-        Localization.locale = parameters.configuration.locale;
+        const localization = Localization.shared(parameters.configuration.locale);
         if (parameters.fine.payedState !== fineSnapshot.data.payedState) {
             let bodyLocalization: ValueLocalization;
             if (parameters.fine.payedState === 'payed')
-                bodyLocalization = Localization.shared.notification.fine.stateChange.bodyPayed;
+                bodyLocalization = localization.notification.fine.stateChange.bodyPayed;
             else
-                bodyLocalization = Localization.shared.notification.fine.stateChange.bodyUnpayed;
+                bodyLocalization = localization.notification.fine.stateChange.bodyUnpayed;
             await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
-                title: Localization.shared.notification.fine.stateChange.title.value(),
+                title: localization.notification.fine.stateChange.title.value(),
                 body: bodyLocalization.value({
                     reason: parameters.fine.reason,
                     amount: parameters.fine.amount.formatted(parameters.configuration)

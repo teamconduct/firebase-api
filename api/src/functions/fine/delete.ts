@@ -44,10 +44,10 @@ export class FineDeleteFunction extends FirebaseFunction<FineDeleteFunction.Para
         person.fineIds = person.fineIds.filter(id => id.guidString !== parameters.id.guidString);
         await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
 
-        Localization.locale = parameters.configuration.locale;
+        const localization = Localization.shared(parameters.configuration.locale);
         await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
-            title: Localization.shared.notification.fine.stateChange.title.value(),
-            body: Localization.shared.notification.fine.stateChange.bodyDeleted.value({
+            title: localization.notification.fine.stateChange.title.value(),
+            body: localization.notification.fine.stateChange.bodyDeleted.value({
                 amount: FineAmount.builder.build(fineSnapshot.data.amount).formatted(parameters.configuration),
                 reason: fineSnapshot.data.reason
             })
