@@ -3,7 +3,7 @@ import { FirebaseApp } from './FirebaseApp/FirebaseApp';
 import { assert, expect } from '@assertive-ts/core'
 import { deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, collection, Firestore, getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { Team, User } from '@stevenkellner/team-conduct-api';
-import { Tagged } from '@stevenkellner/typescript-common-functionality';
+import { Guid, Tagged } from '@stevenkellner/typescript-common-functionality';
 
 describe('Firebase Rules', () => {
 
@@ -112,7 +112,8 @@ describe('Firebase Rules', () => {
     it('should allow to get teams if user is in team', async () => {
         const userId = await FirebaseApp.shared.auth.signIn();
         const user = new User(userId);
-        user.teams.set('123' as unknown as Team.Id, new User.TeamProperties('test', Tagged.generate('person')));
+        const teamId: Team.Id = new Tagged('123' as unknown as Guid, 'team');
+        user.teams.set(teamId, new User.TeamProperties(teamId, 'test', Tagged.generate('person')));
         await FirebaseApp.shared.firestore.user(userId).set(user);
         await createTestDocuments();
         const snapshot1 = await getDoc(doc(firestore, 'teams/123'));

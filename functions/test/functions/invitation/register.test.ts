@@ -78,7 +78,7 @@ describe('InvitationRegisterFunction', () => {
             personId: FirebaseApp.shared.testTeam.persons[1].id
         });
         expect(user).toBeEqual(new User(userId, new Dictionary(Team.Id.builder, {
-            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id)
+            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id)
         })));
         const invitationSnapshot = await FirebaseApp.shared.firestore.invitation(invitationId).snapshot();
         expect(invitationSnapshot.exists).toBeFalse();
@@ -88,7 +88,8 @@ describe('InvitationRegisterFunction', () => {
             id: userId.value,
             teams: {
                 [FirebaseApp.shared.testTeam.id.guidString]: {
-                    name: FirebaseApp.shared.testTeam.name,
+                    teamId: FirebaseApp.shared.testTeam.id.guidString,
+                    teamName: FirebaseApp.shared.testTeam.name,
                     personId: FirebaseApp.shared.testTeam.persons[1].id.guidString
                 }
             }
@@ -119,7 +120,8 @@ describe('InvitationRegisterFunction', () => {
             FirebaseApp.shared.testTeam.persons[1].id
         ));
         const signedInUser = new User(userId);
-        signedInUser.teams.set(RandomData.shared.teamId(), new User.TeamProperties('team-1', Tagged.generate('person')));
+        const teamId = RandomData.shared.teamId();
+        signedInUser.teams.set(teamId, new User.TeamProperties(teamId, 'team-1', Tagged.generate('person')));
         await FirebaseApp.shared.firestore.user(userId).set(signedInUser);
         const user = await FirebaseApp.shared.functions.invitation.register.execute({
             teamId: FirebaseApp.shared.testTeam.id,
@@ -132,12 +134,13 @@ describe('InvitationRegisterFunction', () => {
             teams: {
                 ...userSnapshot.data.teams,
                 [FirebaseApp.shared.testTeam.id.guidString]: {
-                    name: FirebaseApp.shared.testTeam.name,
+                    teamId: FirebaseApp.shared.testTeam.id.guidString,
+                    teamName: FirebaseApp.shared.testTeam.name,
                     personId: FirebaseApp.shared.testTeam.persons[1].id.guidString
                 }
             }
         });
-        signedInUser.teams.set(FirebaseApp.shared.testTeam.id, new User.TeamProperties(FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id));
+        signedInUser.teams.set(FirebaseApp.shared.testTeam.id, new User.TeamProperties(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.name, FirebaseApp.shared.testTeam.persons[1].id));
         expect(user).toBeEqual(new User(userId, signedInUser.teams));
         const invitationSnapshot = await FirebaseApp.shared.firestore.invitation(invitationId).snapshot();
         expect(invitationSnapshot.exists).toBeFalse();

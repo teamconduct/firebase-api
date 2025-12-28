@@ -53,13 +53,14 @@ describe('TeamNewFunction', () => {
             personProperties: personPrivateProperties
         });
         expect(user.teams.has(teamId)).toBeTrue();
-        expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamName, personId));
+        expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamId, teamName, personId));
         const userSnpapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
         expect(userSnpapshot.exists).toBeTrue();
         expect(teamId.guidString in userSnpapshot.data.teams).toBeTrue();
         const userTeam = userSnpapshot.data.teams[teamId.guidString];
         expect(userTeam).toBeEqual({
-            name: teamName,
+            teamId: teamId.guidString,
+            teamName: teamName,
             personId: personId.guidString
         });
         const teamSnapshot = await FirebaseApp.shared.firestore.team(teamId).snapshot();
@@ -83,7 +84,7 @@ describe('TeamNewFunction', () => {
                     tokens: {},
                     subscriptions: []
                 },
-                roles: UserRole.all
+                roles: [...UserRole.all]
             }
         });
     });
@@ -102,13 +103,14 @@ describe('TeamNewFunction', () => {
             personProperties: personPrivateProperties
         });
         expect(user.teams.has(teamId)).toBeTrue();
-        expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamName, personId));
+        expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamId, teamName, personId));
         const userSnpapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
         expect(userSnpapshot.exists).toBeTrue();
         expect(teamId.guidString in userSnpapshot.data.teams).toBeTrue();
         const userTeam = userSnpapshot.data.teams[teamId.guidString];
         expect(userTeam).toBeEqual({
-            name: teamName,
+            teamId: teamId.guidString,
+            teamName: teamName,
             personId: personId.guidString
         });
         const teamSnapshot = await FirebaseApp.shared.firestore.team(teamId).snapshot();
@@ -132,7 +134,7 @@ describe('TeamNewFunction', () => {
                     tokens: {},
                     subscriptions: []
                 },
-                roles: UserRole.all
+                roles: [...UserRole.all]
             }
         });
     });

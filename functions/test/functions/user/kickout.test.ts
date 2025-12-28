@@ -37,7 +37,7 @@ describe('UserKickoutFunction', () => {
     it('person not found', async () => {
         const userId: User.Id = new Tagged('userId', 'user');
         await FirebaseApp.shared.firestore.user(userId).set(new User(userId, new Dictionary(Team.Id.builder, {
-            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, new Tagged(Guid.generate(), 'person'))
+            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.name, new Tagged(Guid.generate(), 'person'))
         })));
         const result = await FirebaseApp.shared.functions.user.kickout.executeWithResult({
             teamId: FirebaseApp.shared.testTeam.id,
@@ -58,7 +58,7 @@ describe('UserKickoutFunction', () => {
         const userId: User.Id = new Tagged('userId', 'user');
         const person = FirebaseApp.shared.testTeam.persons[1];
         await FirebaseApp.shared.firestore.user(userId).set(new User(userId, new Dictionary(Team.Id.builder, {
-            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.name, person.id)
+            [FirebaseApp.shared.testTeam.id.guidString]: new User.TeamProperties(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.name, person.id)
         })));
         person.signInProperties = new PersonSignInProperties(userId, UtcDate.now);
         await FirebaseApp.shared.firestore.person(FirebaseApp.shared.testTeam.id, person.id).set(person);
