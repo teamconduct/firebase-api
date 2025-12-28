@@ -1,11 +1,11 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { checkAuthentication, Firestore, Invitation, InvitationWithdrawFunctionBase } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { checkAuthentication, Firestore, Invitation, InvitationWithdrawFunction } from '@stevenkellner/team-conduct-api';
 
-export class InvitationWithdrawFunction extends InvitationWithdrawFunctionBase {
+export class InvitationWithdrawExecutableFunction extends InvitationWithdrawFunction implements ExecutableFirebaseFunction<Invitation, void> {
 
-    public async execute(invitation: Invitation): Promise<void> {
+    public async execute(userId: string | null, invitation: Invitation): Promise<void> {
 
-        await checkAuthentication(this.userId, invitation.teamId, 'team-manager');
+        await checkAuthentication(userId, invitation.teamId, 'team-manager');
 
         const invitationId = invitation.createId();
         const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();

@@ -1,14 +1,14 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { TeamNewFunctionBase, TeamNewFunctionParameters, User, Team, PersonSignInProperties, NotificationProperties, UserRole, Person, Firestore } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { TeamNewFunction, User, Team, PersonSignInProperties, NotificationProperties, UserRole, Person, Firestore } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
-export class TeamNewFunction extends TeamNewFunctionBase {
+export class TeamNewExecutableFunction extends TeamNewFunction implements ExecutableFirebaseFunction<TeamNewFunction.Parameters, User> {
 
-    public async execute(parameters: TeamNewFunctionParameters): Promise<User> {
+    public async execute(rawUserId: string | null, parameters: TeamNewFunction.Parameters): Promise<User> {
 
-        if (this.userId === null)
+        if (rawUserId === null)
             throw new FunctionsError('permission-denied', 'User is not authenticated');
-        const userId = User.Id.builder.build(this.userId);
+        const userId = User.Id.builder.build(rawUserId);
 
         const teamSnapshot = await Firestore.shared.team(parameters.id).snapshot();
         if (teamSnapshot.exists)

@@ -1,9 +1,9 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { Firestore, NotificationProperties, NotificationRegisterFunctionBase, NotificationRegisterFunctionParameters, Person } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { Firestore, NotificationProperties, NotificationRegisterFunction, Person } from '@stevenkellner/team-conduct-api';
 
-export class NotificationRegisterFunction extends NotificationRegisterFunctionBase {
+export class NotificationRegisterExecutableFunction extends NotificationRegisterFunction implements ExecutableFirebaseFunction<NotificationRegisterFunction.Parameters, void> {
 
-    public async execute(parameters: NotificationRegisterFunctionParameters): Promise<void> {
+    public async execute(_: string | null, parameters: NotificationRegisterFunction.Parameters): Promise<void> {
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)

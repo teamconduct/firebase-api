@@ -1,11 +1,11 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { UserRoleEditFunctionBase, UserRoleEditFunctionParameters, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { UserRoleEditFunction, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
 
-export class UserRoleEditFunction extends UserRoleEditFunctionBase {
+export class UserRoleEditExecutableFunction extends UserRoleEditFunction implements ExecutableFirebaseFunction<UserRoleEditFunction.Parameters, void> {
 
-    public async execute(parameters: UserRoleEditFunctionParameters): Promise<void> {
+    public async execute(rawUserId: string | null, parameters: UserRoleEditFunction.Parameters): Promise<void> {
 
-        const userId = await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
+        const userId = await checkAuthentication(rawUserId, parameters.teamId, 'team-manager');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)

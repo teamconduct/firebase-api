@@ -1,11 +1,11 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { UserKickoutFunctionBase, UserKickoutFunctionParameters, checkAuthentication, User, Person, Firestore } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { UserKickoutFunction, checkAuthentication, User, Person, Firestore } from '@stevenkellner/team-conduct-api';
 
-export class UserKickoutFunction extends UserKickoutFunctionBase {
+export class UserKickoutExecutableFunction extends UserKickoutFunction implements ExecutableFirebaseFunction<UserKickoutFunction.Parameters, void> {
 
-    public async execute(parameters: UserKickoutFunctionParameters): Promise<void> {
+    public async execute(rawUserId: string | null, parameters: UserKickoutFunction.Parameters): Promise<void> {
 
-        const userId = await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
+        const userId = await checkAuthentication(rawUserId, parameters.teamId, 'team-manager');
 
         if (userId.value === parameters.userId.value)
             throw new FunctionsError('invalid-argument', 'You cannot kick yourself out of a team.');

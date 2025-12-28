@@ -1,11 +1,11 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { FineUpdateFunctionBase, FineUpdateFunctionParameters, checkAuthentication, Localization, ValueLocalization, pushNotification, Firestore } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { FineUpdateFunction, checkAuthentication, Localization, ValueLocalization, pushNotification, Firestore } from '@stevenkellner/team-conduct-api';
 
-export class FineUpdateFunction extends FineUpdateFunctionBase {
+export class FineUpdateExecutableFunction extends FineUpdateFunction implements ExecutableFirebaseFunction<FineUpdateFunction.Parameters, void> {
 
-    public async execute(parameters: FineUpdateFunctionParameters): Promise<void> {
+    public async execute(userId: string | null, parameters: FineUpdateFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(this.userId, parameters.teamId, 'fine-manager');
+        await checkAuthentication(userId, parameters.teamId, 'fine-manager');
 
         const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.fine.id).snapshot();
         if (!fineSnapshot.exists)

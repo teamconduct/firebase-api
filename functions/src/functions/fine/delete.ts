@@ -1,10 +1,11 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { checkAuthentication, FineAmount, FineDeleteFunctionBase, FineDeleteFunctionParameters, Firestore, Localization, Person, pushNotification } from '@stevenkellner/team-conduct-api';
-export class FineDeleteFunction extends FineDeleteFunctionBase {
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { checkAuthentication, FineAmount, FineDeleteFunction, Firestore, Localization, Person, pushNotification } from '@stevenkellner/team-conduct-api';
 
-    public async execute(parameters: FineDeleteFunctionParameters): Promise<void> {
+export class FineDeleteExecutableFunction extends FineDeleteFunction implements ExecutableFirebaseFunction<FineDeleteFunction.Parameters, void> {
 
-        await checkAuthentication(this.userId, parameters.teamId, 'fine-manager');
+    public async execute(userId: string | null, parameters: FineDeleteFunction.Parameters): Promise<void> {
+
+        await checkAuthentication(userId, parameters.teamId, 'fine-manager');
 
         const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.id).snapshot();
         if (!fineSnapshot.exists)

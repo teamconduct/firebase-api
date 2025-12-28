@@ -1,11 +1,11 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { Firestore, PersonDeleteFunctionBase, PersonDeleteFunctionParameters, checkAuthentication } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { Firestore, PersonDeleteFunction, checkAuthentication } from '@stevenkellner/team-conduct-api';
 
-export class PersonDeleteFunction extends PersonDeleteFunctionBase {
+export class PersonDeleteExecutableFunction extends PersonDeleteFunction implements ExecutableFirebaseFunction<PersonDeleteFunction.Parameters, void> {
 
-    public async execute(parameters: PersonDeleteFunctionParameters): Promise<void> {
+    public async execute(userId: string | null, parameters: PersonDeleteFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(this.userId, parameters.teamId, 'person-manager');
+        await checkAuthentication(userId, parameters.teamId, 'person-manager');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.id).snapshot();
         if (!personSnapshot.exists)

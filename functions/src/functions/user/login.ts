@@ -1,13 +1,13 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { Firestore, User, UserLoginFunctionBase } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { Firestore, User, UserLoginFunction } from '@stevenkellner/team-conduct-api';
 
-export class UserLoginFunction extends UserLoginFunctionBase {
+export class UserLoginExecutableFunction extends UserLoginFunction implements ExecutableFirebaseFunction<null, User> {
 
-    public async execute(): Promise<User> {
+    public async execute(rawUserId: string | null): Promise<User> {
 
-        if (this.userId === null)
+        if (rawUserId === null)
             throw new FunctionsError('unauthenticated', 'User is not authenticated.');
-        const userId = User.Id.builder.build(this.userId);
+        const userId = User.Id.builder.build(rawUserId);
 
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         if (!userSnapshot.exists)

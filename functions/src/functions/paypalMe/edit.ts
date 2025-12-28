@@ -1,11 +1,11 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { PaypalMeEditFunctionBase, PaypalMeEditFunctionParameters, checkAuthentication, Team, Firestore } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { PaypalMeEditFunction, checkAuthentication, Team, Firestore } from '@stevenkellner/team-conduct-api';
 
-export class PaypalMeEditFunction extends PaypalMeEditFunctionBase {
+export class PaypalMeEditExecutableFunction extends PaypalMeEditFunction implements ExecutableFirebaseFunction<PaypalMeEditFunction.Parameters, void> {
 
-    public async execute(parameters: PaypalMeEditFunctionParameters): Promise<void> {
+    public async execute(userId: string | null, parameters: PaypalMeEditFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
+        await checkAuthentication(userId, parameters.teamId, 'team-manager');
 
         const teamSnapshot = await Firestore.shared.team(parameters.teamId).snapshot();
         if (!teamSnapshot.exists)

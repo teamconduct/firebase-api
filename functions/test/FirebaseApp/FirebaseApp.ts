@@ -3,14 +3,13 @@ import * as admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { FirebaseAuth } from './FirebaseAuth';
 import { FirebaseFirestore } from './FirebaseFirestore';
-import { Configuration, User, UserRole, FirebaseConfiguration, PersonSignInProperties, Team, NotificationProperties } from '@stevenkellner/team-conduct-api';
+import { Configuration, User, UserRole, FirebaseConfiguration, PersonSignInProperties, Team, NotificationProperties, firebaseFunctionsContext } from '@stevenkellner/team-conduct-api';
 import { getFirestore } from 'firebase-admin/firestore';
 import { FirestoreDocument, createCallableClientFirebaseFunctions } from '@stevenkellner/firebase-function';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { BytesCoder, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { testTeam1 } from '../testTeams/testTeam1';
 import { TestTeam } from '../testTeams/TestTeam';
-import { firebaseFunctionsContext } from '../../src/firebaseFunctionsContext';
 
 export class FirebaseApp {
 
@@ -34,7 +33,7 @@ export class FirebaseApp {
     }
 
     private initialize() {
-        configDotenv({ path: 'test/.env.test' });
+        configDotenv({ path: 'test/.env.test', override: true });
         process.env.FIRESTORE_EMULATOR_HOST = '192.168.178.47:8080';
         initializeApp({
             apiKey: process.env.FUNCTESTS_API_KEY,

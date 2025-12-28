@@ -1,12 +1,12 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { InvitationGetInvitationFunctionBase, Invitation, Team, Person, Firestore, InvitationGetInvitationFunctionReturnType } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { InvitationGetInvitationFunction, Invitation, Team, Person, Firestore } from '@stevenkellner/team-conduct-api';
 import { compactMap } from '@stevenkellner/typescript-common-functionality';
 
-export class InvitationGetInvitationFunction extends InvitationGetInvitationFunctionBase {
+export class InvitationGetInvitationExecutableFunction extends InvitationGetInvitationFunction implements ExecutableFirebaseFunction<Invitation.Id, InvitationGetInvitationFunction.ReturnType> {
 
-    public async execute(invitationId: Invitation.Id): Promise<InvitationGetInvitationFunctionReturnType> {
+    public async execute(userId: string | null, invitationId: Invitation.Id): Promise<InvitationGetInvitationFunction.ReturnType> {
 
-        if (this.userId === null)
+        if (userId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
 
         const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();
@@ -20,7 +20,7 @@ export class InvitationGetInvitationFunction extends InvitationGetInvitationFunc
         const team = Team.builder.build(teamSnapshot.data);
 
         if (invitation.personId !== null)
-            return InvitationGetInvitationFunctionReturnType.from(invitation.teamId, team.name, invitation.personId);
+            return InvitationGetInvitationFunction.ReturnType.from(invitation.teamId, team.name, invitation.personId);
 
         const personSnapshots = await Firestore.shared.persons(invitation.teamId).documentSnapshots();
         const persons = compactMap(personSnapshots, personSnapshot => {
@@ -34,6 +34,6 @@ export class InvitationGetInvitationFunction extends InvitationGetInvitationFunc
                 properties: person.properties
             };
         });
-        return InvitationGetInvitationFunctionReturnType.from(invitation.teamId, team.name, persons);
+        return InvitationGetInvitationFunction.ReturnType.from(invitation.teamId, team.name, persons);
     }
 }

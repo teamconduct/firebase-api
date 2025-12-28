@@ -1,10 +1,10 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { PersonUpdateFunctionBase, PersonUpdateFunctionParameters, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
-export class PersonUpdateFunction extends PersonUpdateFunctionBase {
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { PersonUpdateFunction, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
+export class PersonUpdateExecutableFunction extends PersonUpdateFunction implements ExecutableFirebaseFunction<PersonUpdateFunction.Parameters, void> {
 
-    public async execute(parameters: PersonUpdateFunctionParameters): Promise<void> {
+    public async execute(userId: string | null, parameters: PersonUpdateFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(this.userId, parameters.teamId, 'person-manager');
+        await checkAuthentication(userId, parameters.teamId, 'person-manager');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.id).snapshot();
         if (!personSnapshot.exists)

@@ -3,7 +3,7 @@ import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError } from '@stevenkellner/firebase-function';
 import { RandomData } from '../../utils/RandomData';
-import { Invitation, InvitationGetInvitationFunctionReturnType } from '@stevenkellner/team-conduct-api';
+import { Invitation, InvitationGetInvitationFunction } from '@stevenkellner/team-conduct-api';
 
 describe('InvitationGetInvitationFunction', () => {
 
@@ -52,7 +52,7 @@ describe('InvitationGetInvitationFunction', () => {
         const invitation = new Invitation(FirebaseApp.shared.testTeam.id, person.id);
         const invitationId = await FirebaseApp.shared.functions.invitation.invite.execute(invitation);
         const result = await FirebaseApp.shared.functions.invitation.getInvitation.execute(invitationId);
-        expect(result).toBeEqual(InvitationGetInvitationFunctionReturnType.from(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.name, person.id));
+        expect(result).toBeEqual(InvitationGetInvitationFunction.ReturnType.from(FirebaseApp.shared.testTeam.id, FirebaseApp.shared.testTeam.name, person.id));
     });
 
     it('should get invitation for team', async () => {

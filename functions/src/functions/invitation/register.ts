@@ -1,14 +1,14 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { InvitationRegisterFunctionBase, User, Team, Person, PersonSignInProperties, Invitation, Firestore, InvitationRegisterFunctionParameters } from '@stevenkellner/team-conduct-api';
+import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { InvitationRegisterFunction, User, Team, Person, PersonSignInProperties, Invitation, Firestore } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
-export class InvitationRegisterFunction extends InvitationRegisterFunctionBase {
+export class InvitationRegisterExecutableFunction extends InvitationRegisterFunction implements ExecutableFirebaseFunction<InvitationRegisterFunction.Parameters, User> {
 
-    public async execute(parameters: InvitationRegisterFunctionParameters): Promise<User> {
+    public async execute(rawUserId: string | null, parameters: InvitationRegisterFunction.Parameters): Promise<User> {
 
-        if (this.userId === null)
+        if (rawUserId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
-        const userId = User.Id.builder.build(this.userId);
+        const userId = User.Id.builder.build(rawUserId);
         const user = await this.getUser(userId);
 
         if (user.teams.has(parameters.teamId))
