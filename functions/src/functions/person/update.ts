@@ -1,29 +1,8 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Person, PersonPrivateProperties, Team } from '../../types';
-import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Firestore } from '../../firebase/Firestore';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { PersonUpdateFunctionBase, PersonUpdateFunctionParameters, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
+export class PersonUpdateFunction extends PersonUpdateFunctionBase {
 
-export namespace PersonUpdateFunction {
-
-    export type Parameters = {
-        teamId: Team.Id,
-        id: Person.Id,
-        properties: PersonPrivateProperties
-    };
-}
-
-export class PersonUpdateFunction extends FirebaseFunction<PersonUpdateFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PersonUpdateFunction.Parameters>, PersonUpdateFunction.Parameters>({
-        teamId: Team.Id.builder,
-        id: Person.Id.builder,
-        properties: PersonPrivateProperties.builder
-    });
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: PersonUpdateFunction.Parameters): Promise<void> {
+    public async execute(parameters: PersonUpdateFunctionParameters): Promise<void> {
 
         await checkAuthentication(this.userId, parameters.teamId, 'person-manager');
 

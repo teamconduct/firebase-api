@@ -1,32 +1,10 @@
-import { Flattable, ObjectTypeBuilder, UtcDate, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Person, PersonPrivateProperties, PersonSignInProperties, User, UserRole, Team, NotificationProperties } from '../../types';
-import { Firestore } from '../../firebase/Firestore';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { TeamNewFunctionBase, TeamNewFunctionParameters, User, Team, PersonSignInProperties, NotificationProperties, UserRole, Person, Firestore } from '@stevenkellner/team-conduct-api';
+import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
-export namespace TeamNewFunction {
+export class TeamNewFunction extends TeamNewFunctionBase {
 
-    export type Parameters = {
-        id: Team.Id
-        name: string
-        paypalMeLink: string | null
-        personId: Person.Id
-        personProperties: PersonPrivateProperties
-    }
-}
-
-export class TeamNewFunction extends FirebaseFunction<TeamNewFunction.Parameters, User> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamNewFunction.Parameters>, TeamNewFunction.Parameters>({
-        id: Team.Id.builder,
-        name: new ValueTypeBuilder(),
-        paypalMeLink: new ValueTypeBuilder(),
-        personId: Person.Id.builder,
-        personProperties: PersonPrivateProperties.builder
-    });
-
-    public returnTypeBuilder = User.builder;
-
-    public async execute(parameters: TeamNewFunction.Parameters): Promise<User> {
+    public async execute(parameters: TeamNewFunctionParameters): Promise<User> {
 
         if (this.userId === null)
             throw new FunctionsError('permission-denied', 'User is not authenticated');

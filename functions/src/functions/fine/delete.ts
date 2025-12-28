@@ -1,32 +1,8 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Configuration, Fine, FineAmount, Localization, Person, Team } from '../../types';
-import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Firestore } from '../../firebase/Firestore';
-import { pushNotification } from '../../firebase/pushNotification';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { checkAuthentication, FineAmount, FineDeleteFunctionBase, FineDeleteFunctionParameters, Firestore, Localization, Person, pushNotification } from '@stevenkellner/team-conduct-api';
+export class FineDeleteFunction extends FineDeleteFunctionBase {
 
-export namespace FineDeleteFunction {
-
-    export type Parameters = {
-        teamId: Team.Id,
-        personId: Person.Id,
-        id: Fine.Id,
-        configuration: Configuration
-    }
-}
-
-export class FineDeleteFunction extends FirebaseFunction<FineDeleteFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<FineDeleteFunction.Parameters>, FineDeleteFunction.Parameters>({
-        teamId: Team.Id.builder,
-        personId: Person.Id.builder,
-        id: Fine.Id.builder,
-        configuration: Configuration.builder
-    });
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: FineDeleteFunction.Parameters): Promise<void> {
+    public async execute(parameters: FineDeleteFunctionParameters): Promise<void> {
 
         await checkAuthentication(this.userId, parameters.teamId, 'fine-manager');
 

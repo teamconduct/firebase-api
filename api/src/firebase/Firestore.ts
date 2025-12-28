@@ -5,26 +5,26 @@ import { FirebaseConfiguration } from '.';
 
 /**
  * Accessor class for Firestore documents and collections.
- * 
+ *
  * Provides type-safe access to Firestore database documents and collections
  * following the schema defined in {@link FirestoreScheme}.
- * 
+ *
  * Uses a singleton pattern to ensure consistent access to the Firestore instance.
  * All methods return strongly-typed Firestore references that can be used for
  * database operations.
- * 
+ *
  * @example
  * ```typescript
  * // Access a team document
  * const teamDoc = Firestore.shared.team(teamId);
- * 
+ *
  * // Access a person in a team
  * const personDoc = Firestore.shared.person(teamId, personId);
- * 
+ *
  * // Access all fines in a team
  * const finesCollection = Firestore.shared.fines(teamId);
  * ```
- * 
+ *
  * @remarks
  * Requires {@link FirebaseConfiguration} to be configured before use.
  * All document and collection references are lazy and don't perform any
@@ -40,19 +40,19 @@ export class Firestore {
 
     /**
      * The singleton instance of the Firestore accessor.
-     * 
+     *
      * @private
      */
     private static sharedInstance: Firestore | null = null;
 
     /**
      * Gets the singleton instance of the Firestore accessor.
-     * 
+     *
      * Creates the instance on first access and returns the same instance
      * on subsequent calls.
-     * 
+     *
      * @returns The singleton Firestore accessor instance
-     * 
+     *
      * @example
      * ```typescript
      * const firestore = Firestore.shared;
@@ -67,26 +67,26 @@ export class Firestore {
 
     /**
      * Gets the base Firestore schema from the configured Firebase instance.
-     * 
+     *
      * Accesses the global FirebaseConfiguration to retrieve the root document
      * reference for all database operations.
-     * 
+     *
      * @returns The base Firestore schema with typed collections
-     * 
+     *
      * @throws {Error} If FirebaseConfiguration has not been configured
-     * 
+     *
      * @private
      */
-    private get base(): FirestoreScheme {
+    protected get base(): FirestoreScheme {
         return FirebaseConfiguration.shared.baseFirestoreDocument;
     }
 
     /**
      * Gets a reference to a team document.
-     * 
+     *
      * @param id - The unique identifier of the team
      * @returns A typed Firestore document reference for the team
-     * 
+     *
      * @example
      * ```typescript
      * const teamDoc = Firestore.shared.team(teamId);
@@ -101,10 +101,10 @@ export class Firestore {
 
     /**
      * Gets a reference to a user document.
-     * 
+     *
      * @param id - The unique identifier of the user
      * @returns A typed Firestore document reference for the user
-     * 
+     *
      * @example
      * ```typescript
      * const userDoc = Firestore.shared.user(userId);
@@ -119,10 +119,10 @@ export class Firestore {
 
     /**
      * Gets a reference to an invitation document.
-     * 
+     *
      * @param id - The unique identifier of the invitation
      * @returns A typed Firestore document reference for the invitation
-     * 
+     *
      * @example
      * ```typescript
      * const invitationDoc = Firestore.shared.invitation(invitationId);
@@ -137,10 +137,10 @@ export class Firestore {
 
     /**
      * Gets a reference to the persons collection within a team.
-     * 
+     *
      * @param teamId - The unique identifier of the team
      * @returns A typed Firestore collection reference for persons in the team
-     * 
+     *
      * @example
      * ```typescript
      * const personsCollection = Firestore.shared.persons(teamId);
@@ -156,11 +156,11 @@ export class Firestore {
 
     /**
      * Gets a reference to a specific person document within a team.
-     * 
+     *
      * @param teamId - The unique identifier of the team
      * @param id - The unique identifier of the person
      * @returns A typed Firestore document reference for the person
-     * 
+     *
      * @example
      * ```typescript
      * const personDoc = Firestore.shared.person(teamId, personId);
@@ -174,10 +174,10 @@ export class Firestore {
 
     /**
      * Gets a reference to the fine templates collection within a team.
-     * 
+     *
      * @param teamId - The unique identifier of the team
      * @returns A typed Firestore collection reference for fine templates in the team
-     * 
+     *
      * @example
      * ```typescript
      * const templatesCollection = Firestore.shared.fineTemplates(teamId);
@@ -193,11 +193,11 @@ export class Firestore {
 
     /**
      * Gets a reference to a specific fine template document within a team.
-     * 
+     *
      * @param teamId - The unique identifier of the team
      * @param id - The unique identifier of the fine template
      * @returns A typed Firestore document reference for the fine template
-     * 
+     *
      * @example
      * ```typescript
      * const templateDoc = Firestore.shared.fineTemplate(teamId, templateId);
@@ -211,10 +211,10 @@ export class Firestore {
 
     /**
      * Gets a reference to the fines collection within a team.
-     * 
+     *
      * @param teamId - The unique identifier of the team
      * @returns A typed Firestore collection reference for fines in the team
-     * 
+     *
      * @example
      * ```typescript
      * const finesCollection = Firestore.shared.fines(teamId);
@@ -230,11 +230,11 @@ export class Firestore {
 
     /**
      * Gets a reference to a specific fine document within a team.
-     * 
+     *
      * @param teamId - The unique identifier of the team
      * @param id - The unique identifier of the fine
      * @returns A typed Firestore document reference for the fine
-     * 
+     *
      * @example
      * ```typescript
      * const fineDoc = Firestore.shared.fine(teamId, fineId);

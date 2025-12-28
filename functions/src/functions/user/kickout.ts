@@ -1,27 +1,9 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Person, Team, User } from '../../types';
-import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../firebase/Firestore';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { UserKickoutFunctionBase, UserKickoutFunctionParameters, checkAuthentication, User, Person, Firestore } from '@stevenkellner/team-conduct-api';
 
-export namespace UserKickoutFunction {
+export class UserKickoutFunction extends UserKickoutFunctionBase {
 
-    export type Parameters = {
-        teamId: Team.Id
-        userId: User.Id
-    };
-}
-
-export class UserKickoutFunction extends FirebaseFunction<UserKickoutFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserKickoutFunction.Parameters>, UserKickoutFunction.Parameters>({
-        teamId: Team.Id.builder,
-        userId: User.Id.builder
-    });
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: UserKickoutFunction.Parameters): Promise<void> {
+    public async execute(parameters: UserKickoutFunctionParameters): Promise<void> {
 
         const userId = await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
 

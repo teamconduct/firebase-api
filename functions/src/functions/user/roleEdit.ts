@@ -1,29 +1,9 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Person, Team, UserRole } from '../../types';
-import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../firebase/Firestore';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { UserRoleEditFunctionBase, UserRoleEditFunctionParameters, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
 
-export namespace UserRoleEditFunction {
+export class UserRoleEditFunction extends UserRoleEditFunctionBase {
 
-    export type Parameters = {
-        teamId: Team.Id
-        personId: Person.Id
-        roles: UserRole[]
-    };
-}
-
-export class UserRoleEditFunction extends FirebaseFunction<UserRoleEditFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserRoleEditFunction.Parameters>, UserRoleEditFunction.Parameters>({
-        teamId: Team.Id.builder,
-        personId: Person.Id.builder,
-        roles: new ArrayTypeBuilder(new ValueTypeBuilder())
-    });
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: UserRoleEditFunction.Parameters): Promise<void> {
+    public async execute(parameters: UserRoleEditFunctionParameters): Promise<void> {
 
         const userId = await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
 

@@ -1,9 +1,7 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Invitation } from '../../types';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Firestore } from '../../firebase/Firestore';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { InvitationInviteFunctionBase, Invitation, checkAuthentication, Firestore } from '@stevenkellner/team-conduct-api';
 
-export class InvitationInviteFunction extends FirebaseFunction<Invitation, Invitation.Id> {
+export class InvitationInviteFunction extends InvitationInviteFunctionBase {
 
     public parametersBuilder = Invitation.builder;
 

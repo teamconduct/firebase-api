@@ -5,11 +5,12 @@ import * as admin from 'firebase-admin';
 admin.initializeApp();
 
 import { FirestoreDocument, provideFirebaseFunctions } from '@stevenkellner/firebase-function';
-import { firebaseFunctionsContext, FirebaseConfiguration, Localization } from '@stevenkellner/team-conduct-api';
+import { FirebaseConfiguration, Localization } from '@stevenkellner/team-conduct-api';
 import { BytesCoder } from '@stevenkellner/typescript-common-functionality';
 import { getFirestore } from 'firebase-admin/firestore';
 import { onCall, onRequest } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { firebaseFunctionsContext } from './firebaseFunctionsContext';
 
 FirebaseConfiguration.shared.configure({
     baseFirestoreDocument: FirestoreDocument.base(getFirestore()),

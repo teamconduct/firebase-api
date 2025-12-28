@@ -1,27 +1,9 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { FineTemplate, Team } from '../../types';
-import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Firestore } from '../../firebase/Firestore';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { checkAuthentication, FineTemplateUpdateFunctionBase, FineTemplateUpdateFunctionParameters, Firestore } from '@stevenkellner/team-conduct-api';
 
-export namespace FineTemplateUpdateFunction {
+export class FineTemplateUpdateFunction extends FineTemplateUpdateFunctionBase {
 
-    export type Parameters = {
-        teamId: Team.Id,
-        fineTemplate: FineTemplate
-    };
-}
-
-export class FineTemplateUpdateFunction extends FirebaseFunction<FineTemplateUpdateFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<FineTemplateUpdateFunction.Parameters>, FineTemplateUpdateFunction.Parameters>({
-        teamId: Team.Id.builder,
-        fineTemplate: FineTemplate.builder
-    });
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: FineTemplateUpdateFunction.Parameters): Promise<void> {
+    public async execute(parameters: FineTemplateUpdateFunctionParameters): Promise<void> {
 
         await checkAuthentication(this.userId, parameters.teamId, 'fineTemplate-manager');
 

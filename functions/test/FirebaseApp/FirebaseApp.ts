@@ -3,13 +3,14 @@ import * as admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { FirebaseAuth } from './FirebaseAuth';
 import { FirebaseFirestore } from './FirebaseFirestore';
-import { Configuration, User, UserRole, FirebaseConfiguration, PersonSignInProperties, Team, NotificationProperties, firebaseFunctionsContext } from '@stevenkellner/team-conduct-api';
+import { Configuration, User, UserRole, FirebaseConfiguration, PersonSignInProperties, Team, NotificationProperties } from '@stevenkellner/team-conduct-api';
 import { getFirestore } from 'firebase-admin/firestore';
 import { FirestoreDocument, createCallableClientFirebaseFunctions } from '@stevenkellner/firebase-function';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
 import { BytesCoder, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { testTeam1 } from '../testTeams/testTeam1';
 import { TestTeam } from '../testTeams/TestTeam';
+import { firebaseFunctionsContext } from '../../src/firebaseFunctionsContext';
 
 export class FirebaseApp {
 
@@ -61,7 +62,7 @@ export class FirebaseApp {
 
     private* internal_createTestTeam(testTeam: TestTeam, userId: User.Id, roles: UserRole[]): Generator<Promise<unknown>> {
         const user = new User(userId);
-        user.teams.set(testTeam.id, new User.TeamProperties(testTeam.name, testTeam.persons[0].id));
+        user.teams.set(testTeam.id, new User.TeamProperties(testTeam.id, testTeam.name, testTeam.persons[0].id));
         yield FirebaseApp.shared.firestore.user(userId).set(user);
         yield FirebaseApp.shared.firestore.team(testTeam.id).set(new Team(testTeam.id, testTeam.name, null));
         for (const [index, person] of testTeam.persons.entries()) {

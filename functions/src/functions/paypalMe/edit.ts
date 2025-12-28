@@ -1,27 +1,9 @@
-import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Team } from '../../types';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Firestore } from '../../firebase/Firestore';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { PaypalMeEditFunctionBase, PaypalMeEditFunctionParameters, checkAuthentication, Team, Firestore } from '@stevenkellner/team-conduct-api';
 
-export namespace PaypalMeEditFunction {
+export class PaypalMeEditFunction extends PaypalMeEditFunctionBase {
 
-    export type Parameters = {
-        teamId: Team.Id;
-        paypalMeLink: string | null;
-    };
-}
-
-export class PaypalMeEditFunction extends FirebaseFunction<PaypalMeEditFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PaypalMeEditFunction.Parameters>, PaypalMeEditFunction.Parameters>({
-        teamId: Team.Id.builder,
-        paypalMeLink: new ValueTypeBuilder()
-    });
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: PaypalMeEditFunction.Parameters): Promise<void> {
+    public async execute(parameters: PaypalMeEditFunctionParameters): Promise<void> {
 
         await checkAuthentication(this.userId, parameters.teamId, 'team-manager');
 

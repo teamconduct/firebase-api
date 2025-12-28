@@ -1,14 +1,7 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Invitation } from '../../types';
-import { checkAuthentication } from '../../firebase/checkAuthentication';
-import { Firestore } from '../../firebase/Firestore';
-import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { checkAuthentication, Firestore, Invitation, InvitationWithdrawFunctionBase } from '@stevenkellner/team-conduct-api';
 
-export class InvitationWithdrawFunction extends FirebaseFunction<Invitation, void> {
-
-    public parametersBuilder = Invitation.builder;
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
+export class InvitationWithdrawFunction extends InvitationWithdrawFunctionBase {
 
     public async execute(invitation: Invitation): Promise<void> {
 

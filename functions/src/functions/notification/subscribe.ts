@@ -1,28 +1,9 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { NotificationProperties, Person, Team } from '../../types';
-import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../firebase/Firestore';
+import {  FunctionsError } from '@stevenkellner/firebase-function';
+import { Firestore, NotificationSubscribeFunctionBase, NotificationSubscribeFunctionParameters, Person } from '@stevenkellner/team-conduct-api';
 
-export namespace NotificationSubscribeFunction {
+export class NotificationSubscribeFunction extends NotificationSubscribeFunctionBase {
 
-    export type Parameters = {
-        teamId: Team.Id,
-        personId: Person.Id,
-        subscriptions: NotificationProperties.Subscription[]
-    }
-}
-
-export class NotificationSubscribeFunction extends FirebaseFunction<NotificationSubscribeFunction.Parameters, void> {
-
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<NotificationSubscribeFunction.Parameters>, NotificationSubscribeFunction.Parameters>({
-        teamId: Team.Id.builder,
-        personId: Person.Id.builder,
-        subscriptions: new ArrayTypeBuilder(new ValueTypeBuilder())
-    });
-
-    public returnTypeBuilder = new ValueTypeBuilder<void>();
-
-    public async execute(parameters: NotificationSubscribeFunction.Parameters): Promise<void> {
+    public async execute(parameters: NotificationSubscribeFunctionParameters): Promise<void> {
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)

@@ -1,13 +1,7 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { User } from '../../types';
-import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Firestore } from '../../firebase/Firestore';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { Firestore, User, UserLoginFunctionBase } from '@stevenkellner/team-conduct-api';
 
-export class UserLoginFunction extends FirebaseFunction<null, User> {
-
-    public parametersBuilder = new ValueTypeBuilder<null>();
-
-    public returnTypeBuilder = User.builder;
+export class UserLoginFunction extends UserLoginFunctionBase {
 
     public async execute(): Promise<User> {
 

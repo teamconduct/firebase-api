@@ -1,26 +1,10 @@
-import { FirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
-import { Person, PersonSignInProperties, Team, User, Invitation } from '../../types';
-import { Firestore } from '../../firebase/Firestore';
-import { Flattable, ObjectTypeBuilder, UtcDate } from '@stevenkellner/typescript-common-functionality';
+import { FunctionsError } from '@stevenkellner/firebase-function';
+import { InvitationRegisterFunctionBase, User, Team, Person, PersonSignInProperties, Invitation, Firestore, InvitationRegisterFunctionParameters } from '@stevenkellner/team-conduct-api';
+import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
-export namespace InvitationRegisterFunction {
+export class InvitationRegisterFunction extends InvitationRegisterFunctionBase {
 
-    export type Parameters = {
-        teamId: Team.Id
-        personId: Person.Id
-    };
-}
-
-export class InvitationRegisterFunction extends FirebaseFunction<InvitationRegisterFunction.Parameters, User> {
-
-    public parametersBuilder =  new ObjectTypeBuilder<Flattable.Flatten<InvitationRegisterFunction.Parameters>, InvitationRegisterFunction.Parameters>({
-        teamId: Team.Id.builder,
-        personId: Person.Id.builder
-    });
-
-    public returnTypeBuilder = User.builder;
-
-    public async execute(parameters: InvitationRegisterFunction.Parameters): Promise<User> {
+    public async execute(parameters: InvitationRegisterFunctionParameters): Promise<User> {
 
         if (this.userId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
