@@ -2,14 +2,17 @@ import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/t
 import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Team } from '../../types';
 
-export type PaypalMeEditFunctionParameters = {
-    teamId: Team.Id;
-    paypalMeLink: string | null;
-};
+export namespace PaypalMeEditFunction {
 
-export abstract class PaypalMeEditFunctionBase extends FirebaseFunction<PaypalMeEditFunctionParameters, void> {
+    export type Parameters = {
+        teamId: Team.Id;
+        paypalMeLink: string | null;
+    };
+}
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PaypalMeEditFunctionParameters>, PaypalMeEditFunctionParameters>({
+export class PaypalMeEditFunction implements FirebaseFunction<PaypalMeEditFunction.Parameters, void> {
+
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PaypalMeEditFunction.Parameters>, PaypalMeEditFunction.Parameters>({
         teamId: Team.Id.builder,
         paypalMeLink: new ValueTypeBuilder()
     });

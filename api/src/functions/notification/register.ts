@@ -2,15 +2,18 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Person, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export type NotificationRegisterFunctionParameters = {
-    teamId: Team.Id,
-    personId: Person.Id,
-    token: string
+export namespace NotificationRegisterFunction {
+
+    export type Parameters = {
+        teamId: Team.Id,
+        personId: Person.Id,
+        token: string
+    };
 }
 
-export abstract class NotificationRegisterFunctionBase extends FirebaseFunction<NotificationRegisterFunctionParameters, void> {
+export class NotificationRegisterFunction implements FirebaseFunction<NotificationRegisterFunction.Parameters, void> {
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<NotificationRegisterFunctionParameters>, NotificationRegisterFunctionParameters>({
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<NotificationRegisterFunction.Parameters>, NotificationRegisterFunction.Parameters>({
         teamId: Team.Id.builder,
         personId: Person.Id.builder,
         token: new ValueTypeBuilder()

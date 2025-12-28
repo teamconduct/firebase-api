@@ -2,15 +2,18 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Person, PersonPrivateProperties, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export type PersonAddFunctionParameters = {
-    teamId: Team.Id
-    id: Person.Id,
-    properties: PersonPrivateProperties
-};
+export namespace PersonAddFunction {
 
-export abstract class PersonAddFunctionBase extends FirebaseFunction<PersonAddFunctionParameters, void> {
+    export type Parameters = {
+        teamId: Team.Id
+        id: Person.Id,
+        properties: PersonPrivateProperties
+    };
+}
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PersonAddFunctionParameters>, PersonAddFunctionParameters>({
+export class PersonAddFunction implements FirebaseFunction<PersonAddFunction.Parameters, void> {
+
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PersonAddFunction.Parameters>, PersonAddFunction.Parameters>({
         teamId: Team.Id.builder,
         id: Person.Id.builder,
         properties: PersonPrivateProperties.builder

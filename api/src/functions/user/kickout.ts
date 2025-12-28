@@ -2,14 +2,16 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Team, User } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export type UserKickoutFunctionParameters = {
-    teamId: Team.Id
-    userId: User.Id
-};
+export namespace UserKickoutFunction {
 
-export abstract class UserKickoutFunctionBase extends FirebaseFunction<UserKickoutFunctionParameters, void> {
+    export type Parameters = {
+        teamId: Team.Id
+        userId: User.Id
+    };
+}
+export class UserKickoutFunction implements FirebaseFunction<UserKickoutFunction.Parameters, void> {
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserKickoutFunctionParameters>, UserKickoutFunctionParameters>({
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserKickoutFunction.Parameters>, UserKickoutFunction.Parameters>({
         teamId: Team.Id.builder,
         userId: User.Id.builder
     });

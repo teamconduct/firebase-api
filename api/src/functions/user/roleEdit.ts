@@ -2,15 +2,18 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Person, Team, UserRole } from '../../types';
 import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export type UserRoleEditFunctionParameters = {
-    teamId: Team.Id
-    personId: Person.Id
-    roles: UserRole[]
-};
+export namespace UserRoleEditFunction {
 
-export abstract class UserRoleEditFunctionBase extends FirebaseFunction<UserRoleEditFunctionParameters, void> {
+    export type Parameters = {
+        teamId: Team.Id
+        personId: Person.Id
+        roles: UserRole[]
+    };
+}
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserRoleEditFunctionParameters>, UserRoleEditFunctionParameters>({
+export class UserRoleEditFunction implements FirebaseFunction<UserRoleEditFunction.Parameters, void> {
+
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserRoleEditFunction.Parameters>, UserRoleEditFunction.Parameters>({
         teamId: Team.Id.builder,
         personId: Person.Id.builder,
         roles: new ArrayTypeBuilder(new ValueTypeBuilder())

@@ -2,14 +2,17 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { FineTemplate, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export type FineTemplateDeleteFunctionParameters = {
-    teamId: Team.Id,
-    id: FineTemplate.Id
-};
+export namespace FineTemplateDeleteFunction {
 
-export abstract class FineTemplateDeleteFunctionBase extends FirebaseFunction<FineTemplateDeleteFunctionParameters, void> {
+    export type Parameters = {
+        teamId: Team.Id,
+        id: FineTemplate.Id
+    };
+}
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<FineTemplateDeleteFunctionParameters>, FineTemplateDeleteFunctionParameters>({
+export class FineTemplateDeleteFunction implements FirebaseFunction<FineTemplateDeleteFunction.Parameters, void> {
+
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<FineTemplateDeleteFunction.Parameters>, FineTemplateDeleteFunction.Parameters>({
         teamId: Team.Id.builder,
         id: FineTemplate.Id.builder
     });

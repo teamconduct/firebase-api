@@ -2,14 +2,17 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Person, Team, User } from '../../types';
 import { Flattable, ObjectTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export type InvitationRegisterFunctionParameters = {
-    teamId: Team.Id
-    personId: Person.Id
-};
+export namespace InvitationRegisterFunction {
 
-export abstract class InvitationRegisterFunctionBase extends FirebaseFunction<InvitationRegisterFunctionParameters, User> {
+    export type Parameters = {
+        teamId: Team.Id
+        personId: Person.Id
+    };
+}
 
-    public parametersBuilder =  new ObjectTypeBuilder<Flattable.Flatten<InvitationRegisterFunctionParameters>, InvitationRegisterFunctionParameters>({
+export class InvitationRegisterFunction implements FirebaseFunction<InvitationRegisterFunction.Parameters, User> {
+
+    public parametersBuilder =  new ObjectTypeBuilder<Flattable.Flatten<InvitationRegisterFunction.Parameters>, InvitationRegisterFunction.Parameters>({
         teamId: Team.Id.builder,
         personId: Person.Id.builder
     });

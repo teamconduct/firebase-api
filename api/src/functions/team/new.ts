@@ -2,17 +2,20 @@ import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/t
 import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Person, PersonPrivateProperties, User, Team } from '../../types';
 
-export type TeamNewFunctionParameters = {
-    id: Team.Id
-    name: string
-    paypalMeLink: string | null
-    personId: Person.Id
-    personProperties: PersonPrivateProperties
-};
+export namespace TeamNewFunction {
 
-export abstract class TeamNewFunctionBase extends FirebaseFunction<TeamNewFunctionParameters, User> {
+    export type Parameters = {
+        id: Team.Id
+        name: string
+        paypalMeLink: string | null
+        personId: Person.Id
+        personProperties: PersonPrivateProperties
+    };
+}
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamNewFunctionParameters>, TeamNewFunctionParameters>({
+export class TeamNewFunction implements FirebaseFunction<TeamNewFunction.Parameters, User> {
+
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamNewFunction.Parameters>, TeamNewFunction.Parameters>({
         id: Team.Id.builder,
         name: new ValueTypeBuilder(),
         paypalMeLink: new ValueTypeBuilder(),

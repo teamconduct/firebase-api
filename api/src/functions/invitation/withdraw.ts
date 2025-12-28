@@ -2,7 +2,7 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Invitation } from '../../types';
 import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export abstract class InvitationWithdrawFunctionBase extends FirebaseFunction<Invitation, void> {
+export class InvitationWithdrawFunction implements FirebaseFunction<Invitation, void> {
 
     public parametersBuilder = Invitation.builder;
 
