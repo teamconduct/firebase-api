@@ -107,6 +107,43 @@ describe('PayedState', () => {
         });
     });
 
+    describe('PayedState.toggled', () => {
+
+        it('should toggle payed to notPayed', () => {
+            const result = PayedState.toggled('payed');
+            expect(result).toBeEqual('notPayed');
+        });
+
+        it('should toggle notPayed to payed', () => {
+            const result = PayedState.toggled('notPayed');
+            expect(result).toBeEqual('payed');
+        });
+
+        it('should toggle back and forth', () => {
+            const state1: PayedState = 'payed';
+            const state2 = PayedState.toggled(state1);
+            const state3 = PayedState.toggled(state2);
+            expect(state2).toBeEqual('notPayed');
+            expect(state3).toBeEqual('payed');
+        });
+
+        it('should toggle all payment states', () => {
+            PayedState.all.forEach(state => {
+                const toggled = PayedState.toggled(state);
+                expect(toggled).not.toBeEqual(state);
+                expect(PayedState.all.includes(toggled)).toBeTrue();
+            });
+        });
+
+        it('should be reversible', () => {
+            PayedState.all.forEach(state => {
+                const toggledOnce = PayedState.toggled(state);
+                const toggledTwice = PayedState.toggled(toggledOnce);
+                expect(toggledTwice).toBeEqual(state);
+            });
+        });
+    });
+
     describe('PayedState.builder', () => {
 
         it('should build valid payment state from string', () => {

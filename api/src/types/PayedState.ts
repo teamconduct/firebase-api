@@ -30,6 +30,21 @@ export namespace PayedState {
     }
 
     /**
+     * Toggles the payment state between 'payed' and 'notPayed'.
+     *
+     * @param state - The current payment state
+     * @returns The toggled payment state
+     */
+    export function toggled(state: PayedState): PayedState {
+        switch (state) {
+        case 'payed':
+            return 'notPayed';
+        case 'notPayed':
+            return 'payed';
+        }
+    }
+
+    /**
      * Type builder for PayedState serialization/deserialization.
      */
     export const builder = new ValueTypeBuilder<PayedState>();
