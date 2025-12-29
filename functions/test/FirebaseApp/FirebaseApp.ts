@@ -55,6 +55,7 @@ export class FirebaseApp {
             databaseURL: process.env.FUNCTESTS_DATABASE_URL
         });
         FirebaseConfiguration.shared.configure({
+            firebaseFirestore: getFirestore(),
             baseFirestoreDocument: FirestoreDocument.base(getFirestore()),
             messaging: admin.messaging()
         });

@@ -23,8 +23,8 @@
         "upgrade": "npm cache clean --force && ncu --upgrade --install always"
     },
     "dependencies": {
-        "@stevenkellner/firebase-function": "^1.4.143",
-        "@stevenkellner/team-conduct-api": "^2.0.14",
+        "@stevenkellner/firebase-function": "^1.4.144",
+        "@stevenkellner/team-conduct-api": "^2.0.15",
         "firebase-admin": "^13.6.0",
         "firebase-functions": "^7.0.2"
     },

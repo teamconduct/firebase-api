@@ -1,15 +1,17 @@
 import { expect } from '@assertive-ts/core';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { Result } from '@stevenkellner/typescript-common-functionality';
-import { FunctionsError } from '@stevenkellner/firebase-function';
+import { FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { User } from '@stevenkellner/team-conduct-api';
+import { RandomData } from '../../utils/RandomData';
 
 describe('UserLoginFunction', () => {
 
-    let userId: User.Id;
+    let userAuthId: UserAuthId;
+    const userId = RandomData.shared.userId();
 
     beforeEach(async () => {
-        userId = await FirebaseApp.shared.addTestTeam();
+        userAuthId = await FirebaseApp.shared.addTestTeam([], userId);
     });
 
     afterEach(async () => {
@@ -22,9 +24,15 @@ describe('UserLoginFunction', () => {
         expect(result).toBeEqual(Result.failure(new FunctionsError('unauthenticated', 'User is not authenticated.')));
     });
 
+    it('user auth not found', async () => {
+        await FirebaseApp.shared.firestore.userAuth(userAuthId).remove();
+        await FirebaseApp.shared.firestore.user(userId).remove();
+        const result = await FirebaseApp.shared.functions.user.login.executeWithResult(null);
+        expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'User authentication record not found.')));
+    });
+
     it('user not found', async () => {
-        await FirebaseApp.shared.auth.signOut();
-        await FirebaseApp.shared.auth.signIn('abc.def@ghi.jkl', 'password');
+        await FirebaseApp.shared.firestore.user(userId).remove();
         const result = await FirebaseApp.shared.functions.user.login.executeWithResult(null);
         expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'User not found.')));
     });
