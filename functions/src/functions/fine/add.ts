@@ -3,7 +3,7 @@ import { Person, checkAuthentication, Firestore, pushNotification, Localization,
 
 export class FineAddExecutableFunction extends FineAddFunction implements ExecutableFirebaseFunction<FineAddFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: FineAddFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: FineAddFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, {
             anyOf: ['fine-manager', 'fine-can-add']

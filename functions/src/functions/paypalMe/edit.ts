@@ -3,7 +3,7 @@ import { PaypalMeEditFunction, checkAuthentication, Team, Firestore } from '@ste
 
 export class PaypalMeEditExecutableFunction extends PaypalMeEditFunction implements ExecutableFirebaseFunction<PaypalMeEditFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: PaypalMeEditFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: PaypalMeEditFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'team-manager');
 

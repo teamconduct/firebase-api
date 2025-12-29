@@ -3,7 +3,7 @@ import { checkAuthentication, FineAmount, FineDeleteFunction, Firestore, Localiz
 
 export class FineDeleteExecutableFunction extends FineDeleteFunction implements ExecutableFirebaseFunction<FineDeleteFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: FineDeleteFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: FineDeleteFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'fine-manager');
 

@@ -4,7 +4,7 @@ import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
 export class InvitationRegisterExecutableFunction extends InvitationRegisterFunction implements ExecutableFirebaseFunction<InvitationRegisterFunction.Parameters, User> {
 
-    public async execute(rawUserId: string | null, parameters: InvitationRegisterFunction.Parameters): Promise<User> {
+    public async execute(userAuthId: string | null, parameters: InvitationRegisterFunction.Parameters): Promise<User> {
 
         if (rawUserId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');

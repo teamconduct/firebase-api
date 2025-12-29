@@ -3,7 +3,7 @@ import { FineUpdateFunction, checkAuthentication, Localization, ValueLocalizatio
 
 export class FineUpdateExecutableFunction extends FineUpdateFunction implements ExecutableFirebaseFunction<FineUpdateFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: FineUpdateFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: FineUpdateFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'fine-manager');
 

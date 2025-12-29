@@ -3,7 +3,7 @@ import { checkAuthentication, FineTemplateDeleteFunction, Firestore } from '@ste
 
 export class FineTemplateDeleteExecutableFunction extends FineTemplateDeleteFunction implements ExecutableFirebaseFunction<FineTemplateDeleteFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: FineTemplateDeleteFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: FineTemplateDeleteFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'fineTemplate-manager');
 

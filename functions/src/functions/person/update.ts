@@ -2,7 +2,7 @@ import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/fireb
 import { PersonUpdateFunction, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
 export class PersonUpdateExecutableFunction extends PersonUpdateFunction implements ExecutableFirebaseFunction<PersonUpdateFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: PersonUpdateFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: PersonUpdateFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'person-manager');
 

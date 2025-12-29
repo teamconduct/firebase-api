@@ -4,7 +4,7 @@ import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
 export class TeamNewExecutableFunction extends TeamNewFunction implements ExecutableFirebaseFunction<TeamNewFunction.Parameters, User> {
 
-    public async execute(rawUserId: string | null, parameters: TeamNewFunction.Parameters): Promise<User> {
+    public async execute(userAuthId: string | null, parameters: TeamNewFunction.Parameters): Promise<User> {
 
         if (rawUserId === null)
             throw new FunctionsError('permission-denied', 'User is not authenticated');

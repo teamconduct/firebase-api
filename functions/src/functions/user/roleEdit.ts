@@ -3,7 +3,7 @@ import { UserRoleEditFunction, checkAuthentication, Person, Firestore } from '@s
 
 export class UserRoleEditExecutableFunction extends UserRoleEditFunction implements ExecutableFirebaseFunction<UserRoleEditFunction.Parameters, void> {
 
-    public async execute(rawUserId: string | null, parameters: UserRoleEditFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: UserRoleEditFunction.Parameters): Promise<void> {
 
         const userId = await checkAuthentication(rawUserId, parameters.teamId, 'team-manager');
 

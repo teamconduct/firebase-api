@@ -4,7 +4,7 @@ import { compactMap } from '@stevenkellner/typescript-common-functionality';
 
 export class InvitationGetInvitationExecutableFunction extends InvitationGetInvitationFunction implements ExecutableFirebaseFunction<Invitation.Id, InvitationGetInvitationFunction.ReturnType> {
 
-    public async execute(userId: string | null, invitationId: Invitation.Id): Promise<InvitationGetInvitationFunction.ReturnType> {
+    public async execute(userAuthId: string | null, invitationId: Invitation.Id): Promise<InvitationGetInvitationFunction.ReturnType> {
 
         if (userId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');

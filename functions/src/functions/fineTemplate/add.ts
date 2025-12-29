@@ -3,7 +3,7 @@ import { FineTemplateAddFunction, Firestore, checkAuthentication } from '@steven
 
 export class FineTemplateAddExecutableFunction extends FineTemplateAddFunction implements ExecutableFirebaseFunction<FineTemplateAddFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: FineTemplateAddFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: FineTemplateAddFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'fineTemplate-manager');
 

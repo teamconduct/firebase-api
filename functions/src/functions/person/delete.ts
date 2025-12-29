@@ -3,7 +3,7 @@ import { Firestore, PersonDeleteFunction, checkAuthentication } from '@stevenkel
 
 export class PersonDeleteExecutableFunction extends PersonDeleteFunction implements ExecutableFirebaseFunction<PersonDeleteFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: PersonDeleteFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: PersonDeleteFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'person-manager');
 

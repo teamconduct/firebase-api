@@ -7,7 +7,7 @@ export class InvitationInviteExecutableFunction extends InvitationInviteFunction
 
     public returnTypeBuilder = Invitation.Id.builder;
 
-    public async execute(userId: string | null, invitation: Invitation): Promise<Invitation.Id> {
+    public async execute(userAuthId: string | null, invitation: Invitation): Promise<Invitation.Id> {
 
         await checkAuthentication(userId, invitation.teamId, 'team-manager');
 

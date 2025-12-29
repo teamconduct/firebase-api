@@ -3,7 +3,7 @@ import { checkAuthentication, Firestore, Invitation, InvitationWithdrawFunction 
 
 export class InvitationWithdrawExecutableFunction extends InvitationWithdrawFunction implements ExecutableFirebaseFunction<Invitation, void> {
 
-    public async execute(userId: string | null, invitation: Invitation): Promise<void> {
+    public async execute(userAuthId: string | null, invitation: Invitation): Promise<void> {
 
         await checkAuthentication(userId, invitation.teamId, 'team-manager');
 

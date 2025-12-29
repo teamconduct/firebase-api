@@ -3,7 +3,7 @@ import { UserKickoutFunction, checkAuthentication, User, Person, Firestore } fro
 
 export class UserKickoutExecutableFunction extends UserKickoutFunction implements ExecutableFirebaseFunction<UserKickoutFunction.Parameters, void> {
 
-    public async execute(rawUserId: string | null, parameters: UserKickoutFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: UserKickoutFunction.Parameters): Promise<void> {
 
         const userId = await checkAuthentication(rawUserId, parameters.teamId, 'team-manager');
 

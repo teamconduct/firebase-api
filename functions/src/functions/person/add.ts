@@ -3,7 +3,7 @@ import { checkAuthentication, Firestore, Person, PersonAddFunction } from '@stev
 
 export class PersonAddExecutableFunction extends PersonAddFunction implements ExecutableFirebaseFunction<PersonAddFunction.Parameters, void> {
 
-    public async execute(userId: string | null, parameters: PersonAddFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: string | null, parameters: PersonAddFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'person-manager');
 

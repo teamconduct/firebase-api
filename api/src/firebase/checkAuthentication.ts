@@ -50,18 +50,18 @@ function hasUserRoles(userRoles: UserRole[], expectedRoles: ExpectedUserRoles): 
  * 5. Ensures the person is signed in (has signInProperties)
  * 6. Verifies the person has the required roles
  *
- * @param rawUserId - The raw user ID string from authentication context (null if not authenticated)
+ * @param userAuthId - The raw user authentication ID string from authentication context (null if not authenticated)
  * @param teamId - The ID of the team to check membership and roles for
  * @param roles - The expected role requirements (supports AND/OR logic via ExpectedUserRoles)
  * @returns The validated User.Id if all checks pass
  * @throws {FunctionsError} 'unauthenticated' - If rawUserId is null
  * @throws {FunctionsError} 'permission-denied' - If any validation check fails
  */
-export async function checkAuthentication(rawUserId: string | null, teamId: Team.Id, roles: ExpectedUserRoles): Promise<User.Id> {
-    if (rawUserId === null)
+export async function checkAuthentication(userAuthId: string | null, teamId: Team.Id, roles: ExpectedUserRoles): Promise<User.Id> {
+    if (userAuthId === null)
         throw new FunctionsError('unauthenticated', 'User is not authenticated');
 
-    const userAuthenticationId = await Firestore.shared.userAuthentication(rawUserId).snapshot();
+    const userAuthenticationId = await Firestore.shared.userAuthentication(userAuthId).snapshot();
     if (!userAuthenticationId.exists)
         throw new FunctionsError('permission-denied', 'User authentication does not exist');
     const userId = User.Id.builder.build(userAuthenticationId.data);
