@@ -1,6 +1,6 @@
 import { Dictionary, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { adjectives, animals, colors, names, starWars, uniqueNamesGenerator } from 'unique-names-generator';
-import { Fine, FineAmount, FineTemplate, PayedState, Person, Team, User, UserRole, FineTemplateRepetition, MoneyAmount, NotificationProperties, PersonSignInProperties, PersonPrivateProperties } from '@stevenkellner/team-conduct-api';
+import { Fine, FineAmount, FineTemplate, PayedState, Person, Team, User, UserRole, FineTemplateRepetition, MoneyAmount, NotificationProperties, PersonSignInProperties, PersonProperties } from '@stevenkellner/team-conduct-api';
 
 export class RandomData {
 
@@ -38,8 +38,8 @@ export class RandomData {
         return uniqueNamesGenerator({ dictionaries: [adjectives, starWars] });
     }
 
-    public personPrivateProperties(): PersonPrivateProperties {
-        return new PersonPrivateProperties(
+    public personProperties(): PersonProperties {
+        return new PersonProperties(
             uniqueNamesGenerator({ dictionaries: [names] }),
             uniqueNamesGenerator({ dictionaries: [names] })
         );
@@ -64,7 +64,7 @@ export class RandomData {
     public person(id: Person.Id | null = null, fineIds: Fine.Id[] = []): Person {
         return new Person(
             id ?? this.personId(),
-            this.personPrivateProperties(),
+            this.personProperties(),
             fineIds,
             Math.random() > 0.5 ? null : this.personSignInProperties()
         );

@@ -99,6 +99,12 @@ export class Firestore {
             .document(id.guidString) as FirestoreDocument<Team>;
     }
 
+    public userAuthentication(id: string): FirestoreDocument<User.Id> {
+        return this.base
+            .collection('userAuthentications')
+            .document(id);
+    }
+
     /**
      * Gets a reference to a user document.
      *

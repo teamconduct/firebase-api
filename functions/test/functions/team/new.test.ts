@@ -24,7 +24,7 @@ describe('TeamNewFunction', () => {
             name: RandomData.shared.teamName(),
             paypalMeLink: null,
             personId: RandomData.shared.personId(),
-            personProperties: RandomData.shared.personPrivateProperties()
+            personProperties: RandomData.shared.personProperties()
         });
         expect(result).toBeEqual(Result.failure(new FunctionsError('permission-denied', 'User is not authenticated')));
     });
@@ -35,7 +35,7 @@ describe('TeamNewFunction', () => {
             name: RandomData.shared.teamName(),
             paypalMeLink: null,
             personId: RandomData.shared.personId(),
-            personProperties: RandomData.shared.personPrivateProperties()
+            personProperties: RandomData.shared.personProperties()
         });
         expect(result).toBeEqual(Result.failure(new FunctionsError('already-exists', 'Team already exists')));
     });
@@ -44,13 +44,13 @@ describe('TeamNewFunction', () => {
         const teamId = RandomData.shared.teamId();
         const teamName = RandomData.shared.teamName();
         const personId = RandomData.shared.personId();
-        const personPrivateProperties = RandomData.shared.personPrivateProperties();
+        const personProperties = RandomData.shared.personProperties();
         const user = await FirebaseApp.shared.functions.team.new.execute({
             id: teamId,
             name: teamName,
             paypalMeLink: null,
             personId: personId,
-            personProperties: personPrivateProperties
+            personProperties: personProperties
         });
         expect(user.teams.has(teamId)).toBeTrue();
         expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamId, teamName, personId));
@@ -75,7 +75,7 @@ describe('TeamNewFunction', () => {
         expect(personSnapshot.data.signInProperties !== null).toBeTrue();
         expect(personSnapshot.data).toBeEqual({
             id: personId.guidString,
-            properties: personPrivateProperties.flatten,
+            properties: personProperties.flatten,
             fineIds: [],
             signInProperties: {
                 userId: userId.value,
@@ -93,14 +93,14 @@ describe('TeamNewFunction', () => {
         const teamId = RandomData.shared.teamId();
         const teamName = RandomData.shared.teamName();
         const personId = RandomData.shared.personId();
-        const personPrivateProperties = RandomData.shared.personPrivateProperties();
+        const personProperties = RandomData.shared.personProperties();
         await FirebaseApp.shared.firestore.user(userId).remove();
         const user = await FirebaseApp.shared.functions.team.new.execute({
             id: teamId,
             name: teamName,
             paypalMeLink: null,
             personId: personId,
-            personProperties: personPrivateProperties
+            personProperties: personProperties
         });
         expect(user.teams.has(teamId)).toBeTrue();
         expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamId, teamName, personId));
@@ -125,7 +125,7 @@ describe('TeamNewFunction', () => {
         expect(personSnapshot.data.signInProperties !== null).toBeTrue();
         expect(personSnapshot.data).toBeEqual({
             id: personId.guidString,
-            properties: personPrivateProperties.flatten,
+            properties: personProperties.flatten,
             fineIds: [],
             signInProperties: {
                 userId: userId.value,

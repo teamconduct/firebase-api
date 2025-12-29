@@ -1,5 +1,5 @@
 import { Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { MoneyAmount, Fine, FineAmount, Person, PersonPrivateProperties, FineTemplate, FineTemplateRepetition } from '@stevenkellner/team-conduct-api';
+import { MoneyAmount, Fine, FineAmount, Person, PersonProperties, FineTemplate, FineTemplateRepetition } from '@stevenkellner/team-conduct-api';
 import { TestTeam } from './TestTeam';
 
 const fineIds: [Fine.Id, Fine.Id, Fine.Id] = [
@@ -14,12 +14,12 @@ export const testTeam1: TestTeam = {
     persons: [
         new Person(
             Tagged.generate('person'),
-            new PersonPrivateProperties('John', 'Doe'),
+            new PersonProperties('John', 'Doe'),
             [fineIds[0], fineIds[1]]
         ),
         new Person(
             Tagged.generate('person'),
-            new PersonPrivateProperties('Max', 'Mustermann'),
+            new PersonProperties('Max', 'Mustermann'),
             [fineIds[2]]
         )
     ],
