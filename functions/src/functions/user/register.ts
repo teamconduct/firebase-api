@@ -19,9 +19,10 @@ export class UserRegisterExecutableFunction extends UserRegisterFunction impleme
 
         const batch = Firestore.shared.batch();
         batch.set(Firestore.shared.userAuth(userAuthId), parameters.userId);
-        batch.set(Firestore.shared.user(parameters.userId), new User(parameters.userId, UtcDate.now, parameters.signInType));
+        const user = new User(parameters.userId, UtcDate.now, parameters.signInType);
+        batch.set(Firestore.shared.user(parameters.userId), user);
         await batch.commit();
 
-        return User.builder.build(userSnapshot.data);
+        return user;
     }
 }

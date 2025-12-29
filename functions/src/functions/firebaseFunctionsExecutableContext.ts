@@ -7,6 +7,6 @@ import {
 export const firebaseFunctionsExecutableContext = FirebaseFunctionsExecutableContext.build<typeof firebaseFunctionsContext>(builder => ({
     user: {
         login: builder.function(UserLoginExecutableFunction),
-        register: builder.function(UserRegisterExecutableFunction),
+        register: builder.function(UserRegisterExecutableFunction)
     }
 }));

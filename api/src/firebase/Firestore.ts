@@ -103,7 +103,7 @@ export class Firestore {
             .document(id.guidString) as FirestoreDocument<Team>;
     }
 
-    public userAuth(userAuthId: UserAuthId): FirestoreDocument<User.Id> {
+    public userAuth(userAuthId: UserAuthId): FirestoreDocument<{ userId: User.Id }> {
         return this.base
             .collection('userAuthIdDict')
             .document(userAuthId.value);

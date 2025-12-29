@@ -34,7 +34,7 @@ describe('checkAuthentication', () => {
         it('should throw "permission-denied" if user does not exist', async () => {
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.empty()
@@ -50,7 +50,7 @@ describe('checkAuthentication', () => {
             const emptyTeams = new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder);
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, emptyTeams)
@@ -71,7 +71,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -99,7 +99,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -129,7 +129,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -157,7 +157,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -184,7 +184,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -212,7 +212,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -239,7 +239,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -266,7 +266,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -295,7 +295,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -325,7 +325,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
@@ -358,7 +358,7 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data(userId.value)
+                    [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)

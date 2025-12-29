@@ -13,6 +13,7 @@ import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { firebaseFunctionsExecutableContext } from './functions/firebaseFunctionsExecutableContext';
 
 FirebaseConfiguration.shared.configure({
+    firebaseFirestore: getFirestore(),
     baseFirestoreDocument: FirestoreDocument.base(getFirestore()),
     messaging: admin.messaging()
 });
