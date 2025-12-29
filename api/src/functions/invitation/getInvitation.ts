@@ -1,5 +1,5 @@
 import { FirebaseFunction } from '@stevenkellner/firebase-function';
-import { Invitation, Person, PersonPrivateProperties, Team } from '../../types';
+import { Invitation, Person, PersonProperties, Team } from '../../types';
 import {  Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
 export class InvitationGetInvitationFunction implements FirebaseFunction<Invitation.Id, InvitationGetInvitationFunction.ReturnType> {
@@ -16,7 +16,7 @@ export namespace InvitationGetInvitationFunction {
     } | {
         persons: {
             id: Person.Id,
-            properties: PersonPrivateProperties,
+            properties: PersonProperties,
         }[];
     };
 
@@ -27,7 +27,7 @@ export namespace InvitationGetInvitationFunction {
         } | {
             persons: {
                 id: Person.Id.Flatten,
-                properties: PersonPrivateProperties.Flatten,
+                properties: PersonProperties.Flatten,
             }[];
         };
     }
@@ -41,8 +41,8 @@ export namespace InvitationGetInvitationFunction {
         ) {}
 
         public static from(teamId: Team.Id, teamName: string, personId: Person.Id): ReturnType;
-        public static from(teamId: Team.Id, teamName: string, persons: { id: Person.Id, properties: PersonPrivateProperties }[]): ReturnType;
-        public static from(teamId: Team.Id, teamName: string, personIdOrPersons: Person.Id | { id: Person.Id, properties: PersonPrivateProperties }[]): ReturnType {
+        public static from(teamId: Team.Id, teamName: string, persons: { id: Person.Id, properties: PersonProperties }[]): ReturnType;
+        public static from(teamId: Team.Id, teamName: string, personIdOrPersons: Person.Id | { id: Person.Id, properties: PersonProperties }[]): ReturnType {
             if (Array.isArray(personIdOrPersons)) {
                 return new ReturnType(teamId, teamName, {
                     persons: personIdOrPersons
@@ -61,7 +61,7 @@ export namespace InvitationGetInvitationFunction {
 
         public get persons(): {
                 id: Person.Id,
-                properties: PersonPrivateProperties,
+                properties: PersonProperties,
             }[] | null {
             if (!('persons' in this.personIdOrPersons))
                 return null;
@@ -109,7 +109,7 @@ export namespace InvitationGetInvitationFunction {
                     value.teamName,
                     value.persons.map(person => ({
                         id: Person.Id.builder.build(person.id),
-                        properties: PersonPrivateProperties.builder.build(person.properties)
+                        properties: PersonProperties.builder.build(person.properties)
                     }))
                 );
             }

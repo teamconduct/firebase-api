@@ -1,5 +1,5 @@
 import { FirebaseFunction } from '@stevenkellner/firebase-function';
-import { Person, PersonPrivateProperties, Team } from '../../types';
+import { Person, PersonProperties, Team } from '../../types';
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
 export namespace PersonAddFunction {
@@ -7,7 +7,7 @@ export namespace PersonAddFunction {
     export type Parameters = {
         teamId: Team.Id
         id: Person.Id,
-        properties: PersonPrivateProperties
+        properties: PersonProperties
     };
 }
 
@@ -16,7 +16,7 @@ export class PersonAddFunction implements FirebaseFunction<PersonAddFunction.Par
     public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PersonAddFunction.Parameters>, PersonAddFunction.Parameters>({
         teamId: Team.Id.builder,
         id: Person.Id.builder,
-        properties: PersonPrivateProperties.builder
+        properties: PersonProperties.builder
     });
 
     public returnTypeBuilder = new ValueTypeBuilder<void>();

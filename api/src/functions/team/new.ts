@@ -1,6 +1,6 @@
 import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { FirebaseFunction } from '@stevenkellner/firebase-function';
-import { Person, PersonPrivateProperties, User, Team } from '../../types';
+import { Person, PersonProperties, User, Team } from '../../types';
 
 export namespace TeamNewFunction {
 
@@ -9,7 +9,7 @@ export namespace TeamNewFunction {
         name: string
         paypalMeLink: string | null
         personId: Person.Id
-        personProperties: PersonPrivateProperties
+        personProperties: PersonProperties
     };
 }
 
@@ -20,7 +20,7 @@ export class TeamNewFunction implements FirebaseFunction<TeamNewFunction.Paramet
         name: new ValueTypeBuilder(),
         paypalMeLink: new ValueTypeBuilder(),
         personId: Person.Id.builder,
-        personProperties: PersonPrivateProperties.builder
+        personProperties: PersonProperties.builder
     });
 
     public returnTypeBuilder = User.builder;

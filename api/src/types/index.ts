@@ -9,7 +9,7 @@ export * from './MoneyAmount';
 export * from './NotificationProperties';
 export * from './PayedState';
 export * from './Person';
-export * from './PersonPrivateProperties';
+export * from './PersonProperties';
 export * from './PersonSignInProperties';
 export * from './Pluralization';
 export * from './Team';

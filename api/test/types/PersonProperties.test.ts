@@ -1,18 +1,18 @@
 import { expect } from '@assertive-ts/core';
-import { PersonPrivateProperties } from '../../src/types/PersonPrivateProperties';
+import { PersonProperties } from '../../src/types/PersonProperties';
 
-describe('PersonPrivateProperties', () => {
+describe('PersonProperties', () => {
 
-    describe('PersonPrivateProperties constructor', () => {
+    describe('PersonProperties constructor', () => {
 
         it('should create properties with first name and last name', () => {
-            const props = new PersonPrivateProperties('John', 'Doe');
+            const props = new PersonProperties('John', 'Doe');
             expect(props.firstName).toBeEqual('John');
             expect(props.lastName).toBeEqual('Doe');
         });
 
         it('should create properties with first name only', () => {
-            const props = new PersonPrivateProperties('Jane', null);
+            const props = new PersonProperties('Jane', null);
             expect(props.firstName).toBeEqual('Jane');
             expect(props.lastName).toBeNull();
         });
@@ -26,14 +26,14 @@ describe('PersonPrivateProperties', () => {
             ];
 
             testCases.forEach(testCase => {
-                const props = new PersonPrivateProperties(testCase.firstName, testCase.lastName);
+                const props = new PersonProperties(testCase.firstName, testCase.lastName);
                 expect(props.firstName).toBeEqual(testCase.firstName);
                 expect(props.lastName).toBeEqual(testCase.lastName);
             });
         });
 
         it('should handle names with special characters', () => {
-            const props = new PersonPrivateProperties('François', 'O\'Brien');
+            const props = new PersonProperties('François', 'O\'Brien');
             expect(props.firstName).toBeEqual('François');
             expect(props.lastName).toBeEqual('O\'Brien');
         });
@@ -41,29 +41,29 @@ describe('PersonPrivateProperties', () => {
         it('should handle long names', () => {
             const longFirstName = 'Alexander-Christopher-Maximilian';
             const longLastName = 'Van Der Woodsen-Humphrey-Bass';
-            const props = new PersonPrivateProperties(longFirstName, longLastName);
+            const props = new PersonProperties(longFirstName, longLastName);
             expect(props.firstName).toBeEqual(longFirstName);
             expect(props.lastName).toBeEqual(longLastName);
         });
 
         it('should handle empty string as first name', () => {
-            const props = new PersonPrivateProperties('', 'Doe');
+            const props = new PersonProperties('', 'Doe');
             expect(props.firstName).toBeEqual('');
             expect(props.lastName).toBeEqual('Doe');
         });
     });
 
-    describe('PersonPrivateProperties.flatten', () => {
+    describe('PersonProperties.flatten', () => {
 
         it('should return flattened representation with both names', () => {
-            const props = new PersonPrivateProperties('John', 'Smith');
+            const props = new PersonProperties('John', 'Smith');
             const flattened = props.flatten;
             expect(flattened.firstName).toBeEqual('John');
             expect(flattened.lastName).toBeEqual('Smith');
         });
 
         it('should return flattened representation with first name only', () => {
-            const props = new PersonPrivateProperties('Jane', null);
+            const props = new PersonProperties('Jane', null);
             const flattened = props.flatten;
             expect(flattened.firstName).toBeEqual('Jane');
             expect(flattened.lastName).toBeNull();
@@ -72,41 +72,41 @@ describe('PersonPrivateProperties', () => {
         it('should match the original values', () => {
             const firstName = 'Michael';
             const lastName = 'Brown';
-            const props = new PersonPrivateProperties(firstName, lastName);
+            const props = new PersonProperties(firstName, lastName);
             const flattened = props.flatten;
             expect(flattened.firstName).toBeEqual(firstName);
             expect(flattened.lastName).toBeEqual(lastName);
         });
 
         it('should have correct structure', () => {
-            const props = new PersonPrivateProperties('Test', 'User');
+            const props = new PersonProperties('Test', 'User');
             const flattened = props.flatten;
             expect(typeof flattened.firstName).toBeEqual('string');
             expect(typeof flattened.lastName).toBeEqual('string');
         });
 
         it('should handle null lastName correctly in flattened form', () => {
-            const props = new PersonPrivateProperties('Single', null);
+            const props = new PersonProperties('Single', null);
             const flattened = props.flatten;
             expect(flattened.lastName).toBeNull();
         });
 
         it('should preserve special characters in flattened form', () => {
-            const props = new PersonPrivateProperties('José', 'García');
+            const props = new PersonProperties('José', 'García');
             const flattened = props.flatten;
             expect(flattened.firstName).toBeEqual('José');
             expect(flattened.lastName).toBeEqual('García');
         });
     });
 
-    describe('PersonPrivateProperties.TypeBuilder', () => {
+    describe('PersonProperties.TypeBuilder', () => {
 
         it('should build properties from flattened data with both names', () => {
             const flattened = {
                 firstName: 'Emily',
                 lastName: 'Davis'
             };
-            const props = PersonPrivateProperties.builder.build(flattened);
+            const props = PersonProperties.builder.build(flattened);
             expect(props.firstName).toBeEqual('Emily');
             expect(props.lastName).toBeEqual('Davis');
         });
@@ -116,21 +116,21 @@ describe('PersonPrivateProperties', () => {
                 firstName: 'Oliver',
                 lastName: null
             };
-            const props = PersonPrivateProperties.builder.build(flattened);
+            const props = PersonProperties.builder.build(flattened);
             expect(props.firstName).toBeEqual('Oliver');
             expect(props.lastName).toBeNull();
         });
 
         it('should round-trip through flatten and build with both names', () => {
-            const original = new PersonPrivateProperties('Sophia', 'Wilson');
-            const rebuilt = PersonPrivateProperties.builder.build(original.flatten);
+            const original = new PersonProperties('Sophia', 'Wilson');
+            const rebuilt = PersonProperties.builder.build(original.flatten);
             expect(rebuilt.firstName).toBeEqual(original.firstName);
             expect(rebuilt.lastName).toBeEqual(original.lastName);
         });
 
         it('should round-trip through flatten and build with null lastName', () => {
-            const original = new PersonPrivateProperties('Liam', null);
-            const rebuilt = PersonPrivateProperties.builder.build(original.flatten);
+            const original = new PersonProperties('Liam', null);
+            const rebuilt = PersonProperties.builder.build(original.flatten);
             expect(rebuilt.firstName).toBeEqual(original.firstName);
             expect(rebuilt.lastName).toBeNull();
         });
@@ -144,15 +144,15 @@ describe('PersonPrivateProperties', () => {
             ];
 
             testCases.forEach(testCase => {
-                const props = PersonPrivateProperties.builder.build(testCase);
+                const props = PersonProperties.builder.build(testCase);
                 expect(props.firstName).toBeEqual(testCase.firstName);
                 expect(props.lastName).toBeEqual(testCase.lastName);
             });
         });
 
         it('should handle special characters through round-trip', () => {
-            const original = new PersonPrivateProperties('Müller', 'O\'Reilly');
-            const rebuilt = PersonPrivateProperties.builder.build(original.flatten);
+            const original = new PersonProperties('Müller', 'O\'Reilly');
+            const rebuilt = PersonProperties.builder.build(original.flatten);
             expect(rebuilt.firstName).toBeEqual('Müller');
             expect(rebuilt.lastName).toBeEqual('O\'Reilly');
         });
@@ -162,16 +162,16 @@ describe('PersonPrivateProperties', () => {
                 firstName: '',
                 lastName: 'Empty'
             };
-            const props = PersonPrivateProperties.builder.build(flattened);
+            const props = PersonProperties.builder.build(flattened);
             expect(props.firstName).toBeEqual('');
             expect(props.lastName).toBeEqual('Empty');
         });
 
         it('should preserve exact values through multiple round-trips', () => {
-            const original = new PersonPrivateProperties('Isabella', 'Martinez');
-            const rebuilt1 = PersonPrivateProperties.builder.build(original.flatten);
-            const rebuilt2 = PersonPrivateProperties.builder.build(rebuilt1.flatten);
-            const rebuilt3 = PersonPrivateProperties.builder.build(rebuilt2.flatten);
+            const original = new PersonProperties('Isabella', 'Martinez');
+            const rebuilt1 = PersonProperties.builder.build(original.flatten);
+            const rebuilt2 = PersonProperties.builder.build(rebuilt1.flatten);
+            const rebuilt3 = PersonProperties.builder.build(rebuilt2.flatten);
 
             expect(rebuilt3.firstName).toBeEqual(original.firstName);
             expect(rebuilt3.lastName).toBeEqual(original.lastName);

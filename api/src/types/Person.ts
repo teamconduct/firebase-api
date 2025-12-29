@@ -1,4 +1,4 @@
-import { PersonPrivateProperties } from './PersonPrivateProperties';
+import { PersonProperties } from './PersonProperties';
 import { PersonSignInProperties } from './PersonSignInProperties';
 import { Fine } from './Fine';
 import { Flattable, Guid, ITypeBuilder, Tagged } from '@stevenkellner/typescript-common-functionality';
@@ -20,7 +20,7 @@ export class Person implements Flattable<Person.Flatten> {
      */
     public constructor(
         public id: Person.Id,
-        public properties: PersonPrivateProperties,
+        public properties: PersonProperties,
         public fineIds: Fine.Id[] = [],
         public signInProperties: PersonSignInProperties | null = null
     ) {}
@@ -74,7 +74,7 @@ export namespace Person {
      */
     export type Flatten = {
         id: Id.Flatten,
-        properties: PersonPrivateProperties.Flatten,
+        properties: PersonProperties.Flatten,
         fineIds: Fine.Id.Flatten[],
         signInProperties: PersonSignInProperties.Flatten | null,
     }
@@ -93,7 +93,7 @@ export namespace Person {
         public build(value: Flatten): Person {
             return new Person(
                 Id.builder.build(value.id),
-                PersonPrivateProperties.builder.build(value.properties),
+                PersonProperties.builder.build(value.properties),
                 value.fineIds.map(fineId => Fine.Id.builder.build(fineId)),
                 value.signInProperties ? PersonSignInProperties.builder.build(value.signInProperties) : null
             );

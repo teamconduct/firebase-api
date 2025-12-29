@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from '@assertive-ts/core';
-import { User, Team, Person, NotificationProperties, PersonPrivateProperties, PersonSignInProperties, UserRole } from '../../src/types/index';
+import { User, Team, Person, NotificationProperties, PersonProperties, PersonSignInProperties, UserRole } from '../../src/types/index';
 import { Dictionary, Flattable, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import type { FunctionsErrorCode } from '@stevenkellner/firebase-function';
 import { FunctionsError } from '@stevenkellner/firebase-function';
@@ -67,6 +67,8 @@ export class Document {
     public static user(id: User.Id, teams: Dictionary<Team.Id, User.TeamProperties>): Document {
         return Document.data(User.builder.build({
             id: id.value,
+            signInDate: UtcDate.now.flatten,
+            signInType: { type: 'google' },
             teams: teams.flatten
         }).flatten);
     }
@@ -74,7 +76,7 @@ export class Document {
     public static personNotSignedIn(id: Person.Id): Document {
         return Document.data(Person.builder.build({
             id: id.guidString,
-            properties: PersonPrivateProperties.builder.build({
+            properties: PersonProperties.builder.build({
                 firstName: 'Test',
                 lastName: 'User'
             }).flatten,
@@ -86,13 +88,13 @@ export class Document {
     public static person(id: Person.Id, userId: User.Id, roles: UserRole[]): Document {
         return Document.data(Person.builder.build({
             id: id.guidString,
-            properties: PersonPrivateProperties.builder.build({
+            properties: PersonProperties.builder.build({
                 firstName: 'Test',
                 lastName: 'User'
             }).flatten,
             fineIds: [],
             signInProperties: PersonSignInProperties.builder.build({
-                signInDate: UtcDate.now.flatten,
+                joinDate: UtcDate.now.flatten,
                 userId: userId.value,
                 notificationProperties: new NotificationProperties().flatten,
                 roles: roles
@@ -103,13 +105,13 @@ export class Document {
     public static personWithSubscriptions(id: Person.Id, subscriptions: NotificationProperties.Subscription[], tokens?: Dictionary<NotificationProperties.TokenId, string>): Document {
         return Document.data(Person.builder.build({
             id: id.guidString,
-            properties: PersonPrivateProperties.builder.build({
+            properties: PersonProperties.builder.build({
                 firstName: 'Test',
                 lastName: 'User'
             }).flatten,
             fineIds: [],
             signInProperties: PersonSignInProperties.builder.build({
-                signInDate: UtcDate.now.flatten,
+                joinDate: UtcDate.now.flatten,
                 userId: 'user-123',
                 notificationProperties: new NotificationProperties(tokens, subscriptions).flatten,
                 roles: []
