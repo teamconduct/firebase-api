@@ -1,4 +1,4 @@
-import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function';
+import { FirestoreCollection, FirestoreDocument, UserAuthId } from '@stevenkellner/firebase-function';
 import { FirestoreScheme } from './FirestoreScheme';
 import { Fine, FineTemplate, Invitation, Person, User, Team } from '../types';
 import { FirebaseConfiguration } from '.';
@@ -99,10 +99,10 @@ export class Firestore {
             .document(id.guidString) as FirestoreDocument<Team>;
     }
 
-    public userAuthentication(id: string): FirestoreDocument<User.Id> {
+    public userAuth(userAuthId: UserAuthId): FirestoreDocument<User.Id> {
         return this.base
-            .collection('userAuthIds')
-            .document(id);
+            .collection('userAuthIdDict')
+            .document(userAuthId.value);
     }
 
     /**

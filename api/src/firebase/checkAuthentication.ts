@@ -1,4 +1,4 @@
-import { FunctionsError } from '@stevenkellner/firebase-function';
+import { FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { Person, Team, User, UserRole } from '../types';
 import { Firestore } from './Firestore';
 
@@ -57,11 +57,11 @@ function hasUserRoles(userRoles: UserRole[], expectedRoles: ExpectedUserRoles): 
  * @throws {FunctionsError} 'unauthenticated' - If rawUserId is null
  * @throws {FunctionsError} 'permission-denied' - If any validation check fails
  */
-export async function checkAuthentication(userAuthId: string | null, teamId: Team.Id, roles: ExpectedUserRoles): Promise<User.Id> {
+export async function checkAuthentication(userAuthId: UserAuthId | null, teamId: Team.Id, roles: ExpectedUserRoles): Promise<User.Id> {
     if (userAuthId === null)
         throw new FunctionsError('unauthenticated', 'User is not authenticated');
 
-    const userAuthSnapshot = await Firestore.shared.userAuthentication(userAuthId).snapshot();
+    const userAuthSnapshot = await Firestore.shared.userAuth(userAuthId).snapshot();
     if (!userAuthSnapshot.exists)
         throw new FunctionsError('permission-denied', 'User authentication does not exist');
     const userId = User.Id.builder.build(userAuthSnapshot.data);

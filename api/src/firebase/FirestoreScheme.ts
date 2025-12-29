@@ -16,7 +16,7 @@ import { Fine, FineTemplate, Invitation, Person, Team, User } from '../types';
  * throughout the application.
  */
 export type FirestoreScheme = FirestoreDocument<never, {
-    userAuthIds: FirestoreCollection<{
+    userAuthIdDict: FirestoreCollection<{
         [UserAuthId in string]: FirestoreDocument<User.Id>
     }>,
     users: FirestoreCollection<{
