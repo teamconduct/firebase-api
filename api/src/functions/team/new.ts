@@ -6,8 +6,8 @@ export namespace TeamNewFunction {
 
     export type Parameters = {
         id: Team.Id
+        signInType: User.SignInType
         name: string
-        paypalMeLink: string | null
         personId: Person.Id
         personProperties: PersonProperties
     };
@@ -17,8 +17,8 @@ export class TeamNewFunction implements FirebaseFunction<TeamNewFunction.Paramet
 
     public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamNewFunction.Parameters>, TeamNewFunction.Parameters>({
         id: Team.Id.builder,
+        signInType: User.SignInType.builder,
         name: new ValueTypeBuilder(),
-        paypalMeLink: new ValueTypeBuilder(),
         personId: Person.Id.builder,
         personProperties: PersonProperties.builder
     });

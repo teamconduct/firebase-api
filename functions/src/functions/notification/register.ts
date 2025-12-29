@@ -3,7 +3,7 @@ import { Firestore, NotificationProperties, NotificationRegisterFunction, Person
 
 export class NotificationRegisterExecutableFunction extends NotificationRegisterFunction implements ExecutableFirebaseFunction<NotificationRegisterFunction.Parameters, void> {
 
-    public async execute(_: string | null, parameters: NotificationRegisterFunction.Parameters): Promise<void> {
+    public async execute(_: UserAuthId | null, parameters: NotificationRegisterFunction.Parameters): Promise<void> {
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)

@@ -5,7 +5,7 @@ export class PersonAddExecutableFunction extends PersonAddFunction implements Ex
 
     public async execute(userAuthId: UserAuthId | null, parameters: PersonAddFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, 'person-manager');
+        await checkAuthentication(userAuthId, parameters.teamId, 'person-manager');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.id).snapshot();
         if (personSnapshot.exists)

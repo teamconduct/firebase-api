@@ -8,7 +8,7 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
 
         if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
-        const user = await this.getUser(userAuthId);
+        const user = await this.getUser(userAuthId, parameters.signInType);
 
         if (user.teams.has(parameters.teamId))
             throw new FunctionsError('already-exists', 'User already in team');
@@ -29,15 +29,15 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
         await this.removeUserInvitation(parameters.teamId, parameters.personId);
 
         user.teams.set(parameters.teamId, new User.TeamProperties(parameters.teamId, team.name, parameters.personId));
-        await Firestore.shared.user(userId).set(user);
+        await Firestore.shared.user(user.id).set(user);
 
-        person.signInProperties = new PersonSignInProperties(userId, UtcDate.now);
+        person.signInProperties = new PersonSignInProperties(user.id, UtcDate.now);
         await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
 
         return user;
     }
 
-    private async getUser(userAuthId: UserAuthId): Promise<User> {
+    private async getUser(userAuthId: UserAuthId, signInType: User.SignInType): Promise<User> {
         const userAuthSnapshot = await Firestore.shared.userAuth(userAuthId).snapshot();
         if (!userAuthSnapshot.exists)
             throw new FunctionsError('not-found', 'User authentication not found');
@@ -45,7 +45,7 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         if (userSnapshot.exists)
             return User.builder.build(userSnapshot.data);
-        return new User(userId, UtcDate.now);
+        return new User(userId, UtcDate.now, signInType);
     }
 
     private async removeUserInvitation(teamId: Team.Id, personId: Person.Id) {

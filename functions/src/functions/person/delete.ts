@@ -5,7 +5,7 @@ export class PersonDeleteExecutableFunction extends PersonDeleteFunction impleme
 
     public async execute(userAuthId: UserAuthId | null, parameters: PersonDeleteFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, 'person-manager');
+        await checkAuthentication(userAuthId, parameters.teamId, 'person-manager');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.id).snapshot();
         if (!personSnapshot.exists)

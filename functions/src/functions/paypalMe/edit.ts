@@ -5,7 +5,7 @@ export class PaypalMeEditExecutableFunction extends PaypalMeEditFunction impleme
 
     public async execute(userAuthId: UserAuthId | null, parameters: PaypalMeEditFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, 'team-manager');
+        await checkAuthentication(userAuthId, parameters.teamId, 'team-manager');
 
         const teamSnapshot = await Firestore.shared.team(parameters.teamId).snapshot();
         if (!teamSnapshot.exists)

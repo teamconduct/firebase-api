@@ -6,16 +6,20 @@ export class TeamNewExecutableFunction extends TeamNewFunction implements Execut
 
     public async execute(userAuthId: UserAuthId | null, parameters: TeamNewFunction.Parameters): Promise<User> {
 
-        if (rawUserId === null)
+        if (userAuthId === null)
             throw new FunctionsError('permission-denied', 'User is not authenticated');
-        const userId = User.Id.builder.build(rawUserId);
+
+        const userAuthSnapshot = await Firestore.shared.userAuth(userAuthId).snapshot();
+        if (!userAuthSnapshot.exists)
+            throw new FunctionsError('permission-denied', 'User authentication record does not exist');
+        const userId = User.Id.builder.build(userAuthSnapshot.data);
 
         const teamSnapshot = await Firestore.shared.team(parameters.id).snapshot();
         if (teamSnapshot.exists)
             throw new FunctionsError('already-exists', 'Team already exists');
 
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
-        let user = new User(userId);
+        let user = new User(userId, UtcDate.now);
         if (userSnapshot.exists)
             user = User.builder.build(userSnapshot.data);
 
