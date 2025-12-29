@@ -11,7 +11,7 @@ export class UserLoginExecutableFunction extends UserLoginFunction implements Ex
         const userAuthSnapshot = await Firestore.shared.userAuth(userAuthId).snapshot();
         if (!userAuthSnapshot.exists)
             throw new FunctionsError('not-found', 'User authentication record not found.');
-        const userId = User.Id.builder.build(userAuthSnapshot.data);
+        const userId = User.Id.builder.build(userAuthSnapshot.data.userId);
 
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         if (!userSnapshot.exists)

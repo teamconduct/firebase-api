@@ -28,7 +28,7 @@ describe('UserRegisterFunction', () => {
 
     it('user auth already exists', async () => {
         const userAuthId = await FirebaseApp.shared.auth.signIn();
-        await FirebaseApp.shared.firestore.userAuth(userAuthId).set(userId);
+        await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
         const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
             userId: userId,
             signInType: new User.SignInTypeOAuth('google')
@@ -58,7 +58,7 @@ describe('UserRegisterFunction', () => {
 
         const userAuthSnapshot = await FirebaseApp.shared.firestore.userAuth(userAuthId).snapshot();
         expect(userAuthSnapshot.exists).toBeTrue();
-        expect(User.Id.builder.build(userAuthSnapshot.data)).toBeEqual(userId);
+        expect(User.Id.builder.build(userAuthSnapshot.data.userId)).toBeEqual(userId);
 
         const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
         expect(userSnapshot.exists).toBeTrue();
@@ -80,7 +80,7 @@ describe('UserRegisterFunction', () => {
 
         const userAuthSnapshot = await FirebaseApp.shared.firestore.userAuth(userAuthId).snapshot();
         expect(userAuthSnapshot.exists).toBeTrue();
-        expect(User.Id.builder.build(userAuthSnapshot.data)).toBeEqual(userId);
+        expect(User.Id.builder.build(userAuthSnapshot.data.userId)).toBeEqual(userId);
 
         const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
         expect(userSnapshot.exists).toBeTrue();

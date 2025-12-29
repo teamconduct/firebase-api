@@ -114,25 +114,25 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => getDoc(doc(firestore, 'teams/123/subCollection/456')));
     });
 
-    it.only('should allow to get teams if user is not in team', async () => {
+    it('should allow to get teams if user is not in team', async () => {
         const userAuthId = await FirebaseApp.shared.auth.signIn();
-        const userId = RandomData.shared.userId();
-        await FirebaseApp.shared.firestore.userAuth(userAuthId).set(userId);
-        await FirebaseApp.shared.firestore.user(userId).set(new User(userId, UtcDate.now, new User.SignInTypeOAuth('google')));
         await createTestDocuments();
+        const userId = RandomData.shared.userId();
+        await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
+        await FirebaseApp.shared.firestore.user(userId).set(new User(userId, UtcDate.now, new User.SignInTypeOAuth('google')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'teams/123')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'teams/123/subCollection/456')));
     });
 
     it('should allow to get teams if user is in team', async () => {
         const userAuthId = await FirebaseApp.shared.auth.signIn();
+        await createTestDocuments();
         const userId = RandomData.shared.userId();
-        await FirebaseApp.shared.firestore.userAuth(userAuthId).set(userId);
+        await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
         const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'));
         const teamId: Team.Id = new Tagged('123' as unknown as Guid, 'team');
         user.teams.set(teamId, new User.TeamProperties(teamId, 'test', Tagged.generate('person')));
         await FirebaseApp.shared.firestore.user(userId).set(user);
-        await createTestDocuments();
         const snapshot1 = await getDoc(doc(firestore, 'teams/123'));
         expect(snapshot1.exists()).toBeTrue();
         expect(snapshot1.data()).toBeEqual({ data: 'test' });

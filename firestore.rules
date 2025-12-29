@@ -4,12 +4,12 @@ service cloud.firestore {
     match /databases/{database}/documents {
 
         function isInTeam(teamId) {
-            let userId = get(/databases/$(database)/documents/userAuthentications/$(request.auth.uid)).data.userId;
+            let userId = get(/databases/$(database)/documents/userAuthIdDict/$(request.auth.uid)).data.userId;
             let userTeams = get(/databases/$(database)/documents/users/$(userId)).data.teams;
             return request.auth.uid != null && teamId in userTeams;
         }
 
-        match /userAuthentications/{userId} {
+        match /userAuthIdDict/{userId} {
             allow read, write: if false;
         }
         match /users/{userId} {

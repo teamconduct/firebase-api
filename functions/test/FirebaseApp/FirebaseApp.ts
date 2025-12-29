@@ -62,7 +62,7 @@ export class FirebaseApp {
     }
 
     private* internal_createTestTeam(testTeam: TestTeam, userAuthId: UserAuthId, userId: User.Id, roles: UserRole[]): Generator<Promise<unknown>> {
-        yield FirebaseApp.shared.firestore.userAuth(userAuthId).set(userId);
+        yield FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
         const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'));
         user.teams.set(testTeam.id, new User.TeamProperties(testTeam.id, testTeam.name, testTeam.persons[0].id));
         yield FirebaseApp.shared.firestore.user(userId).set(user);

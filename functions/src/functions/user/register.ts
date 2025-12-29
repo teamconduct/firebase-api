@@ -18,7 +18,7 @@ export class UserRegisterExecutableFunction extends UserRegisterFunction impleme
             throw new FunctionsError('already-exists', 'User is already registered.');
 
         const batch = Firestore.shared.batch();
-        batch.set(Firestore.shared.userAuth(userAuthId), parameters.userId);
+        batch.set(Firestore.shared.userAuth(userAuthId), { userId: parameters.userId });
         const user = new User(parameters.userId, UtcDate.now, parameters.signInType);
         batch.set(Firestore.shared.user(parameters.userId), user);
         await batch.commit();
