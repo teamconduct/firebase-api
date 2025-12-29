@@ -1,9 +1,9 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { PaypalMeEditFunction, checkAuthentication, Team, Firestore } from '@stevenkellner/team-conduct-api';
 
 export class PaypalMeEditExecutableFunction extends PaypalMeEditFunction implements ExecutableFirebaseFunction<PaypalMeEditFunction.Parameters, void> {
 
-    public async execute(userAuthId: string | null, parameters: PaypalMeEditFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: UserAuthId | null, parameters: PaypalMeEditFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'team-manager');
 

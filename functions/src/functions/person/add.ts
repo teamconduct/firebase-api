@@ -1,9 +1,9 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { checkAuthentication, Firestore, Person, PersonAddFunction } from '@stevenkellner/team-conduct-api';
 
 export class PersonAddExecutableFunction extends PersonAddFunction implements ExecutableFirebaseFunction<PersonAddFunction.Parameters, void> {
 
-    public async execute(userAuthId: string | null, parameters: PersonAddFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: UserAuthId | null, parameters: PersonAddFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userId, parameters.teamId, 'person-manager');
 

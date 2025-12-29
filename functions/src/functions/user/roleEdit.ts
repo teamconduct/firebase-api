@@ -1,9 +1,9 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { UserRoleEditFunction, checkAuthentication, Person, Firestore } from '@stevenkellner/team-conduct-api';
 
 export class UserRoleEditExecutableFunction extends UserRoleEditFunction implements ExecutableFirebaseFunction<UserRoleEditFunction.Parameters, void> {
 
-    public async execute(userAuthId: string | null, parameters: UserRoleEditFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: UserAuthId | null, parameters: UserRoleEditFunction.Parameters): Promise<void> {
 
         const userId = await checkAuthentication(rawUserId, parameters.teamId, 'team-manager');
 

@@ -1,9 +1,9 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { checkAuthentication, FineAmount, FineDeleteFunction, Firestore, Localization, Person, pushNotification } from '@stevenkellner/team-conduct-api';
 
 export class FineDeleteExecutableFunction extends FineDeleteFunction implements ExecutableFirebaseFunction<FineDeleteFunction.Parameters, void> {
 
-    public async execute(userAuthId: string | null, parameters: FineDeleteFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: UserAuthId | null, parameters: FineDeleteFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userAuthId, parameters.teamId, 'fine-manager');
 

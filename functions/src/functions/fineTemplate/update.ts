@@ -1,9 +1,9 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { checkAuthentication, FineTemplateUpdateFunction, Firestore } from '@stevenkellner/team-conduct-api';
 
 export class FineTemplateUpdateExecutableFunction extends FineTemplateUpdateFunction implements ExecutableFirebaseFunction<FineTemplateUpdateFunction.Parameters, void> {
 
-    public async execute(userAuthId: string | null, parameters: FineTemplateUpdateFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: UserAuthId | null, parameters: FineTemplateUpdateFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userAuthId, parameters.teamId, 'fineTemplate-manager');
 

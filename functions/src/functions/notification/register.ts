@@ -1,4 +1,4 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { Firestore, NotificationProperties, NotificationRegisterFunction, Person } from '@stevenkellner/team-conduct-api';
 
 export class NotificationRegisterExecutableFunction extends NotificationRegisterFunction implements ExecutableFirebaseFunction<NotificationRegisterFunction.Parameters, void> {

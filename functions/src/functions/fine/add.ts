@@ -1,9 +1,9 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { Person, checkAuthentication, Firestore, pushNotification, Localization, FineAddFunction } from '@stevenkellner/team-conduct-api';
 
 export class FineAddExecutableFunction extends FineAddFunction implements ExecutableFirebaseFunction<FineAddFunction.Parameters, void> {
 
-    public async execute(userAuthId: string | null, parameters: FineAddFunction.Parameters): Promise<void> {
+    public async execute(userAuthId: UserAuthId | null, parameters: FineAddFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userAuthId, parameters.teamId, {
             anyOf: ['fine-manager', 'fine-can-add']

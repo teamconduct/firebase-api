@@ -1,10 +1,10 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { InvitationRegisterFunction, User, Team, Person, PersonSignInProperties, Invitation, Firestore } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
 export class InvitationRegisterExecutableFunction extends InvitationRegisterFunction implements ExecutableFirebaseFunction<InvitationRegisterFunction.Parameters, User> {
 
-    public async execute(userAuthId: string | null, parameters: InvitationRegisterFunction.Parameters): Promise<User> {
+    public async execute(userAuthId: UserAuthId | null, parameters: InvitationRegisterFunction.Parameters): Promise<User> {
 
         if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
@@ -37,11 +37,15 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
         return user;
     }
 
-    private async getUser(userAuthId: string): Promise<User> {
+    private async getUser(userAuthId: UserAuthId): Promise<User> {
+        const userAuthSnapshot = await Firestore.shared.userAuth(userAuthId).snapshot();
+        if (!userAuthSnapshot.exists)
+            throw new FunctionsError('not-found', 'User authentication not found');
+        const userId = User.Id.builder.build(userAuthSnapshot.data);
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         if (userSnapshot.exists)
             return User.builder.build(userSnapshot.data);
-        return new User(userId);
+        return new User(userId, UtcDate.now);
     }
 
     private async removeUserInvitation(teamId: Team.Id, personId: Person.Id) {

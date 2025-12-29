@@ -1,4 +1,4 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { InvitationInviteFunction, Invitation, checkAuthentication, Firestore } from '@stevenkellner/team-conduct-api';
 
 export class InvitationInviteExecutableFunction extends InvitationInviteFunction implements ExecutableFirebaseFunction<Invitation, Invitation.Id> {
@@ -7,7 +7,7 @@ export class InvitationInviteExecutableFunction extends InvitationInviteFunction
 
     public returnTypeBuilder = Invitation.Id.builder;
 
-    public async execute(userAuthId: string | null, invitation: Invitation): Promise<Invitation.Id> {
+    public async execute(userAuthId: UserAuthId | null, invitation: Invitation): Promise<Invitation.Id> {
 
         await checkAuthentication(userAuthId, invitation.teamId, 'team-manager');
 

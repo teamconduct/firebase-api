@@ -1,10 +1,10 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { TeamNewFunction, User, Team, PersonSignInProperties, NotificationProperties, UserRole, Person, Firestore } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
 export class TeamNewExecutableFunction extends TeamNewFunction implements ExecutableFirebaseFunction<TeamNewFunction.Parameters, User> {
 
-    public async execute(userAuthId: string | null, parameters: TeamNewFunction.Parameters): Promise<User> {
+    public async execute(userAuthId: UserAuthId | null, parameters: TeamNewFunction.Parameters): Promise<User> {
 
         if (rawUserId === null)
             throw new FunctionsError('permission-denied', 'User is not authenticated');

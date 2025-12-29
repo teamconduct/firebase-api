@@ -1,10 +1,10 @@
-import { ExecutableFirebaseFunction, FunctionsError } from '@stevenkellner/firebase-function';
+import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { InvitationGetInvitationFunction, Invitation, Team, Person, Firestore } from '@stevenkellner/team-conduct-api';
 import { compactMap } from '@stevenkellner/typescript-common-functionality';
 
 export class InvitationGetInvitationExecutableFunction extends InvitationGetInvitationFunction implements ExecutableFirebaseFunction<Invitation.Id, InvitationGetInvitationFunction.ReturnType> {
 
-    public async execute(userAuthId: string | null, invitationId: Invitation.Id): Promise<InvitationGetInvitationFunction.ReturnType> {
+    public async execute(userAuthId: UserAuthId | null, invitationId: Invitation.Id): Promise<InvitationGetInvitationFunction.ReturnType> {
 
         if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
