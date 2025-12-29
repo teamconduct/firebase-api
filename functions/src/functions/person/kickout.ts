@@ -5,7 +5,7 @@ export class UserKickoutExecutableFunction extends UserKickoutFunction implement
 
     public async execute(userAuthId: UserAuthId | null, parameters: UserKickoutFunction.Parameters): Promise<void> {
 
-        const userId = await checkAuthentication(rawUserId, parameters.teamId, 'team-manager');
+        const userId = await checkAuthentication(userAuthId, parameters.teamId, 'team-manager');
 
         if (userId.value === parameters.userId.value)
             throw new FunctionsError('invalid-argument', 'You cannot kick yourself out of a team.');

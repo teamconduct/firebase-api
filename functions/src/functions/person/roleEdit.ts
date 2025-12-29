@@ -5,7 +5,7 @@ export class UserRoleEditExecutableFunction extends UserRoleEditFunction impleme
 
     public async execute(userAuthId: UserAuthId | null, parameters: UserRoleEditFunction.Parameters): Promise<void> {
 
-        const userId = await checkAuthentication(rawUserId, parameters.teamId, 'team-manager');
+        const userId = await checkAuthentication(userAuthId, parameters.teamId, 'team-manager');
 
         const personSnapshot = await Firestore.shared.person(parameters.teamId, parameters.personId).snapshot();
         if (!personSnapshot.exists)

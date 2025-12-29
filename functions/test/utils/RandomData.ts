@@ -18,6 +18,10 @@ export class RandomData {
         )
     }
 
+    public userId(): User.Id {
+        return new Tagged(uniqueNamesGenerator({ dictionaries: [animals] }), 'user');
+    }
+
     public teamId(): Team.Id {
         return Tagged.generate('team');
     }

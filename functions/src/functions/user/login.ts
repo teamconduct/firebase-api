@@ -5,9 +5,13 @@ export class UserLoginExecutableFunction extends UserLoginFunction implements Ex
 
     public async execute(userAuthId: UserAuthId | null): Promise<User> {
 
-        if (rawUserId === null)
+        if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User is not authenticated.');
-        const userId = User.Id.builder.build(rawUserId);
+
+        const userAuthSnapshot = await Firestore.shared.userAuth(userAuthId).snapshot();
+        if (!userAuthSnapshot.exists)
+            throw new FunctionsError('not-found', 'User authentication record not found.');
+        const userId = User.Id.builder.build(userAuthSnapshot.data);
 
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         if (!userSnapshot.exists)

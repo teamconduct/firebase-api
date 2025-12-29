@@ -7,10 +7,10 @@ import { User, UserRole } from '@stevenkellner/team-conduct-api';
 
 describe('TeamNewFunction', () => {
 
-    let userId: User.Id;
+    const userId = RandomData.shared.userId();
 
     beforeEach(async () => {
-        userId = await FirebaseApp.shared.addTestTeam();
+        await FirebaseApp.shared.addTestTeam();
     });
 
     afterEach(async () => {
@@ -22,9 +22,9 @@ describe('TeamNewFunction', () => {
         const result = await FirebaseApp.shared.functions.team.new.executeWithResult({
             id: RandomData.shared.teamId(),
             name: RandomData.shared.teamName(),
-            paypalMeLink: null,
             personId: RandomData.shared.personId(),
-            personProperties: RandomData.shared.personProperties()
+            personProperties: RandomData.shared.personProperties(),
+            signInType: new User.SignInTypeOAuth('google')
         });
         expect(result).toBeEqual(Result.failure(new FunctionsError('permission-denied', 'User is not authenticated')));
     });
@@ -33,9 +33,9 @@ describe('TeamNewFunction', () => {
         const result = await FirebaseApp.shared.functions.team.new.executeWithResult({
             id: FirebaseApp.shared.testTeam.id,
             name: RandomData.shared.teamName(),
-            paypalMeLink: null,
             personId: RandomData.shared.personId(),
-            personProperties: RandomData.shared.personProperties()
+            personProperties: RandomData.shared.personProperties(),
+            signInType: new User.SignInTypeOAuth('google')
         });
         expect(result).toBeEqual(Result.failure(new FunctionsError('already-exists', 'Team already exists')));
     });
@@ -48,9 +48,9 @@ describe('TeamNewFunction', () => {
         const user = await FirebaseApp.shared.functions.team.new.execute({
             id: teamId,
             name: teamName,
-            paypalMeLink: null,
             personId: personId,
-            personProperties: personProperties
+            personProperties: personProperties,
+            signInType: new User.SignInTypeOAuth('google')
         });
         expect(user.teams.has(teamId)).toBeTrue();
         expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamId, teamName, personId));
@@ -79,7 +79,7 @@ describe('TeamNewFunction', () => {
             fineIds: [],
             signInProperties: {
                 userId: userId.value,
-                signInDate: personSnapshot.data.signInProperties!.signInDate,
+                joinDate: personSnapshot.data.signInProperties!.joinDate,
                 notificationProperties: {
                     tokens: {},
                     subscriptions: []
@@ -98,9 +98,9 @@ describe('TeamNewFunction', () => {
         const user = await FirebaseApp.shared.functions.team.new.execute({
             id: teamId,
             name: teamName,
-            paypalMeLink: null,
             personId: personId,
-            personProperties: personProperties
+            personProperties: personProperties,
+            signInType: new User.SignInTypeOAuth('google')
         });
         expect(user.teams.has(teamId)).toBeTrue();
         expect(user.teams.get(teamId)).toBeEqual(new User.TeamProperties(teamId, teamName, personId));
@@ -129,7 +129,7 @@ describe('TeamNewFunction', () => {
             fineIds: [],
             signInProperties: {
                 userId: userId.value,
-                signInDate: personSnapshot.data.signInProperties!.signInDate,
+                joinDate: personSnapshot.data.signInProperties!.joinDate,
                 notificationProperties: {
                     tokens: {},
                     subscriptions: []
