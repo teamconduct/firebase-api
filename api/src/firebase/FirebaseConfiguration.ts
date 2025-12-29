@@ -1,5 +1,6 @@
 import { FirestoreScheme } from './FirestoreScheme';
 import { Messaging } from './Messaging';
+import { Firestore as FirebaseFirestore } from 'firebase-admin/firestore';
 
 /**
  * Singleton configuration manager for Firebase services.
@@ -15,6 +16,8 @@ export class FirebaseConfiguration {
     public static readonly shared = new FirebaseConfiguration();
 
     private configured: boolean = false;
+
+    private _firebaseFirestore: FirebaseFirestore | null = null;
 
     private _baseFirestoreDocument: FirestoreScheme | null = null;
 
@@ -35,11 +38,13 @@ export class FirebaseConfiguration {
      * @throws Error if already configured
      */
     public configure(configuration: {
+        firebaseFirestore: FirebaseFirestore,
         baseFirestoreDocument: FirestoreScheme,
         messaging: Messaging
     }) {
         if (this.configured)
             throw new Error('Configuration is already configured');
+        this._firebaseFirestore = configuration.firebaseFirestore;
         this._baseFirestoreDocument = configuration.baseFirestoreDocument;
         this._messaging = configuration.messaging;
         this.configured = true;
@@ -53,11 +58,18 @@ export class FirebaseConfiguration {
      * @param configuration - New configuration object containing Firestore and Messaging services
      */
     public reconfigure(configuration: {
+        firebaseFirestore: FirebaseFirestore,
         baseFirestoreDocument: FirestoreScheme,
         messaging: Messaging
     }) {
         this.configured = false;
         this.configure(configuration);
+    }
+
+    public get firebaseFirestore(): FirebaseFirestore {
+        if (!this.configured || !this._firebaseFirestore)
+            throw new Error('Configuration.firebaseFirestore is not configured');
+        return this._firebaseFirestore;
     }
 
     /**

@@ -20,8 +20,7 @@ export class UserRegisterExecutableFunction extends UserRegisterFunction impleme
         await Firestore.shared.userAuth(userAuthId).set(parameters.userId);
 
         const user = new User(parameters.userId, UtcDate.now, parameters.signInType);
-        user.teams.set(parameters.id, new User.TeamProperties(parameters.id, parameters.name, parameters.personId));
-        await Firestore.shared.user(userId).set(user);
+        await Firestore.shared.user(parameters.userId).set(user);
 
         return User.builder.build(userSnapshot.data);
     }

@@ -2,6 +2,7 @@ import { expect } from '@assertive-ts/core';
 import { FirebaseConfiguration } from '../../src/firebase/FirebaseConfiguration';
 import { FirestoreScheme } from '../../src/firebase/FirestoreScheme';
 import { Messaging } from '../../src/firebase/Messaging';
+import { Firestore as FirebaseFirestore } from 'firebase-admin/firestore';
 
 describe('FirebaseConfiguration', () => {
 
@@ -28,6 +29,7 @@ describe('FirebaseConfiguration', () => {
 
         it('should throw error when configuring twice', () => {
             // Create a mock configuration
+            const mockFirebaseFirestore = {} as FirebaseFirestore;
             const mockFirestore = {} as FirestoreScheme;
             const mockMessaging = {
                 sendEachForMulticast: async () => ({
@@ -43,11 +45,13 @@ describe('FirebaseConfiguration', () => {
                 // If already configured, this should throw
                 try {
                     FirebaseConfiguration.shared.configure({
+                        firebaseFirestore: mockFirebaseFirestore,
                         baseFirestoreDocument: mockFirestore,
                         messaging: mockMessaging
                     });
                     // If it succeeds, try configuring again to test the double-configuration error
                     FirebaseConfiguration.shared.configure({
+                        firebaseFirestore: mockFirebaseFirestore,
                         baseFirestoreDocument: mockFirestore,
                         messaging: mockMessaging
                     });

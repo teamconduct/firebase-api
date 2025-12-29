@@ -1,4 +1,4 @@
-import { FirestoreCollection, FirestoreDocument, UserAuthId } from '@stevenkellner/firebase-function';
+import { FirestoreBatch, FirestoreCollection, FirestoreDocument, UserAuthId } from '@stevenkellner/firebase-function';
 import { FirestoreScheme } from './FirestoreScheme';
 import { Fine, FineTemplate, Invitation, Person, User, Team } from '../types';
 import { FirebaseConfiguration } from '.';
@@ -79,6 +79,10 @@ export class Firestore {
      */
     protected get base(): FirestoreScheme {
         return FirebaseConfiguration.shared.baseFirestoreDocument;
+    }
+
+    public batch(): FirestoreBatch {
+        return new FirestoreBatch(FirebaseConfiguration.shared.firebaseFirestore);
     }
 
     /**

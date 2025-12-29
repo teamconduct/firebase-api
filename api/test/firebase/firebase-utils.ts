@@ -135,6 +135,7 @@ export async function expectThrowsFunctionsError(fn: () => Promise<any>, expecte
 
 export function configureFirebase(collections: Record<string, Collection>, messaging?: Messaging) {
     FirebaseConfiguration.shared.reconfigure({
+        firebaseFirestore: undefined as any,
         baseFirestoreDocument: Document.colls(collections) as any,
         messaging: messaging as any
     });
