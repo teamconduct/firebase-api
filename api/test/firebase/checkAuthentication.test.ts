@@ -8,6 +8,7 @@ import { configureFirebase, expectThrowsFunctionsError, Collection, Document } f
 describe('checkAuthentication', () => {
     const teamId = Team.Id.builder.build('11111111-1111-4111-1111-111111111111');
     const personId = Person.Id.builder.build('22222222-2222-4222-2222-222222222222');
+    const userAuthId = 'auth-123';
     const userId = User.Id.builder.build('user123');
 
     describe('checkAuthentication - basic validation', () => {
@@ -17,28 +18,46 @@ describe('checkAuthentication', () => {
             }, 'unauthenticated', 'User is not authenticated');
         });
 
+        it('should throw "permission-denied" if user authentication does not exist', async () => {
+            configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.empty()
+                })
+            });
+
+            await expectThrowsFunctionsError(async () => {
+                await checkAuthentication(userAuthId, teamId, 'team-manager');
+            }, 'permission-denied', 'User authentication does not exist');
+        });
+
         it('should throw "permission-denied" if user does not exist', async () => {
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.empty()
                 })
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, 'team-manager');
+                await checkAuthentication(userAuthId, teamId, 'team-manager');
             }, 'permission-denied', 'User does not exist');
         });
 
         it('should throw "permission-denied" if user is not a member of the team', async () => {
             const emptyTeams = new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder);
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, emptyTeams)
                 })
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, 'team-manager');
+                await checkAuthentication(userAuthId, teamId, 'team-manager');
             }, 'permission-denied', 'User is not a member of the team');
         });
 
@@ -50,6 +69,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -63,7 +85,7 @@ describe('checkAuthentication', () => {
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, 'team-manager');
+                await checkAuthentication(userAuthId, teamId, 'team-manager');
             }, 'permission-denied', 'Person does not exist');
         });
 
@@ -75,6 +97,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -88,7 +113,7 @@ describe('checkAuthentication', () => {
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, 'team-manager');
+                await checkAuthentication(userAuthId, teamId, 'team-manager');
             }, 'permission-denied', 'Person is not signed in');
         });
     });
@@ -102,6 +127,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -115,7 +143,7 @@ describe('checkAuthentication', () => {
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, 'team-manager');
+                await checkAuthentication(userAuthId, teamId, 'team-manager');
             }, 'permission-denied', 'User does not have the required roles');
         });
 
@@ -127,6 +155,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -139,7 +170,7 @@ describe('checkAuthentication', () => {
                 })
             });
 
-            const result = await checkAuthentication(userId.value, teamId, 'team-manager');
+            const result = await checkAuthentication(userAuthId, teamId, 'team-manager');
             expect(result).toBeEqual(userId);
         });
 
@@ -151,6 +182,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -164,7 +198,7 @@ describe('checkAuthentication', () => {
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, ['person-manager', 'team-manager']);
+                await checkAuthentication(userAuthId, teamId, ['person-manager', 'team-manager']);
             }, 'permission-denied', 'User does not have the required roles');
         });
 
@@ -176,6 +210,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -188,7 +225,7 @@ describe('checkAuthentication', () => {
                 })
             });
 
-            const result = await checkAuthentication(userId.value, teamId, ['person-manager', 'team-manager']);
+            const result = await checkAuthentication(userAuthId, teamId, ['person-manager', 'team-manager']);
             expect(result).toBeEqual(userId);
         });
 
@@ -200,6 +237,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -212,7 +252,7 @@ describe('checkAuthentication', () => {
                 })
             });
 
-            const result = await checkAuthentication(userId.value, teamId, { anyOf: ['person-manager', 'team-manager'] });
+            const result = await checkAuthentication(userAuthId, teamId, { anyOf: ['person-manager', 'team-manager'] });
             expect(result).toBeEqual(userId);
         });
 
@@ -224,6 +264,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -237,7 +280,7 @@ describe('checkAuthentication', () => {
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, { anyOf: ['person-manager', 'team-manager'] });
+                await checkAuthentication(userAuthId, teamId, { anyOf: ['person-manager', 'team-manager'] });
             }, 'permission-denied', 'User does not have the required roles');
 
         });
@@ -250,6 +293,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -262,7 +308,7 @@ describe('checkAuthentication', () => {
                 })
             });
 
-            const result = await checkAuthentication(userId.value, teamId, [
+            const result = await checkAuthentication(userAuthId, teamId, [
                 'person-manager',
                 { anyOf: ['fine-manager', 'team-manager'] }
             ]);
@@ -277,6 +323,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -290,7 +339,7 @@ describe('checkAuthentication', () => {
             });
 
             await expectThrowsFunctionsError(async () => {
-                await checkAuthentication(userId.value, teamId, [
+                await checkAuthentication(userAuthId, teamId, [
                     'person-manager',
                     { anyOf: ['fine-manager', 'team-manager'] }
                 ]);
@@ -307,6 +356,9 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
+                userAuthentications: Collection.docs({
+                    [userAuthId]: Document.data(userId.value)
+                }),
                 users: Collection.docs({
                     [userId.value]: Document.user(userId, teams)
                 }),
@@ -325,7 +377,7 @@ describe('checkAuthentication', () => {
                 })
             });
 
-            const result = await checkAuthentication(userId.value, teamId, 'fine-can-add');
+            const result = await checkAuthentication(userAuthId, teamId, 'fine-can-add');
             expect(result).toBeEqual(userId);
         });
     });

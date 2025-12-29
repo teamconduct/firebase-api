@@ -60,7 +60,11 @@ function hasUserRoles(userRoles: UserRole[], expectedRoles: ExpectedUserRoles): 
 export async function checkAuthentication(rawUserId: string | null, teamId: Team.Id, roles: ExpectedUserRoles): Promise<User.Id> {
     if (rawUserId === null)
         throw new FunctionsError('unauthenticated', 'User is not authenticated');
-    const userId = User.Id.builder.build(rawUserId);
+
+    const userAuthenticationId = await Firestore.shared.userAuthentication(rawUserId).snapshot();
+    if (!userAuthenticationId.exists)
+        throw new FunctionsError('permission-denied', 'User authentication does not exist');
+    const userId = User.Id.builder.build(userAuthenticationId.data);
 
     const userSnapshot = await Firestore.shared.user(userId).snapshot();
     if (!userSnapshot.exists)
