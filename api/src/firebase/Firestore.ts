@@ -101,7 +101,7 @@ export class Firestore {
 
     public userAuthentication(id: string): FirestoreDocument<User.Id> {
         return this.base
-            .collection('userAuthentications')
+            .collection('userAuthIds')
             .document(id);
     }
 

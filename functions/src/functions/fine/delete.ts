@@ -5,7 +5,7 @@ export class FineDeleteExecutableFunction extends FineDeleteFunction implements 
 
     public async execute(userAuthId: string | null, parameters: FineDeleteFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, 'fine-manager');
+        await checkAuthentication(userAuthId, parameters.teamId, 'fine-manager');
 
         const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.id).snapshot();
         if (!fineSnapshot.exists)

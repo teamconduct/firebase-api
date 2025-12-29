@@ -6,10 +6,9 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
 
     public async execute(userAuthId: string | null, parameters: InvitationRegisterFunction.Parameters): Promise<User> {
 
-        if (rawUserId === null)
+        if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
-        const userId = User.Id.builder.build(rawUserId);
-        const user = await this.getUser(userId);
+        const user = await this.getUser(userAuthId);
 
         if (user.teams.has(parameters.teamId))
             throw new FunctionsError('already-exists', 'User already in team');
@@ -38,7 +37,7 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
         return user;
     }
 
-    private async getUser(userId: User.Id): Promise<User> {
+    private async getUser(userAuthId: string): Promise<User> {
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         if (userSnapshot.exists)
             return User.builder.build(userSnapshot.data);

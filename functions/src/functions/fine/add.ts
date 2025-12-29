@@ -5,7 +5,7 @@ export class FineAddExecutableFunction extends FineAddFunction implements Execut
 
     public async execute(userAuthId: string | null, parameters: FineAddFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, {
+        await checkAuthentication(userAuthId, parameters.teamId, {
             anyOf: ['fine-manager', 'fine-can-add']
         });
 

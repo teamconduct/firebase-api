@@ -5,7 +5,7 @@ export class FineTemplateDeleteExecutableFunction extends FineTemplateDeleteFunc
 
     public async execute(userAuthId: string | null, parameters: FineTemplateDeleteFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, 'fineTemplate-manager');
+        await checkAuthentication(userAuthId, parameters.teamId, 'fineTemplate-manager');
 
         const fineTemplateSnapshot = await Firestore.shared.fineTemplate(parameters.teamId, parameters.id).snapshot();
         if (!fineTemplateSnapshot.exists)

@@ -5,7 +5,7 @@ export class FineTemplateUpdateExecutableFunction extends FineTemplateUpdateFunc
 
     public async execute(userAuthId: string | null, parameters: FineTemplateUpdateFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, 'fineTemplate-manager');
+        await checkAuthentication(userAuthId, parameters.teamId, 'fineTemplate-manager');
 
         const fineTemplateSnapshot = await Firestore.shared.fineTemplate(parameters.teamId, parameters.fineTemplate.id).snapshot();
         if (!fineTemplateSnapshot.exists)

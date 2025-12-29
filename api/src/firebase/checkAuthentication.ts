@@ -61,10 +61,10 @@ export async function checkAuthentication(userAuthId: string | null, teamId: Tea
     if (userAuthId === null)
         throw new FunctionsError('unauthenticated', 'User is not authenticated');
 
-    const userAuthenticationId = await Firestore.shared.userAuthentication(userAuthId).snapshot();
-    if (!userAuthenticationId.exists)
+    const userAuthSnapshot = await Firestore.shared.userAuthentication(userAuthId).snapshot();
+    if (!userAuthSnapshot.exists)
         throw new FunctionsError('permission-denied', 'User authentication does not exist');
-    const userId = User.Id.builder.build(userAuthenticationId.data);
+    const userId = User.Id.builder.build(userAuthSnapshot.data);
 
     const userSnapshot = await Firestore.shared.user(userId).snapshot();
     if (!userSnapshot.exists)

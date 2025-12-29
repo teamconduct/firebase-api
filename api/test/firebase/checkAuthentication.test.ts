@@ -20,7 +20,7 @@ describe('checkAuthentication', () => {
 
         it('should throw "permission-denied" if user authentication does not exist', async () => {
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.empty()
                 })
             });
@@ -32,7 +32,7 @@ describe('checkAuthentication', () => {
 
         it('should throw "permission-denied" if user does not exist', async () => {
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -48,7 +48,7 @@ describe('checkAuthentication', () => {
         it('should throw "permission-denied" if user is not a member of the team', async () => {
             const emptyTeams = new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder);
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -69,7 +69,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -97,7 +97,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -127,7 +127,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -155,7 +155,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -182,7 +182,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -210,7 +210,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -237,7 +237,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -264,7 +264,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -293,7 +293,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -323,7 +323,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({
@@ -356,7 +356,7 @@ describe('checkAuthentication', () => {
                 personId: personId.guidString
             }));
             configureFirebase({
-                userAuthentications: Collection.docs({
+                userAuthIds: Collection.docs({
                     [userAuthId]: Document.data(userId.value)
                 }),
                 users: Collection.docs({

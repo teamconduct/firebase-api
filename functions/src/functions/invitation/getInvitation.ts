@@ -6,7 +6,7 @@ export class InvitationGetInvitationExecutableFunction extends InvitationGetInvi
 
     public async execute(userAuthId: string | null, invitationId: Invitation.Id): Promise<InvitationGetInvitationFunction.ReturnType> {
 
-        if (userId === null)
+        if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User not authenticated');
 
         const invitationSnapshot = await Firestore.shared.invitation(invitationId).snapshot();

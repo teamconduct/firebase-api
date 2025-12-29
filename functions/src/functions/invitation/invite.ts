@@ -9,7 +9,7 @@ export class InvitationInviteExecutableFunction extends InvitationInviteFunction
 
     public async execute(userAuthId: string | null, invitation: Invitation): Promise<Invitation.Id> {
 
-        await checkAuthentication(userId, invitation.teamId, 'team-manager');
+        await checkAuthentication(userAuthId, invitation.teamId, 'team-manager');
 
         if (invitation.personId !== null) {
 

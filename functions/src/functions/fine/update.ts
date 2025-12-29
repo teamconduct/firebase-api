@@ -5,7 +5,7 @@ export class FineUpdateExecutableFunction extends FineUpdateFunction implements 
 
     public async execute(userAuthId: string | null, parameters: FineUpdateFunction.Parameters): Promise<void> {
 
-        await checkAuthentication(userId, parameters.teamId, 'fine-manager');
+        await checkAuthentication(userAuthId, parameters.teamId, 'fine-manager');
 
         const fineSnapshot = await Firestore.shared.fine(parameters.teamId, parameters.fine.id).snapshot();
         if (!fineSnapshot.exists)
