@@ -22,7 +22,7 @@
         "release": "npm run rebuild && npm run lint && npm version patch && git push --follow-tags"
     },
     "dependencies": {
-        "@stevenkellner/firebase-function": "^1.4.144",
+        "@stevenkellner/firebase-function": "^1.4.145",
         "@stevenkellner/typescript-common-functionality": "^1.0.61"
     },
     "devDependencies": {
@@ -31,13 +31,13 @@
         "@eslint/eslintrc": "^3.3.3",
         "@eslint/js": "^9.39.2",
         "@types/mocha": "^10.0.10",
-        "@typescript-eslint/eslint-plugin": "^8.50.1",
-        "@typescript-eslint/parser": "^8.50.1",
+        "@typescript-eslint/eslint-plugin": "^8.51.0",
+        "@typescript-eslint/parser": "^8.51.0",
         "eslint": "^9.39.2",
         "eslint-config-google": "^0.14.0",
         "eslint-plugin-import": "^2.32.0",
         "mocha": "^11.7.5",
-        "npm-check-updates": "^19.2.0",
+        "npm-check-updates": "^19.2.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.3"
     }
