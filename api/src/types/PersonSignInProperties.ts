@@ -1,6 +1,6 @@
 import { Flattable, ITypeBuilder, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { User } from './User';
-import { UserRole } from './UserRole';
+import { TeamRole } from './TeamRole';
 
 /**
  * Represents the sign-in properties for a person in the system.
@@ -19,7 +19,7 @@ export class PersonSignInProperties implements Flattable<PersonSignInProperties.
     public constructor(
         public userId: User.Id,
         public joinDate: UtcDate,
-        public roles: UserRole[] = []
+        public roles: TeamRole[] = []
     ) {}
 
     /**
@@ -42,7 +42,7 @@ export namespace PersonSignInProperties {
     export type Flatten = {
         userId: User.Id.Flatten
         joinDate: UtcDate.Flatten,
-        roles: UserRole[]
+        roles: TeamRole[]
     }
 
     /**

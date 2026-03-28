@@ -14,6 +14,6 @@ export * from './PersonSignInProperties';
 export * from './Pluralization';
 export * from './Team';
 export * from './User';
-export * from './UserRole';
+export * from './TeamRole';
 export * from './Currency';
 export * from './Locale';

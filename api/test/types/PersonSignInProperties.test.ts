@@ -1,7 +1,7 @@
 import { expect } from '@assertive-ts/core';
 import { PersonSignInProperties } from '../../src/types/PersonSignInProperties';
 import { User } from '../../src/types/User';
-import { UserRole } from '../../src/types/UserRole';
+import { TeamRole } from '../../src/types/TeamRole';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
 describe('PersonSignInProperties', () => {
@@ -11,7 +11,7 @@ describe('PersonSignInProperties', () => {
         it('should create sign-in properties with all parameters', () => {
             const userId = User.Id.builder.build('user-123');
             const joinDate = UtcDate.now;
-            const roles: UserRole[] = ['person-manager', 'fine-manager'];
+            const roles: TeamRole[] = ['person-manager', 'fine-manager'];
 
             const props = new PersonSignInProperties(userId, joinDate, roles);
 
@@ -23,7 +23,7 @@ describe('PersonSignInProperties', () => {
         it('should create sign-in properties with multiple roles', () => {
             const userId = User.Id.builder.build('user-multi');
             const joinDate = UtcDate.now;
-            const roles: UserRole[] = ['person-manager', 'fineTemplate-manager', 'fine-manager', 'team-manager'];
+            const roles: TeamRole[] = ['person-manager', 'fineTemplate-manager', 'fine-manager', 'team-manager'];
 
             const props = new PersonSignInProperties(userId, joinDate, roles);
 
@@ -51,7 +51,7 @@ describe('PersonSignInProperties', () => {
         it('should return flattened representation with all properties', () => {
             const userId = User.Id.builder.build('user-flat-1');
             const joinDate = UtcDate.now;
-            const roles: UserRole[] = ['fine-manager', 'fine-can-add'];
+            const roles: TeamRole[] = ['fine-manager', 'fine-can-add'];
 
             const props = new PersonSignInProperties(userId, joinDate, roles);
             const flattened = props.flatten;
@@ -75,7 +75,7 @@ describe('PersonSignInProperties', () => {
         it('should match the original values', () => {
             const userId = User.Id.builder.build('user-match');
             const joinDate = UtcDate.now;
-            const roles: UserRole[] = ['person-manager'];
+            const roles: TeamRole[] = ['person-manager'];
 
             const props = new PersonSignInProperties(userId, joinDate, roles);
             const flattened = props.flatten;
@@ -100,7 +100,7 @@ describe('PersonSignInProperties', () => {
         it('should flatten roles array correctly', () => {
             const userId = User.Id.builder.build('user-roles');
             const joinDate = UtcDate.now;
-            const roles: UserRole[] = ['person-manager', 'fine-manager', 'team-manager'];
+            const roles: TeamRole[] = ['person-manager', 'fine-manager', 'team-manager'];
 
             const props = new PersonSignInProperties(userId, joinDate, roles);
             const flattened = props.flatten;
@@ -118,7 +118,7 @@ describe('PersonSignInProperties', () => {
             const flattened = {
                 userId: 'user-build-1',
                 joinDate: UtcDate.now.flatten,
-                roles: ['person-manager', 'fine-manager'] as UserRole[]
+                roles: ['person-manager', 'fine-manager'] as TeamRole[]
             };
 
             const props = PersonSignInProperties.builder.build(flattened);
@@ -132,7 +132,7 @@ describe('PersonSignInProperties', () => {
             const flattened = {
                 userId: 'user-build-2',
                 joinDate: UtcDate.now.flatten,
-                roles: [] as UserRole[]
+                roles: [] as TeamRole[]
             };
 
             const props = PersonSignInProperties.builder.build(flattened);
@@ -145,7 +145,7 @@ describe('PersonSignInProperties', () => {
             const flattened = {
                 userId: 'user-build-3',
                 joinDate: UtcDate.now.flatten,
-                roles: ['person-manager', 'fineTemplate-manager', 'fine-can-add', 'team-manager'] as UserRole[]
+                roles: ['person-manager', 'fineTemplate-manager', 'fine-can-add', 'team-manager'] as TeamRole[]
             };
 
             const props = PersonSignInProperties.builder.build(flattened);
@@ -158,7 +158,7 @@ describe('PersonSignInProperties', () => {
         it('should round-trip through flatten and build', () => {
             const userId = User.Id.builder.build('user-round');
             const joinDate = UtcDate.now;
-            const roles: UserRole[] = ['fine-manager', 'fine-can-add'];
+            const roles: TeamRole[] = ['fine-manager', 'fine-can-add'];
 
             const original = new PersonSignInProperties(userId, joinDate, roles);
             const rebuilt = PersonSignInProperties.builder.build(original.flatten);
@@ -191,7 +191,7 @@ describe('PersonSignInProperties', () => {
                 const flattened = {
                     userId: 'user-date-test',
                     joinDate: dateString,
-                    roles: [] as UserRole[]
+                    roles: [] as TeamRole[]
                 };
 
                 const props = PersonSignInProperties.builder.build(flattened);

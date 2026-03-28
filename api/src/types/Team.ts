@@ -1,4 +1,6 @@
 import { Flattable, Guid, ITypeBuilder, Tagged } from '@stevenkellner/typescript-common-functionality';
+import { Locale } from './Locale';
+import { Currency } from './Currency';
 
 /**
  * Represents a team in the system with its basic information.
@@ -17,7 +19,10 @@ export class Team implements Flattable<Team.Flatten> {
     public constructor(
         public id: Team.Id,
         public name: string,
-        public paypalMeLink: string | null
+        public teamLogoUrl: string | null,
+        public teamSportCategory: string | null,
+        public teamDescription: string | null,
+        public settings: Team.TeamSettings
     ) {}
 
     /**
@@ -27,7 +32,10 @@ export class Team implements Flattable<Team.Flatten> {
         return {
             id: this.id.flatten,
             name: this.name,
-            paypalMeLink: this.paypalMeLink
+            teamLogoUrl: this.teamLogoUrl,
+            teamSportCategory: this.teamSportCategory,
+            teamDescription: this.teamDescription,
+            settings: this.settings.flatten
         };
     }
 }
@@ -52,13 +60,86 @@ export namespace Team {
         export const builder = Tagged.builder('team' as const, Guid.builder);
     }
 
+    export class TeamSettings implements Flattable<TeamSettings.Flatten> {
+
+        public constructor(
+            public paypalMeLink: string | null,
+            public allowMembersToAddFines: boolean,
+            public fineVisibility: TeamSettings.FineVisibility,
+            public joinRequestType: TeamSettings.JoinRequestType,
+            public currency: Currency,
+            public locale: Locale
+        ) {}
+
+        public get flatten(): TeamSettings.Flatten {
+            return {
+                paypalMeLink: this.paypalMeLink,
+                allowMembersToAddFines: this.allowMembersToAddFines,
+                fineVisibility: this.fineVisibility,
+                joinRequestType: this.joinRequestType,
+                currency: this.currency,
+                locale: this.locale
+
+            };
+        }
+    }
+
+    export namespace TeamSettings {
+
+        export type FineVisibility = 'only-own-fines' | 'all-fines';
+
+        export type JoinRequestType = 'public-link-without-approval' | 'public-link-with-approval' | 'invite-only';
+
+         /**
+         * Flattened representation of team settings for serialization.
+         */
+        export type Flatten = {
+            paypalMeLink: string | null,
+            allowMembersToAddFines: boolean,
+            fineVisibility: FineVisibility,
+            joinRequestType: JoinRequestType,
+            currency: Currency,
+            locale: Locale
+        }
+
+        /**
+         * Builder for constructing TeamSettings instances from flattened data.
+         */
+        export class TypeBuilder implements ITypeBuilder<Flatten, TeamSettings> {
+
+            /**
+             * Builds a TeamSettings instance from flattened data.
+             * @param value - The flattened team settings data
+             * @returns A new TeamSettings instance
+             */
+            public build(value: Flatten): TeamSettings {
+                return new TeamSettings(
+                    value.paypalMeLink,
+                    value.allowMembersToAddFines,
+                    value.fineVisibility,
+                    value.joinRequestType,
+                    value.currency,
+                    value.locale
+                );
+            }
+        }
+
+        /**
+         * Singleton builder instance for TeamSettings.
+         */
+        export const builder = new TypeBuilder();
+    }
+
     /**
      * Flattened representation of a Team for serialization.
      */
     export type Flatten = {
         id: Id.Flatten,
         name: string,
-        paypalMeLink: string | null
+        teamLogoUrl: string | null,
+        teamSportCategory: string | null,
+        teamDescription: string | null,
+        settings: TeamSettings.Flatten
     }
 
     /**
@@ -75,7 +156,10 @@ export namespace Team {
             return new Team(
                 Id.builder.build(value.id),
                 value.name,
-                value.paypalMeLink
+                value.teamLogoUrl,
+                value.teamSportCategory,
+                value.teamDescription,
+                TeamSettings.builder.build(value.settings)
             );
         }
     }

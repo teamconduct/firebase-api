@@ -1,13 +1,13 @@
 import { FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Person, Team, User, UserRole } from '../types';
+import { Person, Team, User, TeamRole } from '../types';
 import { Firestore } from './Firestore';
 
 /**
  * Type representing expected user role requirements.
  *
  * Can be:
- * - A single `UserRole` (user must have this role)
- * - An array of `ExpectedUserRoles` (user must satisfy ALL requirements - logical AND)
+ * - A single `TeamRole` (user must have this role)
+ * - An array of `ExpectedTeamRole` (user must satisfy ALL requirements - logical AND)
  * - An object with `anyOf` property (user must satisfy AT LEAST ONE requirement - logical OR)
  *
  * Examples:
@@ -15,27 +15,27 @@ import { Firestore } from './Firestore';
  * - `['member', 'treasurer']` - User must be both member AND treasurer
  * - `{ anyOf: ['admin', 'treasurer'] }` - User must be admin OR treasurer
  */
-type ExpectedUserRoles =
-    | UserRole
-    | ExpectedUserRoles[]
+type ExpectedTeamRole =
+    | TeamRole
+    | ExpectedTeamRole[]
     | {
-        anyOf: ExpectedUserRoles[];
+        anyOf: ExpectedTeamRole[];
     }
 
 /**
  * Checks if the user has the required roles according to the expected role requirements.
  *
- * @param userRoles - Array of roles the user currently has
+ * @param teamRoles - Array of roles the user currently has
  * @param expectedRoles - The role requirements to check against (supports AND/OR logic)
  * @returns `true` if the user satisfies the role requirements, `false` otherwise
  */
-function hasUserRoles(userRoles: UserRole[], expectedRoles: ExpectedUserRoles): boolean {
+function hasUserRoles(teamRoles: TeamRole[], expectedRoles: ExpectedTeamRole): boolean {
     if (Array.isArray(expectedRoles))
-        return expectedRoles.every(expectedRole => hasUserRoles(userRoles, expectedRole));
+        return expectedRoles.every(expectedRole => hasUserRoles(teamRoles, expectedRole));
     else if (typeof expectedRoles === 'object' && 'anyOf' in expectedRoles)
-        return expectedRoles.anyOf.some(role => hasUserRoles(userRoles, role));
+        return expectedRoles.anyOf.some(role => hasUserRoles(teamRoles, role));
     else
-        return userRoles.includes(expectedRoles);
+        return teamRoles.includes(expectedRoles);
 
 }
 
@@ -52,12 +52,12 @@ function hasUserRoles(userRoles: UserRole[], expectedRoles: ExpectedUserRoles): 
  *
  * @param userAuthId - The raw user authentication ID string from authentication context (null if not authenticated)
  * @param teamId - The ID of the team to check membership and roles for
- * @param roles - The expected role requirements (supports AND/OR logic via ExpectedUserRoles)
+ * @param roles - The expected role requirements (supports AND/OR logic via ExpectedTeamRole)
  * @returns The validated User.Id if all checks pass
  * @throws {FunctionsError} 'unauthenticated' - If rawUserId is null
  * @throws {FunctionsError} 'permission-denied' - If any validation check fails
  */
-export async function checkAuthentication(userAuthId: UserAuthId | null, teamId: Team.Id, roles: ExpectedUserRoles): Promise<User.Id> {
+export async function checkAuthentication(userAuthId: UserAuthId | null, teamId: Team.Id, roles: ExpectedTeamRole): Promise<User.Id> {
     if (userAuthId === null)
         throw new FunctionsError('unauthenticated', 'User is not authenticated');
 

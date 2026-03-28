@@ -1,5 +1,5 @@
 import { expect } from '@assertive-ts/core';
-import { FineAmount, FineTemplateRepetition, Localization, PayedState, UserRole } from '../../src/types';
+import { FineAmount, FineTemplateRepetition, Localization, PayedState, TeamRole } from '../../src/types';
 
 describe('Localization for en', () => {
 
@@ -131,46 +131,46 @@ describe('Localization for en', () => {
         });
     });
 
-    describe('userRole should be tested', () => {
+    describe('teamRole should be tested', () => {
 
-        it('userRole.personManager should be tested', () => {
-            expect(localization.userRole.personManager.value()).toBeEqual('Person Manager');
+        it('teamRole.personManager should be tested', () => {
+            expect(localization.teamRole.personManager.value()).toBeEqual('Person Manager');
         });
 
-        it('userRole.personManager should be formatted correctly', () => {
-            expect(UserRole.formatted('person-manager', locale)).toBeEqual('Person Manager');
+        it('teamRole.personManager should be formatted correctly', () => {
+            expect(TeamRole.formatted('person-manager', locale)).toBeEqual('Person Manager');
         });
 
-        it('userRole.fineTemplateManager should be tested', () => {
-            expect(localization.userRole.fineTemplateManager.value()).toBeEqual('Fine Template Manager');
+        it('teamRole.fineTemplateManager should be tested', () => {
+            expect(localization.teamRole.fineTemplateManager.value()).toBeEqual('Fine Template Manager');
         });
 
-        it('userRole.fineTemplateManager should be formatted correctly', () => {
-            expect(UserRole.formatted('fineTemplate-manager', locale)).toBeEqual('Fine Template Manager');
+        it('teamRole.fineTemplateManager should be formatted correctly', () => {
+            expect(TeamRole.formatted('fineTemplate-manager', locale)).toBeEqual('Fine Template Manager');
         });
 
-        it('userRole.fineManager should be tested', () => {
-            expect(localization.userRole.fineManager.value()).toBeEqual('Fine Manager');
+        it('teamRole.fineManager should be tested', () => {
+            expect(localization.teamRole.fineManager.value()).toBeEqual('Fine Manager');
         });
 
-        it('userRole.fineManager should be formatted correctly', () => {
-            expect(UserRole.formatted('fine-manager', locale)).toBeEqual('Fine Manager');
+        it('teamRole.fineManager should be formatted correctly', () => {
+            expect(TeamRole.formatted('fine-manager', locale)).toBeEqual('Fine Manager');
         });
 
-        it('userRole.fineCanAdd should be tested', () => {
-            expect(localization.userRole.fineCanAdd.value()).toBeEqual('Can add fines');
+        it('teamRole.fineCanAdd should be tested', () => {
+            expect(localization.teamRole.fineCanAdd.value()).toBeEqual('Can add fines');
         });
 
-        it('userRole.fineCanAdd should be formatted correctly', () => {
-            expect(UserRole.formatted('fine-can-add', locale)).toBeEqual('Can add fines');
+        it('teamRole.fineCanAdd should be formatted correctly', () => {
+            expect(TeamRole.formatted('fine-can-add', locale)).toBeEqual('Can add fines');
         });
 
-        it('userRole.teamManager should be tested', () => {
-            expect(localization.userRole.teamManager.value()).toBeEqual('Team Manager');
+        it('teamRole.teamManager should be tested', () => {
+            expect(localization.teamRole.teamManager.value()).toBeEqual('Team Manager');
         });
 
-        it('userRole.teamManager should be formatted correctly', () => {
-            expect(UserRole.formatted('team-manager', locale)).toBeEqual('Team Manager');
+        it('teamRole.teamManager should be formatted correctly', () => {
+            expect(TeamRole.formatted('team-manager', locale)).toBeEqual('Team Manager');
         });
     });
 });

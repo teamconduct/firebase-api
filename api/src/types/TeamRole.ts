@@ -3,9 +3,9 @@ import { Localization, localizations } from './Localization';
 import { Locale } from './Locale';
 
 /**
- * Array of all available user roles.
+ * Array of all available team roles.
  */
-const userRoles = [
+const teamRoles = [
     'person-manager',       // Can manage persons, i.e. add/edit/remove persons of the team
     'fineTemplate-manager', // Can manage fine templates, i.e. add/edit/remove fine templates
     'fine-manager',         // Can manage fines, i.e. add/edit/remove fines
@@ -14,36 +14,36 @@ const userRoles = [
 ] as const;
 
 /**
- * Represents user roles in the application.
+ * Represents team roles in the application.
  * Defines different levels of permissions for team members.
  */
-export type UserRole = typeof userRoles[number];
+export type TeamRole = typeof teamRoles[number];
 
-export namespace UserRole {
+export namespace TeamRole {
     /**
-     * Array of all available user roles.
+     * Array of all available team roles.
      */
-    export const all: readonly UserRole[] = userRoles;
+    export const all: readonly TeamRole[] = teamRoles;
 
     /**
-     * Returns the localized, human-readable name for a user role.
-     * @param role - The user role to format
+     * Returns the localized, human-readable name for a team role.
+     * @param role - The team role to format
      * @param locale - The locale to use for localization
      * @returns The localized role name
      */
-    export function formatted(role: UserRole, locale: Locale): string {
-        const localizationKeyMap: Record<UserRole, keyof (typeof localizations)[keyof typeof localizations]['userRole']> = {
+    export function formatted(role: TeamRole, locale: Locale): string {
+        const localizationKeyMap: Record<TeamRole, keyof (typeof localizations)[keyof typeof localizations]['teamRole']> = {
             'person-manager': 'personManager',
             'fineTemplate-manager': 'fineTemplateManager',
             'fine-manager': 'fineManager',
             'fine-can-add': 'fineCanAdd',
             'team-manager': 'teamManager'
         }
-        return Localization.shared(locale).userRole[localizationKeyMap[role]].value();
+        return Localization.shared(locale).teamRole[localizationKeyMap[role]].value();
     }
 
     /**
-     * Builder for constructing UserRole values.
+     * Builder for constructing TeamRole values.
      */
-    export const builder = new ValueTypeBuilder<UserRole>();
+    export const builder = new ValueTypeBuilder<TeamRole>();
 }

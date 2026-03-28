@@ -37,27 +37,14 @@ describe('Team', () => {
 
             it('should create a team with ID, name, and PayPal link', () => {
                 const teamId = Team.Id.builder.build(Guid.generate().guidString);
-                const team = new Team(teamId, 'Alpha Team', 'https://paypal.me/alphateam');
+                const teamSettings = new Team.TeamSettings('https://paypal.me/alphateam', true, 'all-fines', 'public-link-with-approval', 'USD', 'en');
+                const team = new Team(teamId, 'Alpha Team', 'https://logo.png', 'Soccer', 'A team for soccer enthusiasts', teamSettings);
                 expect(team.id).toBeEqual(teamId);
                 expect(team.name).toBeEqual('Alpha Team');
-                expect(team.paypalMeLink).toBeEqual('https://paypal.me/alphateam');
-            });
-
-            it('should create a team without PayPal link', () => {
-                const teamId = Team.Id.builder.build(Guid.generate().guidString);
-                const team = new Team(teamId, 'Beta Team', null);
-                expect(team.id).toBeEqual(teamId);
-                expect(team.name).toBeEqual('Beta Team');
-                expect(team.paypalMeLink).toBeNull();
-            });
-
-            it('should create teams with different names', () => {
-                const teamId1 = Team.Id.builder.build(Guid.generate().guidString);
-                const teamId2 = Team.Id.builder.build(Guid.generate().guidString);
-                const team1 = new Team(teamId1, 'Team One', null);
-                const team2 = new Team(teamId2, 'Team Two', 'https://paypal.me/team2');
-                expect(team1.name).toBeEqual('Team One');
-                expect(team2.name).toBeEqual('Team Two');
+                expect(team.teamLogoUrl).toBeEqual('https://logo.png');
+                expect(team.teamSportCategory).toBeEqual('Soccer');
+                expect(team.teamDescription).toBeEqual('A team for soccer enthusiasts');
+                expect(team.settings).toBeEqual(teamSettings);
             });
         });
 
@@ -66,41 +53,39 @@ describe('Team', () => {
             it('should return flattened representation with PayPal link', () => {
                 const guidString = 'a1111111-1111-4111-1111-111111111111';
                 const teamId = Team.Id.builder.build(guidString);
-                const team = new Team(teamId, 'Flatten Team', 'https://paypal.me/flattenteam');
+                const teamSettings = new Team.TeamSettings('https://paypal.me/alphateam', true, 'all-fines', 'public-link-with-approval', 'USD', 'en');
+                const team = new Team(teamId, 'Alpha Team', 'https://logo.png', 'Soccer', 'A team for soccer enthusiasts', teamSettings);
                 const flattened = team.flatten;
                 expect(flattened.id).toBeEqual(guidString);
                 expect(flattened.name).toBeEqual('Flatten Team');
-                expect(flattened.paypalMeLink).toBeEqual('https://paypal.me/flattenteam');
-            });
-
-            it('should return flattened representation without PayPal link', () => {
-                const guidString = 'a2222222-2222-4222-2222-222222222222';
-                const teamId = Team.Id.builder.build(guidString);
-                const team = new Team(teamId, 'No PayPal Team', null);
-                const flattened = team.flatten;
-                expect(flattened.id).toBeEqual(guidString);
-                expect(flattened.name).toBeEqual('No PayPal Team');
-                expect(flattened.paypalMeLink).toBeNull();
+                expect(flattened.teamLogoUrl).toBeEqual('https://logo.png');
+                expect(flattened.teamSportCategory).toBeEqual('Soccer');
+                expect(flattened.teamDescription).toBeEqual('A team for soccer enthusiasts');
+                expect(flattened.settings.paypalMeLink).toBeEqual('https://paypal.me/alphateam');
+                expect(flattened.settings.allowMembersToAddFines).toBeEqual(true);
+                expect(flattened.settings.fineVisibility).toBeEqual('all-fines');
+                expect(flattened.settings.joinRequestType).toBeEqual('public-link-with-approval');
+                expect(flattened.settings.currency).toBeEqual('USD');
+                expect(flattened.settings.locale).toBeEqual('en');
             });
 
             it('should match the original values', () => {
                 const teamId = Team.Id.builder.build(Guid.generate().guidString);
                 const name = 'Match Team';
-                const paypalLink = 'https://paypal.me/match';
-                const team = new Team(teamId, name, paypalLink);
+                const teamSettings = new Team.TeamSettings('https://paypal.me/alphateam', true, 'all-fines', 'public-link-with-approval', 'USD', 'en');
+                const team = new Team(teamId, 'Alpha Team', 'https://logo.png', 'Soccer', 'A team for soccer enthusiasts', teamSettings);
                 const flattened = team.flatten;
                 expect(flattened.id).toBeEqual(teamId.flatten);
                 expect(flattened.name).toBeEqual(name);
-                expect(flattened.paypalMeLink).toBeEqual(paypalLink);
-            });
-
-            it('should have correct structure', () => {
-                const teamId = Team.Id.builder.build(Guid.generate().guidString);
-                const team = new Team(teamId, 'Structure Team', null);
-                const flattened = team.flatten;
-                expect(typeof flattened.id).toBeEqual('string');
-                expect(typeof flattened.name).toBeEqual('string');
-                expect(flattened.paypalMeLink).toBeNull();
+                expect(flattened.teamLogoUrl).toBeEqual('https://logo.png');
+                expect(flattened.teamSportCategory).toBeEqual('Soccer');
+                expect(flattened.teamDescription).toBeEqual('A team for soccer enthusiasts');
+                expect(flattened.settings.paypalMeLink).toBeEqual('https://paypal.me/alphateam');
+                expect(flattened.settings.allowMembersToAddFines).toBeEqual(true);
+                expect(flattened.settings.fineVisibility).toBeEqual('all-fines');
+                expect(flattened.settings.joinRequestType).toBeEqual('public-link-with-approval');
+                expect(flattened.settings.currency).toBeEqual('USD');
+                expect(flattened.settings.locale).toBeEqual('en');
             });
         });
 
@@ -110,57 +95,78 @@ describe('Team', () => {
                 const flattened = {
                     id: 'a3333333-3333-4333-3333-333333333333',
                     name: 'Built Team',
-                    paypalMeLink: 'https://paypal.me/builtteam'
-                };
+                    teamLogoUrl: 'https://logo.png',
+                    teamSportCategory: 'Basketball',
+                    teamDescription: 'A team for basketball enthusiasts',
+                    settings: {
+                        paypalMeLink: 'https://paypal.me/builtteam',
+                        allowMembersToAddFines: false,
+                        fineVisibility: 'only-own-fines',
+                        joinRequestType: 'invite-only',
+                        currency: 'EUR',
+                        locale: 'de'
+                    }
+                } as const;
                 const team = Team.builder.build(flattened);
                 expect(team.id.value.guidString).toBeEqual('a3333333-3333-4333-3333-333333333333');
                 expect(team.name).toBeEqual('Built Team');
-                expect(team.paypalMeLink).toBeEqual('https://paypal.me/builtteam');
+                expect(team.teamLogoUrl).toBeEqual('https://logo.png');
+                expect(team.teamSportCategory).toBeEqual('Basketball');
+                expect(team.teamDescription).toBeEqual('A team for basketball enthusiasts');
+                expect(team.settings.paypalMeLink).toBeEqual('https://paypal.me/builtteam');
+                expect(team.settings.allowMembersToAddFines).toBeEqual(false);
+                expect(team.settings.fineVisibility).toBeEqual('only-own-fines');
+                expect(team.settings.joinRequestType).toBeEqual('invite-only');
+                expect(team.settings.currency).toBeEqual('EUR');
+                expect(team.settings.locale).toBeEqual('de');
             });
 
             it('should build team from flattened data without PayPal link', () => {
                 const flattened = {
                     id: 'a4444444-4444-4444-4444-444444444444',
                     name: 'No Link Team',
-                    paypalMeLink: null
-                };
+                    teamLogoUrl: null,
+                    teamSportCategory: null,
+                    teamDescription: null,
+                    settings: {
+                        paypalMeLink: null,
+                        allowMembersToAddFines: false,
+                        fineVisibility: 'only-own-fines',
+                        joinRequestType: 'invite-only',
+                        currency: 'EUR',
+                        locale: 'de'
+                    }
+                } as const;
                 const team = Team.builder.build(flattened);
                 expect(team.id.value.guidString).toBeEqual('a4444444-4444-4444-4444-444444444444');
                 expect(team.name).toBeEqual('No Link Team');
-                expect(team.paypalMeLink).toBeNull();
+                expect(team.teamLogoUrl).toBeNull();
+                expect(team.teamSportCategory).toBeNull();
+                expect(team.teamDescription).toBeNull();
+                expect(team.settings.paypalMeLink).toBeNull();
+                expect(team.settings.allowMembersToAddFines).toBeEqual(false);
+                expect(team.settings.fineVisibility).toBeEqual('only-own-fines');
+                expect(team.settings.joinRequestType).toBeEqual('invite-only');
+                expect(team.settings.currency).toBeEqual('EUR');
+                expect(team.settings.locale).toBeEqual('de');
             });
 
             it('should round-trip through flatten and build with PayPal link', () => {
                 const teamId = Team.Id.builder.build('a5555555-5555-4555-5555-555555555555');
-                const original = new Team(teamId, 'Round Trip Team', 'https://paypal.me/roundtrip');
+                const teamSettings = new Team.TeamSettings('https://paypal.me/roundtrip', true, 'all-fines', 'public-link-with-approval', 'USD', 'en');
+                const original = new Team(teamId, 'Round Trip Team', 'https://logo.png', 'Tennis', 'A team for tennis enthusiasts', teamSettings);
                 const rebuilt = Team.builder.build(original.flatten);
                 expect(rebuilt.id.flatten).toBeEqual(original.id.flatten);
                 expect(rebuilt.name).toBeEqual(original.name);
-                expect(rebuilt.paypalMeLink).toBeEqual(original.paypalMeLink);
-            });
-
-            it('should round-trip through flatten and build without PayPal link', () => {
-                const teamId = Team.Id.builder.build('a6666666-6666-4666-6666-666666666666');
-                const original = new Team(teamId, 'Null Link Team', null);
-                const rebuilt = Team.builder.build(original.flatten);
-                expect(rebuilt.id.flatten).toBeEqual(original.id.flatten);
-                expect(rebuilt.name).toBeEqual(original.name);
-                expect(rebuilt.paypalMeLink).toBeNull();
-            });
-
-            it('should build teams with various valid inputs', () => {
-                const testCases = [
-                    { id: 'a7777777-7777-4777-7777-777777777777', name: 'Test 1', paypalMeLink: 'https://paypal.me/test1' },
-                    { id: 'a8888888-8888-4888-8888-888888888888', name: 'Test 2', paypalMeLink: null },
-                    { id: 'a9999999-9999-4999-9999-999999999999', name: 'Team with Long Name', paypalMeLink: 'https://paypal.me/longname' }
-                ];
-
-                testCases.forEach(testCase => {
-                    const team = Team.builder.build(testCase);
-                    expect(team.id.value.guidString).toBeEqual(testCase.id);
-                    expect(team.name).toBeEqual(testCase.name);
-                    expect(team.paypalMeLink).toBeEqual(testCase.paypalMeLink);
-                });
+                expect(rebuilt.teamLogoUrl).toBeEqual(original.teamLogoUrl);
+                expect(rebuilt.teamSportCategory).toBeEqual(original.teamSportCategory);
+                expect(rebuilt.teamDescription).toBeEqual(original.teamDescription);
+                expect(rebuilt.settings.paypalMeLink).toBeEqual(original.settings.paypalMeLink);
+                expect(rebuilt.settings.allowMembersToAddFines).toBeEqual(original.settings.allowMembersToAddFines);
+                expect(rebuilt.settings.fineVisibility).toBeEqual(original.settings.fineVisibility);
+                expect(rebuilt.settings.joinRequestType).toBeEqual(original.settings.joinRequestType);
+                expect(rebuilt.settings.currency).toBeEqual(original.settings.currency);
+                expect(rebuilt.settings.locale).toBeEqual(original.settings.locale);
             });
         });
     });

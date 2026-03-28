@@ -97,7 +97,7 @@ export const localizationDE: LocalizationDict = {
         payed: 'Bezahlt',
         notPayed: 'Offen'
     },
-    userRole: {
+    teamRole: {
         personManager: 'Personenmanager',
         fineTemplateManager: 'Strafvorlagenmanager',
         fineManager: 'Strafenmanager',

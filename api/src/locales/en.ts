@@ -107,7 +107,7 @@ export const localizationEN = satisfiesLocalization({
         payed: 'Paid',
         notPayed: 'Outstanding'
     },
-    userRole: {
+    teamRole: {
         personManager: 'Person Manager',
         fineTemplateManager: 'Fine Template Manager',
         fineManager: 'Fine Manager',

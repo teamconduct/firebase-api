@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from '@assertive-ts/core';
-import { User, Team, Person, PersonProperties, PersonSignInProperties, UserRole } from '../../src/types/index';
+import { User, Team, Person, PersonProperties, PersonSignInProperties, TeamRole } from '../../src/types/index';
 import { Dictionary, Flattable, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import type { FunctionsErrorCode } from '@stevenkellner/firebase-function';
 import { FunctionsError } from '@stevenkellner/firebase-function';
@@ -87,7 +87,7 @@ export class Document {
         }).flatten);
     }
 
-    public static person(id: Person.Id, userId: User.Id, roles: UserRole[]): Document {
+    public static person(id: Person.Id, userId: User.Id, roles: TeamRole[]): Document {
         return Document.data(Person.builder.build({
             id: id.guidString,
             properties: PersonProperties.builder.build({
