@@ -15,7 +15,7 @@ export class PersonProperties implements Flattable<PersonProperties.Flatten> {
      */
     constructor(
         public firstName: string,
-        public lastName: string | null
+        public lastName: string
     ) {}
 
     /**
@@ -36,7 +36,7 @@ export namespace PersonProperties {
      */
     export type Flatten = {
         firstName: string;
-        lastName: string | null;
+        lastName: string;
     }
 
     /**

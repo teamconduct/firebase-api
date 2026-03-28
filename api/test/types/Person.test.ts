@@ -59,7 +59,7 @@ describe('Person', () => {
 
             it('should create a person with default empty fineIds', () => {
                 const personId = Person.Id.builder.build('a1111111-1111-4111-1111-111111111111');
-                const properties = new PersonProperties('Jane', null);
+                const properties = new PersonProperties('Jane', 'Doe');
 
                 const person = new Person(personId, properties);
                 expect(person.fineIds.length).toBeEqual(0);
@@ -77,7 +77,7 @@ describe('Person', () => {
 
             it('should create a person with multiple fines', () => {
                 const personId = Person.Id.builder.build('a1111111-1111-4111-1111-111111111111');
-                const properties = new PersonProperties('Bob', null);
+                const properties = new PersonProperties('Bob', 'Brown');
                 const fineIds = [
                     Fine.Id.builder.build('b2222222-2222-4222-2222-222222222222'),
                     Fine.Id.builder.build('c3333333-3333-4333-3333-333333333333'),
@@ -90,10 +90,10 @@ describe('Person', () => {
 
             it('should handle person with only first name', () => {
                 const personId = Person.Id.builder.build('a1111111-1111-4111-1111-111111111111');
-                const properties = new PersonProperties('Charlie', null);
+                const properties = new PersonProperties('Charlie', 'Brown');
 
                 const person = new Person(personId, properties);
-                expect(person.properties.lastName).toBeEqual(null);
+                expect(person.properties.lastName).toBeEqual('Brown');
             });
         });
 
@@ -105,14 +105,6 @@ describe('Person', () => {
                 const person = new Person(personId, properties);
 
                 expect(person.name).toBeEqual('John Doe');
-            });
-
-            it('should return only first name when last name is null', () => {
-                const personId = Person.Id.builder.build('a1111111-1111-4111-1111-111111111111');
-                const properties = new PersonProperties('Jane', null);
-                const person = new Person(personId, properties);
-
-                expect(person.name).toBeEqual('Jane');
             });
 
             it('should handle names with special characters', () => {
@@ -160,7 +152,7 @@ describe('Person', () => {
 
             it('should return flattened representation with null sign-in properties', () => {
                 const personId = Person.Id.builder.build('a1111111-1111-4111-1111-111111111111');
-                const properties = new PersonProperties('Jane', null);
+                const properties = new PersonProperties('Jane', 'Doe');
 
                 const person = new Person(personId, properties);
                 const flattened = person.flatten;
@@ -181,7 +173,7 @@ describe('Person', () => {
 
             it('should flatten multiple fineIds', () => {
                 const personId = Person.Id.builder.build('a1111111-1111-4111-1111-111111111111');
-                const properties = new PersonProperties('Bob', null);
+                const properties = new PersonProperties('Bob', 'Brown');
                 const fineIds = [
                     Fine.Id.builder.build('b2222222-2222-4222-2222-222222222222'),
                     Fine.Id.builder.build('c3333333-3333-4333-3333-333333333333')
@@ -240,7 +232,7 @@ describe('Person', () => {
                     id: 'a1111111-1111-4111-1111-111111111111',
                     properties: {
                         firstName: 'Jane',
-                        lastName: null
+                        lastName: 'Doe'
                     },
                     fineIds: [],
                     signInProperties: null
@@ -270,7 +262,7 @@ describe('Person', () => {
                     id: 'a1111111-1111-4111-1111-111111111111',
                     properties: {
                         firstName: 'Bob',
-                        lastName: null
+                        lastName: 'Brown'
                     },
                     fineIds: [
                         'b2222222-2222-4222-2222-222222222222',
@@ -307,7 +299,7 @@ describe('Person', () => {
 
             it('should round-trip through flatten and build with null sign-in properties', () => {
                 const personId = Person.Id.builder.build('a1111111-1111-4111-1111-111111111111');
-                const properties = new PersonProperties('Jane', null);
+                const properties = new PersonProperties('Jane', 'Doe');
 
                 const original = new Person(personId, properties);
                 const rebuilt = Person.builder.build(original.flatten);

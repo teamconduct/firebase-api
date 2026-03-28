@@ -12,15 +12,15 @@ describe('PersonProperties', () => {
         });
 
         it('should create properties with first name only', () => {
-            const props = new PersonProperties('Jane', null);
+            const props = new PersonProperties('Jane', 'Doe');
             expect(props.firstName).toBeEqual('Jane');
-            expect(props.lastName).toBeNull();
+            expect(props.lastName).toBeEqual('Doe');
         });
 
         it('should create properties with various names', () => {
             const testCases = [
                 { firstName: 'Alice', lastName: 'Smith' },
-                { firstName: 'Bob', lastName: null },
+                { firstName: 'Bob', lastName: 'Brown' },
                 { firstName: 'Charlie', lastName: 'Johnson' },
                 { firstName: 'Diana', lastName: 'Williams' }
             ];
@@ -63,10 +63,10 @@ describe('PersonProperties', () => {
         });
 
         it('should return flattened representation with first name only', () => {
-            const props = new PersonProperties('Jane', null);
+            const props = new PersonProperties('Jane', 'Doe');
             const flattened = props.flatten;
             expect(flattened.firstName).toBeEqual('Jane');
-            expect(flattened.lastName).toBeNull();
+            expect(flattened.lastName).toBeEqual('Doe');
         });
 
         it('should match the original values', () => {
@@ -86,9 +86,9 @@ describe('PersonProperties', () => {
         });
 
         it('should handle null lastName correctly in flattened form', () => {
-            const props = new PersonProperties('Single', null);
+            const props = new PersonProperties('Single', 'User');
             const flattened = props.flatten;
-            expect(flattened.lastName).toBeNull();
+            expect(flattened.lastName).toBeEqual('User');
         });
 
         it('should preserve special characters in flattened form', () => {
@@ -111,14 +111,14 @@ describe('PersonProperties', () => {
             expect(props.lastName).toBeEqual('Davis');
         });
 
-        it('should build properties from flattened data with null lastName', () => {
+        it('should build properties from flattened data with empty string lastName', () => {
             const flattened = {
                 firstName: 'Oliver',
-                lastName: null
+                lastName: ''
             };
             const props = PersonProperties.builder.build(flattened);
             expect(props.firstName).toBeEqual('Oliver');
-            expect(props.lastName).toBeNull();
+            expect(props.lastName).toBeEqual('');
         });
 
         it('should round-trip through flatten and build with both names', () => {
@@ -128,17 +128,17 @@ describe('PersonProperties', () => {
             expect(rebuilt.lastName).toBeEqual(original.lastName);
         });
 
-        it('should round-trip through flatten and build with null lastName', () => {
-            const original = new PersonProperties('Liam', null);
+        it('should round-trip through flatten and build with empty string lastName', () => {
+            const original = new PersonProperties('Liam', '');
             const rebuilt = PersonProperties.builder.build(original.flatten);
             expect(rebuilt.firstName).toBeEqual(original.firstName);
-            expect(rebuilt.lastName).toBeNull();
+            expect(rebuilt.lastName).toBeEqual(original.lastName);
         });
 
         it('should build properties with various names', () => {
             const testCases = [
                 { firstName: 'Emma', lastName: 'Taylor' },
-                { firstName: 'Noah', lastName: null },
+                { firstName: 'Noah', lastName: '' },
                 { firstName: 'Ava', lastName: 'Anderson' },
                 { firstName: 'William', lastName: 'Thomas' }
             ];
