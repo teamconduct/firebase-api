@@ -321,7 +321,7 @@ describe('User', () => {
                 const signInDate = UtcDate.now;
                 const signInType = new User.SignInTypeEmail('user001@test.com');
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), false);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const user = new User(userId, signInDate, signInType, properties, settings);
                 expect(user.id).toBeEqual(userId);
                 expect(user.signInDate).toBeEqual(signInDate);
@@ -336,7 +336,7 @@ describe('User', () => {
                 const signInDate = UtcDate.now;
                 const signInType = new User.SignInTypeOAuth('google');
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), true);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const teamId = Team.Id.builder.build(Guid.generate().guidString);
                 const personId = Person.Id.builder.build(Guid.generate().guidString);
                 const teamProperties = new User.TeamProperties(teamId, 'Team A', personId);
@@ -357,7 +357,7 @@ describe('User', () => {
                 const signInDate = UtcDate.now;
                 const signInType = new User.SignInTypeOAuth('apple');
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), true);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const teams = new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder);
 
                 const teamId1 = Team.Id.builder.build(Guid.generate().guidString);
@@ -379,7 +379,7 @@ describe('User', () => {
                 const signInDate = UtcDate.now;
                 const signInType = new User.SignInTypeEmail('flat001@test.com');
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), true);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const user = new User(userId, signInDate, signInType, properties, settings);
                 const flattened = user.flatten;
                 expect(flattened.id).toBeEqual('user-flat-001');
@@ -390,7 +390,6 @@ describe('User', () => {
                 expect(flattened.properties.bio).toBeEqual(null);
                 expect(flattened.properties.profilePictureUrl).toBeEqual('https://example.com/avatar.jpg');
                 expect(flattened.settings.notification).toBeEqual(user.settings.notification.flatten);
-                expect(flattened.settings.twoFactorAuthEnabled).toBeEqual(user.settings.twoFactorAuthEnabled);
                 expect(Object.keys(flattened.teams)).toBeEqual([]);
             });
 
@@ -405,7 +404,7 @@ describe('User', () => {
                 teams.set(teamId, teamProperties);
 
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), true);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const user = new User(userId, signInDate, signInType, properties, settings, teams);
                 const flattened = user.flatten;
                 expect(flattened.id).toBeEqual('user-flat-002');
@@ -416,7 +415,6 @@ describe('User', () => {
                 expect(flattened.properties.bio).toBeEqual(null);
                 expect(flattened.properties.profilePictureUrl).toBeEqual('https://example.com/avatar.jpg');
                 expect(flattened.settings.notification).toBeEqual(user.settings.notification.flatten);
-                expect(flattened.settings.twoFactorAuthEnabled).toBeEqual(user.settings.twoFactorAuthEnabled);
                 expect(flattened.teams['11111111-1111-4111-1111-111111111111']).not.toBeUndefined();
                 expect(flattened.teams['11111111-1111-4111-1111-111111111111'].teamName).toBeEqual('Team Flatten');
             });
@@ -431,7 +429,7 @@ describe('User', () => {
                 teams.set(teamId, new User.TeamProperties(teamId, 'Match Team', personId));
 
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), true);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const user = new User(userId, signInDate, signInType, properties, settings, teams);
                 const flattened = user.flatten;
                 expect(flattened.id).toBeEqual(userId.flatten);
@@ -442,7 +440,6 @@ describe('User', () => {
                 expect(flattened.properties.bio).toBeEqual(null);
                 expect(flattened.properties.profilePictureUrl).toBeEqual('https://example.com/avatar.jpg');
                 expect(flattened.settings.notification).toBeEqual(user.settings.notification.flatten);
-                expect(flattened.settings.twoFactorAuthEnabled).toBeEqual(user.settings.twoFactorAuthEnabled);
             });
 
             it('should have correct structure', () => {
@@ -450,7 +447,7 @@ describe('User', () => {
                 const signInDate = UtcDate.now;
                 const signInType = new User.SignInTypeOAuth('apple');
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), true);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const user = new User(userId, signInDate, signInType, properties, settings);
                 const flattened = user.flatten;
                 expect(typeof flattened.id).toBeEqual('string');
@@ -496,7 +493,6 @@ describe('User', () => {
                 expect(user.properties.bio).toBeEqual(null);
                 expect(user.properties.profilePictureUrl).toBeEqual('https://example.com/avatar.jpg');
                 expect(user.settings.notification.flatten).toBeEqual(flattened.settings.notification);
-                expect(user.settings.twoFactorAuthEnabled).toBeEqual(flattened.settings.twoFactorAuthEnabled);
                 expect(user.teams.values.length).toBeEqual(0);
             });
 
@@ -537,7 +533,6 @@ describe('User', () => {
                 expect(user.properties.bio).toBeEqual(null);
                 expect(user.properties.profilePictureUrl).toBeEqual('https://example.com/avatar2.jpg');
                 expect(user.settings.notification.flatten).toBeEqual(flattened.settings.notification);
-                expect(user.settings.twoFactorAuthEnabled).toBeEqual(flattened.settings.twoFactorAuthEnabled);
                 expect(user.teams.values.length).toBeEqual(1);
                 const teamId = Team.Id.builder.build('33333333-3333-4333-3333-333333333333');
                 expect(user.teams.get(teamId)?.teamName).toBeEqual('Built Team');
@@ -548,7 +543,7 @@ describe('User', () => {
                 const signInDate = UtcDate.now;
                 const signInType = new User.SignInTypeEmail('round001@test.com');
                 const properties = new User.UserProperties('John', 'Doe', null, 'https://example.com/avatar.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), true);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const original = new User(userId, signInDate, signInType, properties, settings);
                 const rebuilt = User.builder.build(original.flatten);
                 expect(rebuilt.id.flatten).toBeEqual(original.id.flatten);
@@ -564,7 +559,7 @@ describe('User', () => {
                 const signInDate = UtcDate.now;
                 const signInType = new User.SignInTypeOAuth('apple');
                 const properties = new User.UserProperties('Jane', 'Doe', null, 'https://example.com/avatar2.jpg');
-                const settings = new User.UserSettings(new NotificationProperties(), false);
+                const settings = new User.UserSettings(new NotificationProperties());
                 const teamId = Team.Id.builder.build('55555555-5555-4555-5555-555555555555');
                 const personId = Person.Id.builder.build('66666666-6666-4666-6666-666666666666');
                 const teams = new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder);

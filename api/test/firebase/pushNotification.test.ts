@@ -55,7 +55,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(), false),
+                        new User.UserSettings(new NotificationProperties()),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -87,7 +87,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-reminder']), false),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -131,7 +131,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['fine-state-change']), false),
+                        new User.UserSettings(new NotificationProperties(tokens, ['fine-state-change'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -176,7 +176,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine']), false),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -221,7 +221,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine']), false),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -278,7 +278,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-state-change', 'fine-reminder']), false),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-state-change', 'fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -322,7 +322,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['fine-reminder']), false),
+                        new User.UserSettings(new NotificationProperties(tokens, ['fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -365,7 +365,7 @@ describe('pushNotification', () => {
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
                         new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, []), false),
+                        new User.UserSettings(new NotificationProperties(tokens, [])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),

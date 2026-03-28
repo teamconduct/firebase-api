@@ -53,7 +53,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), emptyTeams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), emptyTeams)
                 })
             });
 
@@ -74,7 +74,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -102,7 +102,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -132,7 +132,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -160,7 +160,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -187,7 +187,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -215,7 +215,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -242,7 +242,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -269,7 +269,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -298,7 +298,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -328,7 +328,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -361,7 +361,7 @@ describe('checkAuthentication', () => {
                     [userAuthId.value]: Document.data({ userId: userId.value })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false), teams)
+                    [userId.value]: Document.user(userId, new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({

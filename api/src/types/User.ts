@@ -340,8 +340,7 @@ export namespace User {
     export class UserSettings implements Flattable<UserSettings.Flatten> {
 
         public constructor(
-            public notification: NotificationProperties,
-            public twoFactorAuthEnabled: boolean
+            public notification: NotificationProperties
         ) {}
 
         /**
@@ -349,8 +348,7 @@ export namespace User {
          */
         public get flatten(): UserSettings.Flatten {
             return {
-                notification: this.notification.flatten,
-                twoFactorAuthEnabled: this.twoFactorAuthEnabled
+                notification: this.notification.flatten
             };
         }
     }
@@ -361,8 +359,7 @@ export namespace User {
          * Flattened representation of user settings for serialization.
          */
         export type Flatten = {
-            notification: NotificationProperties.Flatten,
-            twoFactorAuthEnabled: boolean
+            notification: NotificationProperties.Flatten
         };
 
         /**
@@ -376,7 +373,7 @@ export namespace User {
              * @returns A new UserSettings instance
              */
             public build(value: Flatten): UserSettings {
-                return new UserSettings(NotificationProperties.builder.build(value.notification), value.twoFactorAuthEnabled);
+                return new UserSettings(NotificationProperties.builder.build(value.notification));
             }
         }
 
