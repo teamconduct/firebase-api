@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { expect } from '@assertive-ts/core';
-import { User, Team, Person, PersonProperties, PersonSignInProperties, TeamRole } from '../../src/types/index';
 import { Dictionary, Flattable, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import type { FunctionsErrorCode } from '@stevenkellner/firebase-function';
 import { FunctionsError } from '@stevenkellner/firebase-function';
-import { FirebaseConfiguration, Messaging } from '../../src';
+import { Person, PersonProperties, PersonSignInProperties, Team, TeamRole, User } from '@stevenkellner/team-conduct-api';
+import { FirebaseConfiguration, Messaging } from '../../src/firebase';
 
 export class Collection {
 

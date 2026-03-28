@@ -119,7 +119,7 @@ describe('Firebase Rules', () => {
         await createTestDocuments();
         const userId = RandomData.shared.userId();
         await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
-        await FirebaseApp.shared.firestore.user(userId).set(new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false)));
+        await FirebaseApp.shared.firestore.user(userId).set(new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties())));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'teams/123')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'teams/123/subCollection/456')));
     });
@@ -129,7 +129,7 @@ describe('Firebase Rules', () => {
         await createTestDocuments();
         const userId = RandomData.shared.userId();
         await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
-        const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false));
+        const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()));
         const teamId: Team.Id = new Tagged('123' as unknown as Guid, 'team');
         user.teams.set(teamId, new User.TeamProperties(teamId, 'test', Tagged.generate('person')));
         await FirebaseApp.shared.firestore.user(userId).set(user);

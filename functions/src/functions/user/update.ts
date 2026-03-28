@@ -1,5 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Firestore, User, UserUpdateFunction } from '@stevenkellner/team-conduct-api';
+import { User, UserUpdateFunction } from '@stevenkellner/team-conduct-api';
+import { Firestore } from '../../firebase';
 
 export class UserUpdateExecutableFunction extends UserUpdateFunction implements ExecutableFirebaseFunction<UserUpdateFunction.Parameters, null> {
 

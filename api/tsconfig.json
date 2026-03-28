@@ -112,7 +112,7 @@
     },
     "include": [
         "index.ts",
-        "src/**/*.ts",
-        "test/**/*.ts"
+        "src/**/*.ts"
+        // "test/**/*.ts"
     ]
 }

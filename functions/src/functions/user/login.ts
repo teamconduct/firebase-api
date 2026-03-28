@@ -1,5 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Firestore, User, UserLoginFunction } from '@stevenkellner/team-conduct-api';
+import { User, UserLoginFunction } from '@stevenkellner/team-conduct-api';
+import { Firestore } from '../../firebase';
 
 export class UserLoginExecutableFunction extends UserLoginFunction implements ExecutableFirebaseFunction<null, User | '2FA_REQUIRED'> {
 

@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { FirebaseAuth } from './FirebaseAuth';
 import { FirebaseFirestore } from './FirebaseFirestore';
-import { Configuration, User, UserRole, FirebaseConfiguration, PersonSignInProperties, Team, NotificationProperties, firebaseFunctionsContext } from '@stevenkellner/team-conduct-api';
+import { Configuration, User, PersonSignInProperties, Team, NotificationProperties, firebaseFunctionsContext, TeamRole } from '@stevenkellner/team-conduct-api';
 import { getFirestore } from 'firebase-admin/firestore';
 import { FirestoreDocument, UserAuthId, createCallableClientFirebaseFunctions } from '@stevenkellner/firebase-function';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
@@ -11,6 +11,7 @@ import { BytesCoder, UtcDate } from '@stevenkellner/typescript-common-functional
 import { testTeam1 } from '../testTeams/testTeam1';
 import { TestTeam } from '../testTeams/TestTeam';
 import { RandomData } from '../utils/RandomData';
+import { FirebaseConfiguration } from '../../src/firebase';
 
 export class FirebaseApp {
 
@@ -61,9 +62,9 @@ export class FirebaseApp {
         });
     }
 
-    private* internal_createTestTeam(testTeam: TestTeam, userAuthId: UserAuthId, userId: User.Id, roles: UserRole[]): Generator<Promise<unknown>> {
+    private* internal_createTestTeam(testTeam: TestTeam, userAuthId: UserAuthId, userId: User.Id, roles: TeamRole[]): Generator<Promise<unknown>> {
         yield FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
-        const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties(testTeam.persons[0].properties.firstName, testTeam.persons[0].properties.lastName ?? 'asdf', null, null), new User.UserSettings(new NotificationProperties(), false));
+        const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties(testTeam.persons[0].properties.firstName, testTeam.persons[0].properties.lastName, null, null), new User.UserSettings(new NotificationProperties()));
         user.teams.set(testTeam.id, new User.TeamProperties(testTeam.id, testTeam.name, testTeam.persons[0].id));
         yield FirebaseApp.shared.firestore.user(userId).set(user);
         yield FirebaseApp.shared.firestore.team(testTeam.id).set(new Team(testTeam.id, testTeam.name, null, null, null, new Team.TeamSettings(null, true, 'all-fines', 'public-link-with-approval', 'USD', 'en')));
@@ -78,7 +79,7 @@ export class FirebaseApp {
             yield FirebaseApp.shared.firestore.fine(testTeam.id, fine.id).set(fine);
     }
 
-    public async addTestTeam(roles: UserRole | UserRole[] = [], userId: User.Id | null = null, testTeam: TestTeam = testTeam1): Promise<UserAuthId> {
+    public async addTestTeam(roles: TeamRole | TeamRole[] = [], userId: User.Id | null = null, testTeam: TestTeam = testTeam1): Promise<UserAuthId> {
         const userAuthId = await this.auth.signIn();
         const _userId = userId ?? RandomData.shared.userId();
         await Promise.all([...this.internal_createTestTeam(testTeam, userAuthId, _userId, typeof roles === 'string' ? [roles] : roles)]);

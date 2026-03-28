@@ -1,10 +1,10 @@
 import { describe, it } from 'mocha';
 import { expect } from '@assertive-ts/core';
 import { checkAuthentication } from '../../src/firebase/checkAuthentication';
-import { User, Team, Person, NotificationProperties } from '../../src/types/index';
 import { Dictionary } from '@stevenkellner/typescript-common-functionality';
 import { configureFirebase, expectThrowsFunctionsError, Collection, Document } from './firebase-utils';
 import { UserAuthId } from '@stevenkellner/firebase-function';
+import { NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
 
 describe('checkAuthentication', () => {
     const teamId = Team.Id.builder.build('11111111-1111-4111-1111-111111111111');

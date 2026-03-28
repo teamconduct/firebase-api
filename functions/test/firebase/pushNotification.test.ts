@@ -1,10 +1,10 @@
 import { describe, it } from 'mocha';
 import { expect } from '@assertive-ts/core';
 import { pushNotification } from '../../src/firebase/pushNotification';
-import { Team, Person, NotificationProperties, User } from '../../src/types/index';
 import { Dictionary, Guid } from '@stevenkellner/typescript-common-functionality';
 import { configureFirebase, Collection, Document } from './firebase-utils';
-import { Firestore } from '../../src';
+import { NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
+import { Firestore } from '../../src/firebase';
 
 describe('pushNotification', () => {
     const teamId = Team.Id.builder.build(Guid.generate().guidString);

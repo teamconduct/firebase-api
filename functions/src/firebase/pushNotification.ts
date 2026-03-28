@@ -1,7 +1,7 @@
 import { Dictionary } from '@stevenkellner/typescript-common-functionality';
 import { Firestore } from './Firestore';
-import { NotificationProperties, Person, Team, User } from '../types';
 import { FirebaseConfiguration, BatchResponse, Notification } from '.';
+import { NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
 
 /**
  * Filters successful tokens from a Firebase Cloud Messaging batch response.

@@ -1,5 +1,5 @@
 import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function';
-import { Fine, FineTemplate, Invitation, Person, Team, User } from '../types';
+import { Fine, FineTemplate, Invitation, Person, Team, User } from '@stevenkellner/team-conduct-api';
 
 /**
  * Type definition for the Firestore database schema.

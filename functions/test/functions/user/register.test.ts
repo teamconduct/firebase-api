@@ -41,7 +41,7 @@ describe('UserRegisterFunction', () => {
     });
 
     it('user already exists', async () => {
-        const user = new User(userId, RandomData.shared.date(), new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false));
+        const user = new User(userId, RandomData.shared.date(), new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()));
         await FirebaseApp.shared.firestore.user(userId).set(user);
         const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
             userId: userId,
@@ -67,7 +67,6 @@ describe('UserRegisterFunction', () => {
         expect(registeredUser.properties.lastName).toBeEqual('User');
         expect(registeredUser.properties.bio).toBeNull();
         expect(registeredUser.properties.profilePictureUrl).toBeNull();
-        expect(registeredUser.settings.twoFactorAuthEnabled).toBeFalse();
 
         const userAuthSnapshot = await FirebaseApp.shared.firestore.userAuth(userAuthId).snapshot();
         expect(userAuthSnapshot.exists).toBeTrue();
@@ -82,7 +81,6 @@ describe('UserRegisterFunction', () => {
         expect(storedUser.properties.lastName).toBeEqual('User');
         expect(storedUser.properties.bio).toBeNull();
         expect(storedUser.properties.profilePictureUrl).toBeNull();
-        expect(storedUser.settings.twoFactorAuthEnabled).toBeFalse();
     });
 
     it('register with email', async () => {
@@ -101,7 +99,6 @@ describe('UserRegisterFunction', () => {
         expect(registeredUser.properties.lastName).toBeEqual('User');
         expect(registeredUser.properties.bio).toBeNull();
         expect(registeredUser.properties.profilePictureUrl).toBeNull();
-        expect(registeredUser.settings.twoFactorAuthEnabled).toBeFalse();
 
         const userAuthSnapshot = await FirebaseApp.shared.firestore.userAuth(userAuthId).snapshot();
         expect(userAuthSnapshot.exists).toBeTrue();
@@ -116,6 +113,5 @@ describe('UserRegisterFunction', () => {
         expect(storedUser.properties.lastName).toBeEqual('User');
         expect(storedUser.properties.bio).toBeNull();
         expect(storedUser.properties.profilePictureUrl).toBeNull();
-        expect(storedUser.settings.twoFactorAuthEnabled).toBeFalse();
     });
 });

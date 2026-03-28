@@ -1,7 +1,7 @@
 import { FirestoreBatch, FirestoreCollection, FirestoreDocument, UserAuthId } from '@stevenkellner/firebase-function';
 import { FirestoreScheme } from './FirestoreScheme';
-import { Fine, FineTemplate, Invitation, Person, User, Team } from '../types';
 import { FirebaseConfiguration } from '.';
+import { Fine, FineTemplate, Invitation, Person, Team, User } from '@stevenkellner/team-conduct-api';
 
 /**
  * Accessor class for Firestore documents and collections.

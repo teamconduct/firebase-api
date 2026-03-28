@@ -1,6 +1,6 @@
 import { FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Person, Team, User, TeamRole } from '../types';
 import { Firestore } from './Firestore';
+import { Person, Team, TeamRole, User } from '@stevenkellner/team-conduct-api';
 
 /**
  * Type representing expected user role requirements.
