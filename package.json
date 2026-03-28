@@ -1,0 +1,8 @@
+{
+    "name": "teamconduct-firebase-api",
+    "private": true,
+    "workspaces": [
+        "api",
+        "functions"
+    ]
+}

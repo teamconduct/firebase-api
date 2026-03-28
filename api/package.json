@@ -23,7 +23,8 @@
     },
     "dependencies": {
         "@stevenkellner/firebase-function": "^1.4.145",
-        "@stevenkellner/typescript-common-functionality": "^1.0.61"
+        "@stevenkellner/typescript-common-functionality": "^1.0.61",
+        "firebase-admin": "^13.6.0"
     },
     "devDependencies": {
         "@assertive-ts/core": "^2.1.0",
