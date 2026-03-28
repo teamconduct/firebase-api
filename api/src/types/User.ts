@@ -1,6 +1,7 @@
 import { Dictionary, Flattable, ITypeBuilder, Tagged, UtcDate, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { Team } from './Team';
 import { Person } from './Person';
+import { NotificationProperties } from './NotificationProperties';
 
 /**
  * Represents a user in the system with associated team memberships.
@@ -19,6 +20,8 @@ export class User implements Flattable<User.Flatten> {
         public id: User.Id,
         public signInDate: UtcDate,
         public signInType: User.SignInType,
+        public properties: User.UserProperties,
+        public settings: User.UserSettings,
         public teams: Dictionary<Team.Id, User.TeamProperties> = new Dictionary(Team.Id.builder)
     ) {}
 
@@ -30,6 +33,8 @@ export class User implements Flattable<User.Flatten> {
             id: this.id.flatten,
             signInDate: this.signInDate.flatten,
             signInType: this.signInType.flatten,
+            properties: this.properties.flatten,
+            settings: this.settings.flatten,
             teams: this.teams.flatten
         };
     }
@@ -210,6 +215,68 @@ export namespace User {
     }
 
     /**
+     * Represents a user's name, bio, and profile picture URL.
+     */
+    export class UserProperties implements Flattable<UserProperties.Flatten> {
+
+        /**
+         * Creates a new UserProperties instance.
+         * @param firstName - The user's first name
+         * @param lastName - The user's last name
+         * @param bio - The user's bio
+         * @param profilePictureUrl - The URL of the user's profile picture
+         */
+        public constructor(
+            public firstName: string,
+            public lastName: string,
+            public bio: string | null = null,
+            public profilePictureUrl: string | null = null
+        ) {}
+
+        public get flatten(): UserProperties.Flatten {
+            return {
+                firstName: this.firstName,
+                lastName: this.lastName,
+                bio: this.bio,
+                profilePictureUrl: this.profilePictureUrl
+            };
+        }
+    }
+
+    export namespace UserProperties {
+
+        /**
+         * Flattened representation of a user's properties for serialization.
+         */
+        export type Flatten = {
+            firstName: string,
+            lastName: string,
+            bio: string | null,
+            profilePictureUrl: string | null
+        };
+
+        /**
+         * Builder for constructing UserProperties instances from flattened data.
+         */
+        export class TypeBuilder implements ITypeBuilder<Flatten, UserProperties> {
+
+            /**
+             * Builds a UserProperties instance from flattened data.
+             * @param value - The flattened user properties data
+             * @returns A new UserProperties instance
+             */
+            public build(value: Flatten): UserProperties {
+                return new UserProperties(value.firstName, value.lastName, value.bio, value.profilePictureUrl);
+            }
+        }
+
+        /**
+         * Singleton builder instance for UserProperties.
+         */
+        export const builder = new TypeBuilder();
+    }
+
+    /**
      * Properties that are specific to a user's membership in a particular team.
      */
     export class TeamProperties implements Flattable<TeamProperties.Flatten> {
@@ -270,6 +337,55 @@ export namespace User {
         export const builder = new TypeBuilder();
     }
 
+    export class UserSettings implements Flattable<UserSettings.Flatten> {
+
+        public constructor(
+            public notification: NotificationProperties,
+            public twoFactorAuthEnabled: boolean
+        ) {}
+
+        /**
+         * Gets the flattened representation of these user settings for serialization.
+         */
+        public get flatten(): UserSettings.Flatten {
+            return {
+                notification: this.notification.flatten,
+                twoFactorAuthEnabled: this.twoFactorAuthEnabled
+            };
+        }
+    }
+
+    export namespace UserSettings {
+
+        /**
+         * Flattened representation of user settings for serialization.
+         */
+        export type Flatten = {
+            notification: NotificationProperties.Flatten,
+            twoFactorAuthEnabled: boolean
+        };
+
+        /**
+         * Builder for constructing UserSettings instances from flattened data.
+         */
+        export class TypeBuilder implements ITypeBuilder<Flatten, UserSettings> {
+
+            /**
+             * Builds a UserSettings instance from flattened data.
+             * @param value - The flattened user settings data
+             * @returns A new UserSettings instance
+             */
+            public build(value: Flatten): UserSettings {
+                return new UserSettings(NotificationProperties.builder.build(value.notification), value.twoFactorAuthEnabled);
+            }
+        }
+
+        /**
+         * Singleton builder instance for UserSettings.
+         */
+        export const builder = new TypeBuilder();
+    }
+
     /**
      * Flattened representation of a User for serialization.
      */
@@ -277,6 +393,8 @@ export namespace User {
         id: Id.Flatten,
         signInDate: string,
         signInType: SignInType.Flatten,
+        properties: UserProperties.Flatten,
+        settings: UserSettings.Flatten,
         teams: Dictionary.Flatten<TeamProperties>
     }
 
@@ -291,7 +409,7 @@ export namespace User {
          * @returns A new User instance with all teams reconstructed
          */
         public build(value: Flatten): User {
-            return new User(Id.builder.build(value.id), UtcDate.builder.build(value.signInDate), SignInType.builder.build(value.signInType), Dictionary.builder(Team.Id.builder, User.TeamProperties.builder).build(value.teams));
+            return new User(Id.builder.build(value.id), UtcDate.builder.build(value.signInDate), SignInType.builder.build(value.signInType), User.UserProperties.builder.build(value.properties), User.UserSettings.builder.build(value.settings), Dictionary.builder(Team.Id.builder, User.TeamProperties.builder).build(value.teams));
         }
     }
 

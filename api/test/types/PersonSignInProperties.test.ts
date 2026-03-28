@@ -1,7 +1,6 @@
 import { expect } from '@assertive-ts/core';
 import { PersonSignInProperties } from '../../src/types/PersonSignInProperties';
 import { User } from '../../src/types/User';
-import { NotificationProperties } from '../../src/types/NotificationProperties';
 import { UserRole } from '../../src/types/UserRole';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
@@ -12,38 +11,13 @@ describe('PersonSignInProperties', () => {
         it('should create sign-in properties with all parameters', () => {
             const userId = User.Id.builder.build('user-123');
             const joinDate = UtcDate.now;
-            const notificationProperties = new NotificationProperties();
             const roles: UserRole[] = ['person-manager', 'fine-manager'];
 
-            const props = new PersonSignInProperties(userId, joinDate, notificationProperties, roles);
+            const props = new PersonSignInProperties(userId, joinDate, roles);
 
             expect(props.userId).toBeEqual(userId);
             expect(props.joinDate).toBeEqual(joinDate);
-            expect(props.notificationProperties).toBeEqual(notificationProperties);
             expect(props.roles.length).toBeEqual(2);
-        });
-
-        it('should create sign-in properties with default notification properties and empty roles', () => {
-            const userId = User.Id.builder.build('user-456');
-            const joinDate = UtcDate.now;
-
-            const props = new PersonSignInProperties(userId, joinDate);
-
-            expect(props.userId).toBeEqual(userId);
-            expect(props.joinDate).toBeEqual(joinDate);
-            expect(props.notificationProperties).not.toBeUndefined();
-            expect(props.roles.length).toBeEqual(0);
-        });
-
-        it('should create sign-in properties with custom notification properties but no roles', () => {
-            const userId = User.Id.builder.build('user-789');
-            const joinDate = UtcDate.now;
-            const notificationProperties = new NotificationProperties();
-
-            const props = new PersonSignInProperties(userId, joinDate, notificationProperties);
-
-            expect(props.notificationProperties).toBeEqual(notificationProperties);
-            expect(props.roles.length).toBeEqual(0);
         });
 
         it('should create sign-in properties with multiple roles', () => {
@@ -51,7 +25,7 @@ describe('PersonSignInProperties', () => {
             const joinDate = UtcDate.now;
             const roles: UserRole[] = ['person-manager', 'fineTemplate-manager', 'fine-manager', 'team-manager'];
 
-            const props = new PersonSignInProperties(userId, joinDate, new NotificationProperties(), roles);
+            const props = new PersonSignInProperties(userId, joinDate, roles);
 
             expect(props.roles.length).toBeEqual(4);
             expect(props.roles.includes('person-manager')).toBeTrue();
@@ -77,15 +51,13 @@ describe('PersonSignInProperties', () => {
         it('should return flattened representation with all properties', () => {
             const userId = User.Id.builder.build('user-flat-1');
             const joinDate = UtcDate.now;
-            const notificationProperties = new NotificationProperties();
             const roles: UserRole[] = ['fine-manager', 'fine-can-add'];
 
-            const props = new PersonSignInProperties(userId, joinDate, notificationProperties, roles);
+            const props = new PersonSignInProperties(userId, joinDate, roles);
             const flattened = props.flatten;
 
             expect(flattened.userId).toBeEqual('user-flat-1');
             expect(flattened.joinDate).toBeEqual(joinDate.flatten);
-            expect(flattened.notificationProperties).not.toBeUndefined();
             expect(flattened.roles.length).toBeEqual(2);
         });
 
@@ -97,7 +69,6 @@ describe('PersonSignInProperties', () => {
             const flattened = props.flatten;
 
             expect(flattened.userId).toBeEqual('user-flat-2');
-            expect(flattened.notificationProperties).not.toBeUndefined();
             expect(flattened.roles.length).toBeEqual(0);
         });
 
@@ -106,7 +77,7 @@ describe('PersonSignInProperties', () => {
             const joinDate = UtcDate.now;
             const roles: UserRole[] = ['person-manager'];
 
-            const props = new PersonSignInProperties(userId, joinDate, new NotificationProperties(), roles);
+            const props = new PersonSignInProperties(userId, joinDate, roles);
             const flattened = props.flatten;
 
             expect(flattened.userId).toBeEqual(userId.flatten);
@@ -123,7 +94,6 @@ describe('PersonSignInProperties', () => {
 
             expect(typeof flattened.userId).toBeEqual('string');
             expect(typeof flattened.joinDate).toBeEqual('string');
-            expect(typeof flattened.notificationProperties).toBeEqual('object');
             expect(Array.isArray(flattened.roles)).toBeTrue();
         });
 
@@ -132,7 +102,7 @@ describe('PersonSignInProperties', () => {
             const joinDate = UtcDate.now;
             const roles: UserRole[] = ['person-manager', 'fine-manager', 'team-manager'];
 
-            const props = new PersonSignInProperties(userId, joinDate, new NotificationProperties(), roles);
+            const props = new PersonSignInProperties(userId, joinDate, roles);
             const flattened = props.flatten;
 
             expect(flattened.roles.length).toBeEqual(3);
@@ -148,10 +118,6 @@ describe('PersonSignInProperties', () => {
             const flattened = {
                 userId: 'user-build-1',
                 joinDate: UtcDate.now.flatten,
-                notificationProperties: {
-                    tokens: {},
-                    subscriptions: []
-                },
                 roles: ['person-manager', 'fine-manager'] as UserRole[]
             };
 
@@ -166,10 +132,6 @@ describe('PersonSignInProperties', () => {
             const flattened = {
                 userId: 'user-build-2',
                 joinDate: UtcDate.now.flatten,
-                notificationProperties: {
-                    tokens: {},
-                    subscriptions: []
-                },
                 roles: [] as UserRole[]
             };
 
@@ -183,10 +145,6 @@ describe('PersonSignInProperties', () => {
             const flattened = {
                 userId: 'user-build-3',
                 joinDate: UtcDate.now.flatten,
-                notificationProperties: {
-                    tokens: {},
-                    subscriptions: []
-                },
                 roles: ['person-manager', 'fineTemplate-manager', 'fine-can-add', 'team-manager'] as UserRole[]
             };
 
@@ -202,7 +160,7 @@ describe('PersonSignInProperties', () => {
             const joinDate = UtcDate.now;
             const roles: UserRole[] = ['fine-manager', 'fine-can-add'];
 
-            const original = new PersonSignInProperties(userId, joinDate, new NotificationProperties(), roles);
+            const original = new PersonSignInProperties(userId, joinDate, roles);
             const rebuilt = PersonSignInProperties.builder.build(original.flatten);
 
             expect(rebuilt.userId.flatten).toBeEqual(original.userId.flatten);
@@ -222,19 +180,6 @@ describe('PersonSignInProperties', () => {
             expect(rebuilt.roles.length).toBeEqual(0);
         });
 
-        it('should preserve notification properties through round-trip', () => {
-            const userId = User.Id.builder.build('user-notif');
-            const joinDate = UtcDate.now;
-            const notificationProperties = new NotificationProperties();
-
-            const original = new PersonSignInProperties(userId, joinDate, notificationProperties, []);
-            const rebuilt = PersonSignInProperties.builder.build(original.flatten);
-
-            expect(rebuilt.notificationProperties).not.toBeUndefined();
-            expect(rebuilt.notificationProperties.tokens.values.length).toBeEqual(0);
-            expect(rebuilt.notificationProperties.subscriptions.length).toBeEqual(0);
-        });
-
         it('should build with different date values', () => {
             const testDateStrings = [
                 '2020-01-01T00:00:00.000Z',
@@ -246,10 +191,6 @@ describe('PersonSignInProperties', () => {
                 const flattened = {
                     userId: 'user-date-test',
                     joinDate: dateString,
-                    notificationProperties: {
-                        tokens: {},
-                        subscriptions: []
-                    },
                     roles: [] as UserRole[]
                 };
 

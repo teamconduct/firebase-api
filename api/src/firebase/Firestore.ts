@@ -128,6 +128,27 @@ export class Firestore {
     }
 
     /**
+     * Gets a reference to a user secrets document.
+     *
+     * @param id - The unique identifier of the user
+     * @returns A typed Firestore document reference for the user's secrets
+     *
+     * @example
+     * ```typescript
+     * const userSecretsDoc = Firestore.shared.userSecrets(userId);
+     * const userSecretsData = await userSecretsDoc.get();
+     * ```
+
+     */
+    public userSecrets(id: User.Id): FirestoreDocument<{
+        totpSecret: string | null
+    }> {
+        return this.base
+            .collection('userSecrets')
+            .document(id.value);
+    }
+
+    /**
      * Gets a reference to an invitation document.
      *
      * @param id - The unique identifier of the invitation

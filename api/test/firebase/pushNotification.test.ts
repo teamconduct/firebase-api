@@ -1,7 +1,7 @@
 import { describe, it } from 'mocha';
 import { expect } from '@assertive-ts/core';
 import { pushNotification } from '../../src/firebase/pushNotification';
-import { Team, Person, NotificationProperties } from '../../src/types/index';
+import { Team, Person, NotificationProperties, User } from '../../src/types/index';
 import { Dictionary, Guid } from '@stevenkellner/typescript-common-functionality';
 import { configureFirebase, Collection, Document } from './firebase-utils';
 import { Firestore } from '../../src';
@@ -51,10 +51,18 @@ describe('pushNotification', () => {
     describe('person is not subscribed to topic', () => {
         it('should return without sending when person is not subscribed', async () => {
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, ['fine-reminder'])
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })
@@ -75,10 +83,18 @@ describe('pushNotification', () => {
 
             let messagingCalled = false;
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-reminder']), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, ['new-fine', 'fine-reminder'], tokens)
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })
@@ -111,10 +127,18 @@ describe('pushNotification', () => {
 
             let messagingCalled = false;
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(tokens, ['fine-state-change']), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, ['fine-state-change'], tokens)
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })
@@ -148,10 +172,18 @@ describe('pushNotification', () => {
 
             let messagingCalled = false;
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine']), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, ['new-fine'], tokens)
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })
@@ -185,10 +217,18 @@ describe('pushNotification', () => {
 
             let messagingCalled = false;
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine']), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, ['new-fine'], tokens)
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })
@@ -219,13 +259,11 @@ describe('pushNotification', () => {
 
             expect(messagingCalled).toBeTrue();
 
-            const personSnapshot = await Firestore.shared.person(teamId, personId).snapshot();
-            expect(personSnapshot.exists).toBeTrue();
-            const person = Person.builder.build(personSnapshot.data);
-            expect(person.signInProperties).not.toBeNull();
-            const newTokens = person.signInProperties!.notificationProperties.tokens.values;
-            expect(newTokens.length).toBeEqual(3);
-            expect(newTokens).toContainAll('device-token-1', 'device-token-3', 'device-token-5');
+            const userSnapshot = await Firestore.shared.user(User.Id.builder.build('user-123')).snapshot();
+            expect(userSnapshot.exists).toBeTrue();
+            const user = User.builder.build(userSnapshot.data);
+            expect(user.settings.notification.tokens.values.length).toBeEqual(3);
+            expect(user.settings.notification.tokens.values).toContainAll('device-token-1', 'device-token-3', 'device-token-5');
         });
     });
 
@@ -236,10 +274,18 @@ describe('pushNotification', () => {
 
             let messagingCalled = false;
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-state-change', 'fine-reminder']), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, ['new-fine', 'fine-reminder', 'fine-state-change'], tokens)
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })
@@ -272,10 +318,18 @@ describe('pushNotification', () => {
 
             let messagingCalled = false;
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(tokens, ['fine-reminder']), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, ['fine-reminder'], tokens)
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })
@@ -307,10 +361,18 @@ describe('pushNotification', () => {
 
             let messagingCalled = false;
             configureFirebase({
+                users: Collection.docs({
+                    [User.Id.builder.build('user-123').value]: Document.user(
+                        User.Id.builder.build('user-123'),
+                        new User.UserProperties('Test', 'User', null, null),
+                        new User.UserSettings(new NotificationProperties(tokens, []), false),
+                        new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
+                    )
+                }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.personWithSubscriptions(personId, [], tokens)
+                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
                         })
                     })
                 })

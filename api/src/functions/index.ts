@@ -1,5 +1,6 @@
 export * from './team/new';
 export * from './user/login';
+export * from './user/loginAfter2FA';
 export * from './user/register';
 export * from './person/roleEdit';
 export * from './person/kickout';

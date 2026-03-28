@@ -1,5 +1,4 @@
 import { Flattable, ITypeBuilder, UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { NotificationProperties } from './NotificationProperties';
 import { User } from './User';
 import { UserRole } from './UserRole';
 
@@ -15,13 +14,11 @@ export class PersonSignInProperties implements Flattable<PersonSignInProperties.
      * Creates new person sign-in properties.
      * @param userId - The unique identifier of the user associated with this person
      * @param joinDate - The timestamp when the person joined the team
-     * @param notificationProperties - Optional notification preferences (defaults to new NotificationProperties)
      * @param roles - Optional array of user roles for access control (defaults to empty array)
      */
     public constructor(
         public userId: User.Id,
         public joinDate: UtcDate,
-        public notificationProperties: NotificationProperties = new NotificationProperties(),
         public roles: UserRole[] = []
     ) {}
 
@@ -32,7 +29,6 @@ export class PersonSignInProperties implements Flattable<PersonSignInProperties.
         return {
             userId: this.userId.flatten,
             joinDate: this.joinDate.flatten,
-            notificationProperties: this.notificationProperties.flatten,
             roles: this.roles
         };
     }
@@ -46,7 +42,6 @@ export namespace PersonSignInProperties {
     export type Flatten = {
         userId: User.Id.Flatten
         joinDate: UtcDate.Flatten,
-        notificationProperties: NotificationProperties.Flatten,
         roles: UserRole[]
     }
 
@@ -61,7 +56,7 @@ export namespace PersonSignInProperties {
          * @returns A new PersonSignInProperties instance
          */
         public build(value: Flatten): PersonSignInProperties {
-            return new PersonSignInProperties(User.Id.builder.build(value.userId), UtcDate.builder.build(value.joinDate), NotificationProperties.builder.build(value.notificationProperties), value.roles);
+            return new PersonSignInProperties(User.Id.builder.build(value.userId), UtcDate.builder.build(value.joinDate), value.roles);
         }
     }
 

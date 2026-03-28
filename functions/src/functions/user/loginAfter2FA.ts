@@ -1,9 +1,11 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Firestore, User, UserLoginFunction } from '@stevenkellner/team-conduct-api';
+import { Firestore, User, UserLoginAfter2FAFunction } from '@stevenkellner/team-conduct-api';
+// eslint-disable-next-line import/namespace
+import { TotpGenerator } from 'totp-native';
 
-export class UserLoginExecutableFunction extends UserLoginFunction implements ExecutableFirebaseFunction<null, User | '2FA_REQUIRED'> {
+export class UserLoginAfter2FAExecutableFunction extends UserLoginAfter2FAFunction implements ExecutableFirebaseFunction<UserLoginAfter2FAFunction.Parameters, User> {
 
-    public async execute(userAuthId: UserAuthId | null): Promise<User | '2FA_REQUIRED'> {
+    public async execute(userAuthId: UserAuthId | null, parameters: UserLoginAfter2FAFunction.Parameters): Promise<User> {
 
         if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User is not authenticated.');
@@ -21,9 +23,18 @@ export class UserLoginExecutableFunction extends UserLoginFunction implements Ex
         const userSecretsSnapshot = await Firestore.shared.userSecrets(userId).snapshot();
         if (!userSecretsSnapshot.exists)
             throw new FunctionsError('not-found', 'User secrets not found.');
+        const totpSecret = userSecretsSnapshot.data.totpSecret;
 
-        if (user.settings.twoFactorAuthEnabled && userSecretsSnapshot.data.totpSecret !== null)
-            return '2FA_REQUIRED';
+        if (!user.settings.twoFactorAuthEnabled || totpSecret === null)
+            throw new FunctionsError('failed-precondition', 'User does not have 2FA enabled.');
+
+        const totp = new TotpGenerator({
+            secret: totpSecret,
+            digits: 6,
+            algorithm: 'SHA512'
+        });
+        if (!(await totp.verify(parameters.totpToken)))
+            throw new FunctionsError('invalid-argument', 'Invalid 2FA code.');
 
         return user;
     }

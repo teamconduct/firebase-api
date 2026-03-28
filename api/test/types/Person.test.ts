@@ -2,7 +2,6 @@ import { expect } from '@assertive-ts/core';
 import { Person } from '../../src/types/Person';
 import { PersonProperties } from '../../src/types/PersonProperties';
 import { PersonSignInProperties } from '../../src/types/PersonSignInProperties';
-import { NotificationProperties } from '../../src/types/NotificationProperties';
 import { Fine } from '../../src/types/Fine';
 import { Guid, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { User } from '../../src/types/User';
@@ -48,7 +47,6 @@ describe('Person', () => {
                 const signInProperties = new PersonSignInProperties(
                     userId,
                     UtcDate.now,
-                    new NotificationProperties(),
                     []
                 );
 
@@ -147,7 +145,6 @@ describe('Person', () => {
                 const signInProperties = new PersonSignInProperties(
                     userId,
                     UtcDate.now,
-                    new NotificationProperties(),
                     []
                 );
 
@@ -295,7 +292,6 @@ describe('Person', () => {
                 const signInProperties = new PersonSignInProperties(
                     userId,
                     UtcDate.now,
-                    new NotificationProperties(),
                     []
                 );
 

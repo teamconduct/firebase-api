@@ -1,6 +1,6 @@
 import { Dictionary } from '@stevenkellner/typescript-common-functionality';
 import { Firestore } from './Firestore';
-import { NotificationProperties, Person, Team } from '../types';
+import { NotificationProperties, Person, Team, User } from '../types';
 import { FirebaseConfiguration, BatchResponse, Notification } from '.';
 
 /**
@@ -77,14 +77,22 @@ export async function pushNotification(teamId: Team.Id, personId: Person.Id, top
         return;
     const person = Person.builder.build(personSnapshot.data);
 
-    if (person.signInProperties === null || !person.signInProperties.notificationProperties.subscriptions.includes(topic))
+    if (person.signInProperties === null)
         return;
 
-    const tokens = person.signInProperties.notificationProperties.tokens.values;
+    const userSnapshot = await Firestore.shared.user(person.signInProperties.userId).snapshot();
+    if (!userSnapshot.exists)
+        return;
+    const user = User.builder.build(userSnapshot.data);
+
+    if (!user.settings.notification.subscriptions.includes(topic))
+        return;
+
+    const tokens = user.settings.notification.tokens.values;
     const response = await FirebaseConfiguration.shared.messaging.sendEachForMulticast({
         tokens: tokens,
         notification: notification
     });
-    person.signInProperties.notificationProperties.tokens = successfulTokens(response, tokens);
-    await Firestore.shared.person(teamId, personId).set(person);
+    user.settings.notification.tokens = successfulTokens(response, tokens);
+    await Firestore.shared.user(person.signInProperties.userId).set(user);
 }

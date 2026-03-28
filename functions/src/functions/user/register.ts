@@ -1,6 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Firestore, User, UserRegisterFunction } from '@stevenkellner/team-conduct-api';
-import { UtcDate } from '@stevenkellner/typescript-common-functionality';
+import { Firestore, NotificationProperties, User, UserRegisterFunction } from '@stevenkellner/team-conduct-api';
+import { Dictionary, UtcDate } from '@stevenkellner/typescript-common-functionality';
 
 export class UserRegisterExecutableFunction extends UserRegisterFunction implements ExecutableFirebaseFunction<UserRegisterFunction.Parameters, User> {
 
@@ -19,8 +19,11 @@ export class UserRegisterExecutableFunction extends UserRegisterFunction impleme
 
         const batch = Firestore.shared.batch();
         batch.set(Firestore.shared.userAuth(userAuthId), { userId: parameters.userId });
-        const user = new User(parameters.userId, UtcDate.now, parameters.signInType);
+        const userProperties = new User.UserProperties(parameters.firstName, parameters.lastName, null, null);
+        const userSettings = new User.UserSettings(new NotificationProperties(new Dictionary(NotificationProperties.TokenId.builder), [...NotificationProperties.Subscription.all]), false);
+        const user = new User(parameters.userId, UtcDate.now, parameters.signInType, userProperties, userSettings);
         batch.set(Firestore.shared.user(parameters.userId), user);
+        batch.set(Firestore.shared.userSecrets(parameters.userId), { totpSecret: null });
         await batch.commit();
 
         return user;

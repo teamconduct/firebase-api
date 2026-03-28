@@ -60,7 +60,6 @@ export class RandomData {
         return new PersonSignInProperties(
             userId ?? new Tagged(uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }), 'user'),
             this.date(),
-            this.notificationProperties(),
             new Array(Math.floor(Math.random() * UserRole.all.length)).fill(null).map(() => UserRole.all[Math.floor(Math.random() * UserRole.all.length)])
         );
     }

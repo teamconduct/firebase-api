@@ -2,7 +2,7 @@ import { FirestoreCollection } from '@stevenkellner/firebase-function';
 import { FirebaseApp } from './FirebaseApp/FirebaseApp';
 import { assert, expect } from '@assertive-ts/core'
 import { deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, collection, Firestore, getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
-import { Team, User } from '@stevenkellner/team-conduct-api';
+import { NotificationProperties, Team, User } from '@stevenkellner/team-conduct-api';
 import { Guid, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { RandomData } from './utils/RandomData';
 
@@ -39,6 +39,8 @@ describe('Firebase Rules', () => {
         await firestore.collection('userAuthIdDict').document('123').collection('subCollection').document('456').set({ data: 'test' });
         await firestore.collection('users').document('123').set({ data: 'test' });
         await firestore.collection('users').document('123').collection('subCollection').document('456').set({ data: 'test' });
+        await firestore.collection('userSecrets').document('123').set({ data: 'test' });
+        await firestore.collection('userSecrets').document('123').collection('subCollection').document('456').set({ data: 'test' });
         await firestore.collection('teams').document('123').set({ data: 'test' });
         await firestore.collection('teams').document('123').collection('subCollection').document('456').set({ data: 'test' });
         await firestore.collection('other').document('123').set({ data: 'test' });
@@ -50,6 +52,8 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => setDoc(doc(firestore, 'userAuthIdDict/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'users/123'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'users/123/subCollection/456'), { data: 'test' }));
+        await expectPermissionDenied(() => setDoc(doc(firestore, 'userSecrets/123'), { data: 'test' }));
+        await expectPermissionDenied(() => setDoc(doc(firestore, 'userSecrets/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'teams/123'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'teams/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'other/123'), { data: 'test' }));
@@ -62,6 +66,8 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'userAuthIdDict/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'users/123'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'users/123/subCollection/456'), { data: 'test' }));
+        await expectPermissionDenied(() => updateDoc(doc(firestore, 'userSecrets/123'), { data: 'test' }));
+        await expectPermissionDenied(() => updateDoc(doc(firestore, 'userSecrets/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'teams/123'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'teams/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'other/123'), { data: 'test' }));
@@ -86,6 +92,8 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => getDoc(doc(firestore, 'userAuthIdDict/123/subCollection/456')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'users/123')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'users/123/subCollection/456')));
+        await expectPermissionDenied(() => getDoc(doc(firestore, 'userSecrets/123')));
+        await expectPermissionDenied(() => getDoc(doc(firestore, 'userSecrets/123/subCollection/456')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'other/123')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'other/123/subCollection/456')));
     });
@@ -96,6 +104,8 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'userAuthIdDict/123/subCollection'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'users'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'users/123/subCollection'))));
+        await expectPermissionDenied(() => getDocs(query(collection(firestore, 'userSecrets'))));
+        await expectPermissionDenied(() => getDocs(query(collection(firestore, 'userSecrets/123/subCollection'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'other'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'other/123/subCollection'))));
     });
@@ -119,7 +129,7 @@ describe('Firebase Rules', () => {
         await createTestDocuments();
         const userId = RandomData.shared.userId();
         await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
-        await FirebaseApp.shared.firestore.user(userId).set(new User(userId, UtcDate.now, new User.SignInTypeOAuth('google')));
+        await FirebaseApp.shared.firestore.user(userId).set(new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false)));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'teams/123')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'teams/123/subCollection/456')));
     });
@@ -129,7 +139,7 @@ describe('Firebase Rules', () => {
         await createTestDocuments();
         const userId = RandomData.shared.userId();
         await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
-        const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'));
+        const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties(), false));
         const teamId: Team.Id = new Tagged('123' as unknown as Guid, 'team');
         user.teams.set(teamId, new User.TeamProperties(teamId, 'test', Tagged.generate('person')));
         await FirebaseApp.shared.firestore.user(userId).set(user);
