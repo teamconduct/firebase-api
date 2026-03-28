@@ -16,15 +16,7 @@ export class UserLoginExecutableFunction extends UserLoginFunction implements Ex
         const userSnapshot = await Firestore.shared.user(userId).snapshot();
         if (!userSnapshot.exists)
             throw new FunctionsError('not-found', 'User not found.');
-        const user = User.builder.build(userSnapshot.data);
 
-        const userSecretsSnapshot = await Firestore.shared.userSecrets(userId).snapshot();
-        if (!userSecretsSnapshot.exists)
-            throw new FunctionsError('not-found', 'User secrets not found.');
-
-        if (user.settings.twoFactorAuthEnabled && userSecretsSnapshot.data.totpSecret !== null)
-            return '2FA_REQUIRED';
-
-        return user;
+        return User.builder.build(userSnapshot.data);
     }
 }

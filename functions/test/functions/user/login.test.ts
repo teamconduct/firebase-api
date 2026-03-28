@@ -4,7 +4,6 @@ import { Result } from '@stevenkellner/typescript-common-functionality';
 import { FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { User } from '@stevenkellner/team-conduct-api';
 import { RandomData } from '../../utils/RandomData';
-import { TotpGenerator } from 'totp-native';
 
 describe('UserLoginFunction', () => {
 
@@ -13,7 +12,6 @@ describe('UserLoginFunction', () => {
 
     beforeEach(async () => {
         userAuthId = await FirebaseApp.shared.addTestTeam([], userId);
-        await FirebaseApp.shared.firestore.userSecrets(userId).set({ totpSecret: null });
     });
 
     afterEach(async () => {
@@ -37,22 +35,6 @@ describe('UserLoginFunction', () => {
         await FirebaseApp.shared.firestore.user(userId).remove();
         const result = await FirebaseApp.shared.functions.user.login.executeWithResult(null);
         expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'User not found.')));
-    });
-
-    it('user secrets not found', async () => {
-        await FirebaseApp.shared.firestore.userSecrets(userId).remove();
-        const result = await FirebaseApp.shared.functions.user.login.executeWithResult(null);
-        expect(result).toBeEqual(Result.failure(new FunctionsError('not-found', 'User secrets not found.')));
-    });
-
-    it('2FA required', async () => {
-        const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
-        const user = User.builder.build(userSnapshot.data);
-        user.settings.twoFactorAuthEnabled = true;
-        await FirebaseApp.shared.firestore.user(userId).set(user);
-        await FirebaseApp.shared.firestore.userSecrets(userId).set({ totpSecret: TotpGenerator.generateSecret() });
-        const result = await FirebaseApp.shared.functions.user.login.execute(null);
-        expect(result).toBeEqual('2FA_REQUIRED');
     });
 
     it('login', async () => {

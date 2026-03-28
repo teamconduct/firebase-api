@@ -39,8 +39,6 @@ describe('Firebase Rules', () => {
         await firestore.collection('userAuthIdDict').document('123').collection('subCollection').document('456').set({ data: 'test' });
         await firestore.collection('users').document('123').set({ data: 'test' });
         await firestore.collection('users').document('123').collection('subCollection').document('456').set({ data: 'test' });
-        await firestore.collection('userSecrets').document('123').set({ data: 'test' });
-        await firestore.collection('userSecrets').document('123').collection('subCollection').document('456').set({ data: 'test' });
         await firestore.collection('teams').document('123').set({ data: 'test' });
         await firestore.collection('teams').document('123').collection('subCollection').document('456').set({ data: 'test' });
         await firestore.collection('other').document('123').set({ data: 'test' });
@@ -52,8 +50,6 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => setDoc(doc(firestore, 'userAuthIdDict/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'users/123'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'users/123/subCollection/456'), { data: 'test' }));
-        await expectPermissionDenied(() => setDoc(doc(firestore, 'userSecrets/123'), { data: 'test' }));
-        await expectPermissionDenied(() => setDoc(doc(firestore, 'userSecrets/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'teams/123'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'teams/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => setDoc(doc(firestore, 'other/123'), { data: 'test' }));
@@ -66,8 +62,6 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'userAuthIdDict/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'users/123'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'users/123/subCollection/456'), { data: 'test' }));
-        await expectPermissionDenied(() => updateDoc(doc(firestore, 'userSecrets/123'), { data: 'test' }));
-        await expectPermissionDenied(() => updateDoc(doc(firestore, 'userSecrets/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'teams/123'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'teams/123/subCollection/456'), { data: 'test' }));
         await expectPermissionDenied(() => updateDoc(doc(firestore, 'other/123'), { data: 'test' }));
@@ -92,8 +86,6 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => getDoc(doc(firestore, 'userAuthIdDict/123/subCollection/456')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'users/123')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'users/123/subCollection/456')));
-        await expectPermissionDenied(() => getDoc(doc(firestore, 'userSecrets/123')));
-        await expectPermissionDenied(() => getDoc(doc(firestore, 'userSecrets/123/subCollection/456')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'other/123')));
         await expectPermissionDenied(() => getDoc(doc(firestore, 'other/123/subCollection/456')));
     });
@@ -104,8 +96,6 @@ describe('Firebase Rules', () => {
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'userAuthIdDict/123/subCollection'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'users'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'users/123/subCollection'))));
-        await expectPermissionDenied(() => getDocs(query(collection(firestore, 'userSecrets'))));
-        await expectPermissionDenied(() => getDocs(query(collection(firestore, 'userSecrets/123/subCollection'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'other'))));
         await expectPermissionDenied(() => getDocs(query(collection(firestore, 'other/123/subCollection'))));
     });

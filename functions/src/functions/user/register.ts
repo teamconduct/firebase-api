@@ -23,7 +23,6 @@ export class UserRegisterExecutableFunction extends UserRegisterFunction impleme
         const userSettings = new User.UserSettings(new NotificationProperties(new Dictionary(NotificationProperties.TokenId.builder), [...NotificationProperties.Subscription.all]), false);
         const user = new User(parameters.userId, UtcDate.now, parameters.signInType, userProperties, userSettings);
         batch.set(Firestore.shared.user(parameters.userId), user);
-        batch.set(Firestore.shared.userSecrets(parameters.userId), { totpSecret: null });
         await batch.commit();
 
         return user;

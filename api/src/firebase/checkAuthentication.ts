@@ -71,14 +71,6 @@ export async function checkAuthentication(userAuthId: UserAuthId | null, teamId:
         throw new FunctionsError('permission-denied', 'User does not exist');
     const user = User.builder.build(userSnapshot.data);
 
-    if (user.settings.twoFactorAuthEnabled) {
-        const userSecretsSnapshot = await Firestore.shared.userSecrets(userId).snapshot();
-        if (!userSecretsSnapshot.exists || userSecretsSnapshot.data.totpSecret === null)
-            throw new FunctionsError('permission-denied', 'User has 2FA enabled but no TOTP secret found');
-
-        throw new FunctionsError('permission-denied', 'User has 2FA enabled but has not completed 2FA verification'); // TODO
-    }
-
     if (!user.teams.has(teamId))
         throw new FunctionsError('permission-denied', 'User is not a member of the team');
     const team = user.teams.get(teamId);

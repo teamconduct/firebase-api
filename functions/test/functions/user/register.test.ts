@@ -83,10 +83,6 @@ describe('UserRegisterFunction', () => {
         expect(storedUser.properties.bio).toBeNull();
         expect(storedUser.properties.profilePictureUrl).toBeNull();
         expect(storedUser.settings.twoFactorAuthEnabled).toBeFalse();
-
-        const userSecretsSnapshot = await FirebaseApp.shared.firestore.userSecrets(userId).snapshot();
-        expect(userSecretsSnapshot.exists).toBeTrue();
-        expect(userSecretsSnapshot.data.totpSecret).toBeNull();
     });
 
     it('register with email', async () => {
@@ -121,10 +117,5 @@ describe('UserRegisterFunction', () => {
         expect(storedUser.properties.bio).toBeNull();
         expect(storedUser.properties.profilePictureUrl).toBeNull();
         expect(storedUser.settings.twoFactorAuthEnabled).toBeFalse();
-
-        const userSecretsSnapshot = await FirebaseApp.shared.firestore.userSecrets(userId).snapshot();
-        expect(userSecretsSnapshot.exists).toBeTrue();
-        expect(userSecretsSnapshot.data.totpSecret).toBeNull();
-
     });
 });

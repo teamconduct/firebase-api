@@ -1,7 +1,7 @@
 import { FirebaseFunctionsContext } from '@stevenkellner/firebase-function';
 import {
     // TeamNewFunction,
-    UserLoginFunction, UserLoginAfter2FAFunction, UserRegisterFunction
+    UserLoginFunction, UserRegisterFunction
     // PaypalMeEditFunction, NotificationRegisterFunction, NotificationSubscribeFunction,
     // InvitationInviteFunction, InvitationWithdrawFunction, InvitationGetInvitationFunction, InvitationRegisterFunction,
     // PersonAddFunction, PersonDeleteFunction, PersonUpdateFunction, UserKickoutFunction, UserRoleEditFunction,
@@ -15,7 +15,6 @@ export const firebaseFunctionsContext = FirebaseFunctionsContext.build(builder =
     // },
     user: {
         login: builder.function(UserLoginFunction),
-        loginAfter2FA: builder.function(UserLoginAfter2FAFunction),
         register: builder.function(UserRegisterFunction)
     }
     // paypalMe: {

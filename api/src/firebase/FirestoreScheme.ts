@@ -22,11 +22,6 @@ export type FirestoreScheme = FirestoreDocument<never, {
     users: FirestoreCollection<{
         [UserId in string]: FirestoreDocument<User>
     }>
-    userSecrets: FirestoreCollection<{
-        [UserId in string]: FirestoreDocument<{
-            totpSecret: string | null
-        }>
-    }>
     invitations: FirestoreCollection<{
         [InvitationId in string]: FirestoreDocument<Invitation>
     }>
