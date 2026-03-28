@@ -1,6 +1,7 @@
 import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { NotificationProperties } from '../../types';
-import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, UnionTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { StaticUnionTypeBuilder } from '../../utils';
 
 export namespace UserUpdateFunction {
 
@@ -18,10 +19,10 @@ export namespace UserUpdateFunction {
 export class UserUpdateFunction implements FirebaseFunction<UserUpdateFunction.Parameters, null> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserUpdateFunction.Parameters>, UserUpdateFunction.Parameters>({
-        name: new ValueTypeBuilder(),
-        bio: new ValueTypeBuilder(),
-        profilePictureUrl: new ValueTypeBuilder(),
-        notificationSubscriptions: new UnionTypeBuilder(value => value === 'do-not-update' ? 'T2' : 'T1', new ArrayTypeBuilder(new ValueTypeBuilder()), new ValueTypeBuilder())
+        name: StaticUnionTypeBuilder.doNotUpdate(new ValueTypeBuilder()),
+        bio: StaticUnionTypeBuilder.doNotUpdateRemove(new ValueTypeBuilder()),
+        profilePictureUrl: StaticUnionTypeBuilder.doNotUpdateRemove(new ValueTypeBuilder()),
+        notificationSubscriptions: StaticUnionTypeBuilder.doNotUpdate(new ArrayTypeBuilder(new ValueTypeBuilder()))
     });
 
     public returnTypeBuilder = new ValueTypeBuilder<null>();

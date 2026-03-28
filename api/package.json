@@ -22,7 +22,7 @@
         "release": "npm run rebuild && npm run lint && npm version patch && git push --follow-tags"
     },
     "dependencies": {
-        "@stevenkellner/firebase-function": "^1.4.145",
+        "@stevenkellner/firebase-function": "^1.4.148",
         "@stevenkellner/typescript-common-functionality": "^1.0.62",
         "firebase-admin": "^13.6.0"
     },
