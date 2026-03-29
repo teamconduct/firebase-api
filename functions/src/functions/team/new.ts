@@ -3,9 +3,9 @@ import { Person, PersonProperties, PersonSignInProperties, Team, TeamNewFunction
 import { Firestore } from '../../firebase';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 
-export class TeamNewExecutableFunction extends TeamNewFunction implements ExecutableFirebaseFunction<TeamNewFunction.Parameters, null> {
+export class TeamNewExecutableFunction extends TeamNewFunction implements ExecutableFirebaseFunction<TeamNewFunction.Parameters, void> {
 
-    public async execute(userAuthId: UserAuthId | null, parameters: TeamNewFunction.Parameters): Promise<null> {
+    public async execute(userAuthId: UserAuthId | null, parameters: TeamNewFunction.Parameters): Promise<void> {
 
         if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User is not authenticated');
@@ -37,7 +37,5 @@ export class TeamNewExecutableFunction extends TeamNewFunction implements Execut
         batch.set(Firestore.shared.person(parameters.id, parameters.teamPersonId), person);
 
         await batch.commit();
-
-        return null;
     }
 }

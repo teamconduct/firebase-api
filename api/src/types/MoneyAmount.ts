@@ -1,6 +1,6 @@
 import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Configuration } from './Configuration';
 import { Currency } from './Currency';
+import { Locale } from './Locale';
 
 /**
  * Represents a monetary amount with integer value and subunit components.
@@ -62,11 +62,11 @@ export class MoneyAmount implements Flattable<MoneyAmount.Flatten> {
      * Uses Intl.NumberFormat for proper currency formatting based on locale.
      *
      * @param currency - The currency code (e.g., 'USD', 'EUR')
-     * @param configuration - Configuration containing locale information
+     * @param locale - The locale information for formatting
      * @returns Formatted currency string (e.g., "$12.50", "12,50 €")
      */
-    public formatted(currency: Currency, configuration: Configuration): string {
-        const numberFormat = Intl.NumberFormat(configuration.locale, {
+    public formatted(currency: Currency, locale: Locale): string {
+        const numberFormat = Intl.NumberFormat(locale, {
             style: 'currency',
             currency: currency
         });

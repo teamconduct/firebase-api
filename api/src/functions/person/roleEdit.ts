@@ -2,7 +2,7 @@ import { FirebaseFunction } from '@stevenkellner/firebase-function';
 import { Person, Team, TeamRole } from '../../types';
 import { ArrayTypeBuilder, Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
-export namespace TeamRoleEditFunction {
+export namespace PersonRoleEditFunction {
 
     export type Parameters = {
         teamId: Team.Id
@@ -11,9 +11,9 @@ export namespace TeamRoleEditFunction {
     };
 }
 
-export class TeamRoleEditFunction implements FirebaseFunction<TeamRoleEditFunction.Parameters, void> {
+export class PersonRoleEditFunction implements FirebaseFunction<PersonRoleEditFunction.Parameters, void> {
 
-    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamRoleEditFunction.Parameters>, TeamRoleEditFunction.Parameters>({
+    public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<PersonRoleEditFunction.Parameters>, PersonRoleEditFunction.Parameters>({
         teamId: Team.Id.builder,
         personId: Person.Id.builder,
         roles: new ArrayTypeBuilder(new ValueTypeBuilder())

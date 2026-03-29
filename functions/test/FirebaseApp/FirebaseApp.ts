@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { initializeApp } from 'firebase/app';
 import { FirebaseAuth } from './FirebaseAuth';
 import { FirebaseFirestore } from './FirebaseFirestore';
-import { Configuration, User, PersonSignInProperties, Team, NotificationProperties, firebaseFunctionsContext, TeamRole } from '@stevenkellner/team-conduct-api';
+import { User, PersonSignInProperties, Team, NotificationProperties, firebaseFunctionsContext, TeamRole } from '@stevenkellner/team-conduct-api';
 import { getFirestore } from 'firebase-admin/firestore';
 import { FirestoreDocument, UserAuthId, createCallableClientFirebaseFunctions } from '@stevenkellner/firebase-function';
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions';
@@ -91,9 +91,5 @@ export class FirebaseApp {
         if (this._testTeam === null)
             throw new Error('No test team created');
         return this._testTeam;
-    }
-
-    public get testConfiguration(): Configuration {
-        return new Configuration('EUR', 'en');
     }
 }

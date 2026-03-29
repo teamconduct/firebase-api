@@ -20,7 +20,7 @@ export namespace TeamUpdateFunction {
     };
 }
 
-export class TeamUpdateFunction implements FirebaseFunction<TeamUpdateFunction.Parameters, null> {
+export class TeamUpdateFunction implements FirebaseFunction<TeamUpdateFunction.Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamUpdateFunction.Parameters>, TeamUpdateFunction.Parameters>({
         id: Team.Id.builder,
@@ -36,5 +36,5 @@ export class TeamUpdateFunction implements FirebaseFunction<TeamUpdateFunction.P
         locale: StaticUnionTypeBuilder.doNotUpdate(Locale.builder)
     });
 
-    public returnTypeBuilder = new ValueTypeBuilder<null>();
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 }

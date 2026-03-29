@@ -1,4 +1,3 @@
-export * from './Configuration';
 export * from './Fine';
 export * from './FineAmount';
 export * from './FineTemplate';

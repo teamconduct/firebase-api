@@ -1,8 +1,8 @@
 import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { MoneyAmount } from './MoneyAmount';
-import { Configuration } from './Configuration';
 import { Localization } from './Localization';
 import { Locale } from './Locale';
+import { Currency } from '../..';
 
 /**
  * Represents the amount of a fine, either as a monetary value or as items.
@@ -35,8 +35,8 @@ export namespace FineAmount {
          * @param configuration - Configuration containing currency and locale
          * @returns Formatted currency string (e.g., "$10.50")
          */
-        public formatted(configuration: Configuration): string {
-            return this.amount.formatted(configuration.currency, configuration);
+        public formatted(currency: Currency, locale: Locale): string {
+            return this.amount.formatted(currency, locale);
         }
 
         /**
@@ -114,16 +114,7 @@ export namespace FineAmount {
          * @param locale - The locale for formatting
          * @returns Formatted string (e.g., "2 crates of beer")
          */
-        public formatted(locale: Locale): string;
-        /**
-         * Returns a formatted string representation including count.
-         *
-         * @param configuration - Configuration containing locale
-         * @returns Formatted string (e.g., "2 crates of beer")
-         */
-        public formatted(configuration: Configuration): string;
-        public formatted(configurationOrLocale: Configuration | Locale): string {
-            const locale = configurationOrLocale instanceof Configuration ? configurationOrLocale.locale : configurationOrLocale;
+        public formatted(currency: Currency, locale: Locale): string {
             return Localization.shared(locale).fineAmount.item.type[this.item].withCount.value(this.count);
         }
 

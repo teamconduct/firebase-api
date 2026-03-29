@@ -9,11 +9,11 @@ export namespace TeamDeleteFunction {
     };
 }
 
-export class TeamDeleteFunction implements FirebaseFunction<TeamDeleteFunction.Parameters, null> {
+export class TeamDeleteFunction implements FirebaseFunction<TeamDeleteFunction.Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamDeleteFunction.Parameters>, TeamDeleteFunction.Parameters>({
         id: Team.Id.builder
     });
 
-    public returnTypeBuilder = new ValueTypeBuilder<null>();
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 }

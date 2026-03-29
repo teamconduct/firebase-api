@@ -5,7 +5,7 @@ import { Flattable, ObjectTypeBuilder, ValueTypeBuilder } from '@stevenkellner/t
 export namespace PersonAddFunction {
 
     export type Parameters = {
-        teamId: Team.Id
+        teamId: Team.Id,
         id: Person.Id,
         properties: PersonProperties
     };

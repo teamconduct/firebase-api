@@ -16,7 +16,7 @@ export namespace UserUpdateFunction {
     };
 }
 
-export class UserUpdateFunction implements FirebaseFunction<UserUpdateFunction.Parameters, null> {
+export class UserUpdateFunction implements FirebaseFunction<UserUpdateFunction.Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<UserUpdateFunction.Parameters>, UserUpdateFunction.Parameters>({
         name: StaticUnionTypeBuilder.doNotUpdate(new ValueTypeBuilder()),
@@ -25,5 +25,5 @@ export class UserUpdateFunction implements FirebaseFunction<UserUpdateFunction.P
         notificationSubscriptions: StaticUnionTypeBuilder.doNotUpdate(new ArrayTypeBuilder(new ValueTypeBuilder()))
     });
 
-    public returnTypeBuilder = new ValueTypeBuilder<null>();
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 }

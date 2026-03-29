@@ -2,9 +2,9 @@ import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenk
 import { User, UserUpdateFunction } from '@stevenkellner/team-conduct-api';
 import { Firestore } from '../../firebase';
 
-export class UserUpdateExecutableFunction extends UserUpdateFunction implements ExecutableFirebaseFunction<UserUpdateFunction.Parameters, null> {
+export class UserUpdateExecutableFunction extends UserUpdateFunction implements ExecutableFirebaseFunction<UserUpdateFunction.Parameters, void> {
 
-    public async execute(userAuthId: UserAuthId | null, parameters: UserUpdateFunction.Parameters): Promise<null> {
+    public async execute(userAuthId: UserAuthId | null, parameters: UserUpdateFunction.Parameters): Promise<void> {
 
         if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User is not authenticated');
@@ -34,7 +34,5 @@ export class UserUpdateExecutableFunction extends UserUpdateFunction implements 
             user.settings.notification.subscriptions = parameters.notificationSubscriptions;
 
         await Firestore.shared.user(userId).set(user);
-
-        return null;
     }
 }

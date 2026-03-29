@@ -2,9 +2,9 @@ import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenk
 import { TeamUpdateFunction, Team } from '@stevenkellner/team-conduct-api';
 import { checkAuthentication, Firestore } from '../../firebase';
 
-export class TeamUpdateExecutableFunction extends TeamUpdateFunction implements ExecutableFirebaseFunction<TeamUpdateFunction.Parameters, null> {
+export class TeamUpdateExecutableFunction extends TeamUpdateFunction implements ExecutableFirebaseFunction<TeamUpdateFunction.Parameters, void> {
 
-    public async execute(userAuthId: UserAuthId | null, parameters: TeamUpdateFunction.Parameters): Promise<null> {
+    public async execute(userAuthId: UserAuthId | null, parameters: TeamUpdateFunction.Parameters): Promise<void> {
 
         await checkAuthentication(userAuthId, parameters.id, 'team-manager');
 
@@ -44,7 +44,5 @@ export class TeamUpdateExecutableFunction extends TeamUpdateFunction implements 
             team.settings.locale = parameters.locale;
 
         await Firestore.shared.team(parameters.id).set(team);
-
-        return null;
     }
 }

@@ -2,9 +2,9 @@ import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenk
 import { User, UserLoginFunction } from '@stevenkellner/team-conduct-api';
 import { Firestore } from '../../firebase';
 
-export class UserLoginExecutableFunction extends UserLoginFunction implements ExecutableFirebaseFunction<null, User | '2FA_REQUIRED'> {
+export class UserLoginExecutableFunction extends UserLoginFunction implements ExecutableFirebaseFunction<null, User> {
 
-    public async execute(userAuthId: UserAuthId | null): Promise<User | '2FA_REQUIRED'> {
+    public async execute(userAuthId: UserAuthId | null): Promise<User> {
 
         if (userAuthId === null)
             throw new FunctionsError('unauthenticated', 'User is not authenticated.');

@@ -17,7 +17,7 @@ export namespace TeamNewFunction {
     };
 }
 
-export class TeamNewFunction implements FirebaseFunction<TeamNewFunction.Parameters, null> {
+export class TeamNewFunction implements FirebaseFunction<TeamNewFunction.Parameters, void> {
 
     public parametersBuilder = new ObjectTypeBuilder<Flattable.Flatten<TeamNewFunction.Parameters>, TeamNewFunction.Parameters>({
         id: Team.Id.builder,
@@ -31,5 +31,5 @@ export class TeamNewFunction implements FirebaseFunction<TeamNewFunction.Paramet
         locale: Locale.builder
     });
 
-    public returnTypeBuilder = new ValueTypeBuilder<null>();
+    public returnTypeBuilder = new ValueTypeBuilder<void>();
 }

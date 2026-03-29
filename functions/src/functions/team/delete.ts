@@ -2,9 +2,9 @@ import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenk
 import { TeamDeleteFunction, User } from '@stevenkellner/team-conduct-api';
 import { checkAuthentication, Firestore } from '../../firebase';
 
-export class TeamDeleteExecutableFunction extends TeamDeleteFunction implements ExecutableFirebaseFunction<TeamDeleteFunction.Parameters, null> {
+export class TeamDeleteExecutableFunction extends TeamDeleteFunction implements ExecutableFirebaseFunction<TeamDeleteFunction.Parameters, void> {
 
-    public async execute(userAuthId: UserAuthId | null, parameters: TeamDeleteFunction.Parameters): Promise<null> {
+    public async execute(userAuthId: UserAuthId | null, parameters: TeamDeleteFunction.Parameters): Promise<void> {
 
         const userId = await checkAuthentication(userAuthId, parameters.id, 'team-manager');
 
@@ -22,7 +22,5 @@ export class TeamDeleteExecutableFunction extends TeamDeleteFunction implements 
         await batch.removeAllSubCollections(Firestore.shared.team(parameters.id));
 
         await batch.commit();
-
-        return null;
     }
 }
