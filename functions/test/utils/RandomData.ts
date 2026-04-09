@@ -1,6 +1,6 @@
 import { Dictionary, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { adjectives, animals, colors, names, starWars, uniqueNamesGenerator } from 'unique-names-generator';
-import { Fine, FineAmount, FineTemplate, PayedState, Person, Team, User, TeamRole, FineTemplateRepetition, MoneyAmount, NotificationProperties, PersonSignInProperties, PersonProperties } from '@stevenkellner/team-conduct-api';
+import { Fine, FineTemplate, PayedState, Person, Team, User, TeamRole, Money, NotificationProperties, PersonSignInProperties, PersonProperties } from '@stevenkellner/team-conduct-api';
 
 export class RandomData {
 
@@ -73,21 +73,21 @@ export class RandomData {
         );
     }
 
-    public moneyAmount(): MoneyAmount {
-        return new MoneyAmount(
+    public money(): Money {
+        return new Money(
             Math.floor(Math.random() * 100),
             Math.floor(Math.random() * 100)
         );
     }
 
-    public fineAmount(): FineAmount {
+    public fineAmount(): Fine.Amount {
         if (Math.random() > 0.5) {
-            return FineAmount.item(
-                FineAmount.Item.Type.all[Math.floor(Math.random() * FineAmount.Item.Type.all.length)],
+            return Fine.Amount.item(
+                Fine.Amount.Item.Type.all[Math.floor(Math.random() * Fine.Amount.Item.Type.all.length)],
                 Math.floor(Math.random() * 100)
             );
         }
-        return FineAmount.money(this.moneyAmount());
+        return Fine.Amount.money(this.money());
     }
 
     public fine(id: Fine.Id | null = null, date: UtcDate | null = null): Fine {
@@ -100,9 +100,9 @@ export class RandomData {
         );
     }
 
-    public fineTemplateRepetition(): FineTemplateRepetition {
-        return new FineTemplateRepetition(
-            FineTemplateRepetition.Item.all[Math.floor(Math.random() * FineTemplateRepetition.Item.all.length)],
+    public fineTemplateRepetition(): FineTemplate.Repetition {
+        return new FineTemplate.Repetition(
+            FineTemplate.Repetition.Item.all[Math.floor(Math.random() * FineTemplate.Repetition.Item.all.length)],
             Math.random() > 0.5 ? null : Math.floor(Math.random() * 100)
         );
     }

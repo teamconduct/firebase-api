@@ -26,8 +26,8 @@ export class TeamNewExecutableFunction extends TeamNewFunction implements Execut
         user.teams.set(parameters.id, teamProperties);
         batch.set(Firestore.shared.user(userId), user);
 
-        const teamSettings = new Team.TeamSettings(parameters.paypalMeLink, true, 'all-fines', 'public-link-with-approval', parameters.currency, parameters.locale)
-        const team = new Team(parameters.id, parameters.name, parameters.teamLogoUrl, parameters.teamSportCategory, parameters.teamDescription, teamSettings);
+        const teamSettings = new Team.Settings(parameters.paypalMeLink, true, 'all-fines', 'public-link-with-approval', parameters.currency, parameters.locale)
+        const team = new Team(parameters.id, parameters.name, parameters.logoUrl, parameters.sportCategory, parameters.description, teamSettings);
         batch.set(Firestore.shared.team(parameters.id), team);
 
 

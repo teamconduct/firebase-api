@@ -1,6 +1,6 @@
 import { BytesCoder, Flattable, ITypeBuilder, OptionalTypeBuilder, Sha512, Tagged, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
 import { Team } from './Team';
-import { Person } from './Person';
+import { Person } from '../person/Person';
 
 /**
  * Represents an invitation to join a team.

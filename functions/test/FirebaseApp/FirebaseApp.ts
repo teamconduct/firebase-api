@@ -64,10 +64,10 @@ export class FirebaseApp {
 
     private* internal_createTestTeam(testTeam: TestTeam, userAuthId: UserAuthId, userId: User.Id, roles: TeamRole[]): Generator<Promise<unknown>> {
         yield FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
-        const user = new User(userId, UtcDate.now, new User.SignInTypeOAuth('google'), new User.UserProperties(testTeam.persons[0].properties.firstName, testTeam.persons[0].properties.lastName, null, null), new User.UserSettings(new NotificationProperties()));
+        const user = new User(userId, UtcDate.now, new User.SignInType.OAuth('google'), new User.Properties(testTeam.persons[0].properties.firstName, testTeam.persons[0].properties.lastName ?? '', null, null), new User.Settings(new NotificationProperties()));
         user.teams.set(testTeam.id, new User.TeamProperties(testTeam.id, testTeam.name, testTeam.persons[0].id));
         yield FirebaseApp.shared.firestore.user(userId).set(user);
-        yield FirebaseApp.shared.firestore.team(testTeam.id).set(new Team(testTeam.id, testTeam.name, null, null, null, new Team.TeamSettings(null, true, 'all-fines', 'public-link-with-approval', 'USD', 'en')));
+        yield FirebaseApp.shared.firestore.team(testTeam.id).set(new Team(testTeam.id, testTeam.name, null, null, null, new Team.Settings(null, true, 'all-fines', 'public-link-with-approval', 'USD', 'en')));
         for (const [index, person] of testTeam.persons.entries()) {
             if (index === 0)
                 person.signInProperties = new PersonSignInProperties(userId, UtcDate.now, roles);

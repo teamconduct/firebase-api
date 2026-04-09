@@ -1,5 +1,5 @@
-import { Pluralization } from '../types/Pluralization';
-import { LocalizationDict } from '../types/Localization';
+import { Pluralization } from '../types/localization/Pluralization';
+import { LocalizationDict } from '../types/localization/Localization';
 
 /**
  * German (de) localization strings for the application.

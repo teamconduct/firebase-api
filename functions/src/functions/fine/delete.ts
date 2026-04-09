@@ -1,5 +1,5 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { FineAmount, FineDeleteFunction, Person, Team } from '@stevenkellner/team-conduct-api';
+import { Fine, FineDeleteFunction, Person, Team } from '@stevenkellner/team-conduct-api';
 import { checkAuthentication, Firestore, NotificationSender } from '../../firebase';
 
 export class FineDeleteExecutableFunction extends FineDeleteFunction implements ExecutableFirebaseFunction<FineDeleteFunction.Parameters, void> {
@@ -32,6 +32,6 @@ export class FineDeleteExecutableFunction extends FineDeleteFunction implements 
         await batch.commit();
 
         await NotificationSender.for(parameters.teamId, parameters.personId)
-            .fineDeleted(fineSnapshot.data.reason, FineAmount.builder.build(fineSnapshot.data.amount), teamSettings);
+            .fineDeleted(fineSnapshot.data.reason, Fine.Amount.builder.build(fineSnapshot.data.amount), teamSettings);
     }
 }

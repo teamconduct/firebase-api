@@ -1,5 +1,5 @@
-import { Pluralization } from '../types/Pluralization';
-import { SubLocalizationType } from '../types/Localization';
+import { Pluralization } from '../types/localization/Pluralization';
+import { SubLocalizationType } from '../types/localization/Localization';
 
 /**
  * Helper function to ensure a value satisfies the Localization structure

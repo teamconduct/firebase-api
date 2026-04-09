@@ -1,7 +1,7 @@
+import { Flattable, Guid, ITypeBuilder, Tagged } from '@stevenkellner/typescript-common-functionality';
 import { PersonProperties } from './PersonProperties';
 import { PersonSignInProperties } from './PersonSignInProperties';
-import { Fine } from './Fine';
-import { Flattable, Guid, ITypeBuilder, Tagged } from '@stevenkellner/typescript-common-functionality';
+import { Fine } from '../fine/Fine';
 
 /**
  * Represents a person within a team, including their personal details, assigned fines, and optional sign-in properties.
@@ -14,7 +14,7 @@ export class Person implements Flattable<Person.Flatten> {
      * Creates a new Person instance.
      *
      * @param id - Unique identifier for the person (GUID)
-     * @param properties - Private properties including first name and optional last name
+     * @param properties - Personal properties including first name and last name
      * @param fineIds - Array of fine IDs assigned to this person (defaults to empty array)
      * @param signInProperties - Optional sign-in properties if the person has signed in (defaults to null)
      */

@@ -1,21 +1,21 @@
 import { Flattable, ITypeBuilder } from '@stevenkellner/typescript-common-functionality';
 
 /**
- * Represents the private properties of a person.
+ * Represents the personal properties of a person within a team.
  *
- * Contains personal information that is private to the person,
- * such as their name. The last name is optional.
+ * Contains identification information such as first and last name.
  */
 export class PersonProperties implements Flattable<PersonProperties.Flatten> {
 
     /**
-     * Creates new person private properties.
+     * Creates new person properties.
+     *
      * @param firstName - The first name of the person
      * @param lastName - The last name of the person (null if not provided)
      */
     constructor(
         public firstName: string,
-        public lastName: string
+        public lastName: string | null = null
     ) {}
 
     /**
@@ -32,11 +32,11 @@ export class PersonProperties implements Flattable<PersonProperties.Flatten> {
 export namespace PersonProperties {
 
     /**
-     * Flattened representation of person private properties for serialization.
+     * Flattened representation of person properties for serialization.
      */
     export type Flatten = {
         firstName: string;
-        lastName: string;
+        lastName: string | null;
     }
 
     /**
@@ -46,7 +46,8 @@ export namespace PersonProperties {
 
         /**
          * Builds a PersonProperties instance from flattened data.
-         * @param value - The flattened person private properties data
+         *
+         * @param value - The flattened person properties data
          * @returns A new PersonProperties instance
          */
         public build(value: Flatten): PersonProperties {

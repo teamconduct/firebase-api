@@ -16,14 +16,14 @@ export class TeamUpdateExecutableFunction extends TeamUpdateFunction implements 
         if (parameters.name !== 'do-not-update')
             team.name = parameters.name;
 
-        if (parameters.teamLogoUrl !== 'do-not-update')
-            team.teamLogoUrl = parameters.teamLogoUrl === 'remove' ? null : parameters.teamLogoUrl;
+        if (parameters.logoUrl !== 'do-not-update')
+            team.logoUrl = parameters.logoUrl === 'remove' ? null : parameters.logoUrl;
 
-        if (parameters.teamSportCategory !== 'do-not-update')
-            team.teamSportCategory = parameters.teamSportCategory === 'remove' ? null : parameters.teamSportCategory;
+        if (parameters.sportCategory !== 'do-not-update')
+            team.sportCategory = parameters.sportCategory === 'remove' ? null : parameters.sportCategory;
 
-        if (parameters.teamDescription !== 'do-not-update')
-            team.teamDescription = parameters.teamDescription === 'remove' ? null : parameters.teamDescription;
+        if (parameters.description !== 'do-not-update')
+            team.description = parameters.description === 'remove' ? null : parameters.description;
 
         if (parameters.paypalMeLink !== 'do-not-update')
             team.settings.paypalMeLink = parameters.paypalMeLink === 'remove' ? null : parameters.paypalMeLink;

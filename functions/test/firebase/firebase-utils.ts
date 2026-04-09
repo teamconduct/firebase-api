@@ -86,7 +86,7 @@ export class Document {
         return new Document(collections, data);
     }
 
-    public static user(id: User.Id, properties: User.UserProperties, settings: User.UserSettings, teams: Dictionary<Team.Id, User.TeamProperties>): Document {
+    public static user(id: User.Id, properties: User.Properties, settings: User.Settings, teams: Dictionary<Team.Id, User.TeamProperties>): Document {
         return Document.collsAndData(
             { notifications: Collection.dynamic() },
             User.builder.build({
@@ -161,7 +161,6 @@ export function configureFirebase(collections: Record<string, Collection>, messa
 }
 
 export function restoreFirebase() {
-    if (savedConfig) {
+    if (savedConfig)
         FirebaseConfiguration.shared.reconfigure(savedConfig);
-    }
 }

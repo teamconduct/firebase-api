@@ -1,5 +1,5 @@
 import { Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { MoneyAmount, Fine, FineAmount, Person, PersonProperties, FineTemplate, FineTemplateRepetition } from '@stevenkellner/team-conduct-api';
+import { Money, Fine, FineTemplate, Person, PersonProperties } from '@stevenkellner/team-conduct-api';
 import { TestTeam } from './TestTeam';
 
 const fineIds: [Fine.Id, Fine.Id, Fine.Id] = [
@@ -27,14 +27,14 @@ export const testTeam1: TestTeam = {
         new FineTemplate(
             Tagged.generate('fineTemplate'),
             'Fine Template 1',
-            FineAmount.money(new MoneyAmount(10, 50)),
+            Fine.Amount.money(new Money(10, 50)),
             null
         ),
         new FineTemplate(
             Tagged.generate('fineTemplate'),
             'Fine Template 2',
-            FineAmount.item('crateOfBeer', 1),
-            new FineTemplateRepetition('day', 3)
+            Fine.Amount.item('crateOfBeer', 1),
+            new FineTemplate.Repetition('day', 3)
         )
     ],
     fines: [
@@ -43,21 +43,21 @@ export const testTeam1: TestTeam = {
             'notPayed',
             UtcDate.now,
             'Fine 1',
-            FineAmount.money(new MoneyAmount(10, 50))
+            Fine.Amount.money(new Money(10, 50))
         ),
         new Fine(
             fineIds[1],
             'payed',
             UtcDate.now,
             'Fine 2',
-            FineAmount.item('crateOfBeer', 2)
+            Fine.Amount.item('crateOfBeer', 2)
         ),
         new Fine(
             fineIds[2],
             'notPayed',
             UtcDate.now,
             'Fine 3',
-            FineAmount.money(new MoneyAmount(5, 0))
+            Fine.Amount.money(new Money(5, 0))
         )
     ]
 };

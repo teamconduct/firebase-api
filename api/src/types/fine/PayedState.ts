@@ -1,6 +1,6 @@
 import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Localization } from './Localization';
-import { Locale } from './Locale';
+import { Localization } from '../localization/Localization';
+import { Locale } from '../localization/Locale';
 
 const payedStates = ['payed', 'notPayed'] as const;
 

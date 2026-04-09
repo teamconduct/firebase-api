@@ -2,15 +2,15 @@ import { describe, it, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
 import { Dictionary, Guid } from '@stevenkellner/typescript-common-functionality';
 import { configureFirebase, restoreFirebase, Collection, Document } from './firebase-utils';
-import { Fine, FineAmount, MoneyAmount, NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
+import { Fine, Money, NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
 import { Firestore, NotificationSender } from '../../src/firebase';
 
 describe('NotificationSender', () => {
     const teamId = Team.Id.builder.build(Guid.generate().guidString);
     const personId = Person.Id.builder.build(Guid.generate().guidString);
     const fineId = Fine.Id.builder.build(Guid.generate().guidString);
-    const amount = new FineAmount.Money(new MoneyAmount(10, 0));
-    const teamSettings = new Team.TeamSettings(null, false, 'all-fines', 'invite-only', 'EUR', 'de');
+    const amount = new Fine.Amount.Money(new Money(10, 0));
+    const teamSettings = new Team.Settings(null, false, 'all-fines', 'invite-only', 'EUR', 'de');
 
     afterEach(() => restoreFirebase());
 
@@ -52,8 +52,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties()),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties()),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -81,8 +81,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-reminder'])),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties(tokens, ['new-fine', 'fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -122,8 +122,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['fine-state-change'])),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties(tokens, ['fine-state-change'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -164,8 +164,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine'])),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties(tokens, ['new-fine'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -206,8 +206,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine'])),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties(tokens, ['new-fine'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -260,8 +260,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['new-fine', 'fine-state-change', 'fine-reminder'])),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties(tokens, ['new-fine', 'fine-state-change', 'fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -301,8 +301,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, ['fine-reminder'])),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties(tokens, ['fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),
@@ -341,8 +341,8 @@ describe('NotificationSender', () => {
                 users: Collection.docs({
                     [User.Id.builder.build('user-123').value]: Document.user(
                         User.Id.builder.build('user-123'),
-                        new User.UserProperties('Test', 'User', null, null),
-                        new User.UserSettings(new NotificationProperties(tokens, [])),
+                        new User.Properties('Test', 'User', null, null),
+                        new User.Settings(new NotificationProperties(tokens, [])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
                     )
                 }),

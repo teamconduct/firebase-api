@@ -1,6 +1,6 @@
 import { Dictionary, Flattable, ITypeBuilder, Tagged, UtcDate, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Team } from './Team';
-import { Person } from './Person';
+import { Team } from '../team/Team';
+import { Person } from '../person/Person';
 import { NotificationProperties } from './NotificationProperties';
 
 /**
@@ -13,15 +13,20 @@ export class User implements Flattable<User.Flatten> {
 
     /**
      * Creates a new User instance.
+     *
      * @param id - The unique identifier for this user
+     * @param signInDate - The date when the user signed in
+     * @param signInType - The authentication method used
+     * @param properties - The user's profile properties
+     * @param settings - The user's app settings
      * @param teams - Dictionary mapping team IDs to team-specific user properties
      */
     public constructor(
         public id: User.Id,
         public signInDate: UtcDate,
         public signInType: User.SignInType,
-        public properties: User.UserProperties,
-        public settings: User.UserSettings,
+        public properties: User.Properties,
+        public settings: User.Settings,
         public teams: Dictionary<Team.Id, User.TeamProperties> = new Dictionary(Team.Id.builder)
     ) {}
 
@@ -61,130 +66,134 @@ export namespace User {
     }
 
     /**
-     * Represents email-based authentication sign-in type.
-     *
-     * Used when a user signs in using their email address.
-     */
-    export class SignInTypeEmail implements Flattable<SignInTypeEmail.Flatten> {
-
-        /**
-         * Creates a new email sign-in type.
-         * @param email - The email address used for authentication
-         */
-        public constructor(
-            public email: string
-        ) {}
-
-        /**
-         * Gets the flattened representation for serialization.
-         */
-        public get flatten(): SignInTypeEmail.Flatten {
-            return {
-                type: 'email',
-                email: this.email
-            };
-        }
-    }
-
-    export namespace SignInTypeEmail {
-
-        /**
-         * Flattened representation of email sign-in type for serialization.
-         */
-        export type Flatten = {
-            type: 'email',
-            email: string
-        };
-
-        /**
-         * Builder for constructing SignInTypeEmail instances from flattened data.
-         */
-        export class TypeBuilder implements ITypeBuilder<Flatten, SignInTypeEmail> {
-
-            /**
-             * Builds a SignInTypeEmail instance from flattened data.
-             * @param value - The flattened email sign-in type data
-             * @returns A new SignInTypeEmail instance
-             */
-            public build(value: Flatten): SignInTypeEmail {
-                return new SignInTypeEmail(value.email);
-            }
-        }
-
-        /**
-         * Singleton builder instance for SignInTypeEmail.
-         */
-        export const builder = new TypeBuilder();
-    }
-
-    /**
-     * Represents OAuth-based authentication sign-in type.
-     *
-     * Used when a user signs in using an OAuth provider (Google or Apple).
-     */
-    export class SignInTypeOAuth implements Flattable<SignInTypeOAuth.Flatten> {
-
-        /**
-         * Creates a new OAuth sign-in type.
-         * @param provider - The OAuth provider used for authentication ('google' or 'apple')
-         */
-        public constructor(
-            public provider: 'google' | 'apple'
-        ) {}
-
-        /**
-         * Gets the flattened representation for serialization.
-         */
-        public get flatten(): SignInTypeOAuth.Flatten {
-            return {
-                type: this.provider
-            };
-        }
-    }
-
-    export namespace SignInTypeOAuth {
-
-        /**
-         * Flattened representation of OAuth sign-in type for serialization.
-         */
-        export type Flatten = {
-            type: 'google' | 'apple'
-        };
-
-        /**
-         * Builder for constructing SignInTypeOAuth instances from flattened data.
-         */
-        export class TypeBuilder implements ITypeBuilder<Flatten, SignInTypeOAuth> {
-
-            /**
-             * Builds a SignInTypeOAuth instance from flattened data.
-             * @param value - The flattened OAuth sign-in type data
-             * @returns A new SignInTypeOAuth instance
-             */
-            public build(value: Flatten): SignInTypeOAuth {
-                return new SignInTypeOAuth(value.type);
-            }
-        }
-
-        /**
-         * Singleton builder instance for SignInTypeOAuth.
-         */
-        export const builder = new TypeBuilder();
-    }
-
-    /**
      * Union type representing any sign-in method.
      *
      * Can be either email-based or OAuth-based authentication.
      */
-    export type SignInType = SignInTypeEmail | SignInTypeOAuth;
+    export type SignInType = SignInType.Email | SignInType.OAuth;
 
     export namespace SignInType {
 
         /**
+         * Represents email-based authentication sign-in type.
+         *
+         * Used when a user signs in using their email address.
+         */
+        export class Email implements Flattable<Email.Flatten> {
+
+            /**
+             * Creates a new email sign-in type.
+             *
+             * @param email - The email address used for authentication
+             */
+            public constructor(
+                public email: string
+            ) {}
+
+            /**
+             * Gets the flattened representation for serialization.
+             */
+            public get flatten(): Email.Flatten {
+                return {
+                    type: 'email',
+                    email: this.email
+                };
+            }
+        }
+
+        export namespace Email {
+
+            /**
+             * Flattened representation of email sign-in type for serialization.
+             */
+            export type Flatten = {
+                type: 'email',
+                email: string
+            };
+
+            /**
+             * Builder for constructing Email instances from flattened data.
+             */
+            export class TypeBuilder implements ITypeBuilder<Flatten, Email> {
+
+                /**
+                 * Builds an Email instance from flattened data.
+                 *
+                 * @param value - The flattened email sign-in type data
+                 * @returns A new Email instance
+                 */
+                public build(value: Flatten): Email {
+                    return new Email(value.email);
+                }
+            }
+
+            /**
+             * Singleton builder instance for Email.
+             */
+            export const builder = new TypeBuilder();
+        }
+
+        /**
+         * Represents OAuth-based authentication sign-in type.
+         *
+         * Used when a user signs in using an OAuth provider (Google or Apple).
+         */
+        export class OAuth implements Flattable<OAuth.Flatten> {
+
+            /**
+             * Creates a new OAuth sign-in type.
+             *
+             * @param provider - The OAuth provider used for authentication ('google' or 'apple')
+             */
+            public constructor(
+                public provider: 'google' | 'apple'
+            ) {}
+
+            /**
+             * Gets the flattened representation for serialization.
+             */
+            public get flatten(): OAuth.Flatten {
+                return {
+                    type: this.provider
+                };
+            }
+        }
+
+        export namespace OAuth {
+
+            /**
+             * Flattened representation of OAuth sign-in type for serialization.
+             */
+            export type Flatten = {
+                type: 'google' | 'apple'
+            };
+
+            /**
+             * Builder for constructing OAuth instances from flattened data.
+             */
+            export class TypeBuilder implements ITypeBuilder<Flatten, OAuth> {
+
+                /**
+                 * Builds an OAuth instance from flattened data.
+                 *
+                 * @param value - The flattened OAuth sign-in type data
+                 * @returns A new OAuth instance
+                 */
+                public build(value: Flatten): OAuth {
+                    return new OAuth(value.type);
+                }
+            }
+
+            /**
+             * Singleton builder instance for OAuth.
+             */
+            export const builder = new TypeBuilder();
+        }
+
+        /**
          * Flattened representation of any sign-in type for serialization.
          */
-        export type Flatten = SignInTypeEmail.Flatten | SignInTypeOAuth.Flatten;
+        export type Flatten = Email.Flatten | OAuth.Flatten;
 
         /**
          * Builder for constructing SignInType instances from flattened data.
@@ -197,14 +206,15 @@ export namespace User {
              * Builds a SignInType instance from flattened data.
              *
              * Routes to the appropriate builder based on the type field.
+             *
              * @param value - The flattened sign-in type data
-             * @returns Either a SignInTypeEmail or SignInTypeOAuth instance
+             * @returns Either an Email or OAuth instance
              */
             public build(value: Flatten): SignInType {
                 if (value.type === 'email')
-                    return SignInTypeEmail.builder.build(value);
+                    return Email.builder.build(value);
                 else
-                    return SignInTypeOAuth.builder.build(value);
+                    return OAuth.builder.build(value);
             }
         }
 
@@ -215,16 +225,17 @@ export namespace User {
     }
 
     /**
-     * Represents a user's name, bio, and profile picture URL.
+     * Represents a user's profile information.
      */
-    export class UserProperties implements Flattable<UserProperties.Flatten> {
+    export class Properties implements Flattable<Properties.Flatten> {
 
         /**
-         * Creates a new UserProperties instance.
+         * Creates a new Properties instance.
+         *
          * @param firstName - The user's first name
          * @param lastName - The user's last name
-         * @param bio - The user's bio
-         * @param profilePictureUrl - The URL of the user's profile picture
+         * @param bio - The user's bio (null if not set)
+         * @param profilePictureUrl - The URL of the user's profile picture (null if not set)
          */
         public constructor(
             public firstName: string,
@@ -233,7 +244,10 @@ export namespace User {
             public profilePictureUrl: string | null = null
         ) {}
 
-        public get flatten(): UserProperties.Flatten {
+        /**
+         * Gets the flattened representation for serialization.
+         */
+        public get flatten(): Properties.Flatten {
             return {
                 firstName: this.firstName,
                 lastName: this.lastName,
@@ -243,7 +257,7 @@ export namespace User {
         }
     }
 
-    export namespace UserProperties {
+    export namespace Properties {
 
         /**
          * Flattened representation of a user's properties for serialization.
@@ -256,33 +270,35 @@ export namespace User {
         };
 
         /**
-         * Builder for constructing UserProperties instances from flattened data.
+         * Builder for constructing Properties instances from flattened data.
          */
-        export class TypeBuilder implements ITypeBuilder<Flatten, UserProperties> {
+        export class TypeBuilder implements ITypeBuilder<Flatten, Properties> {
 
             /**
-             * Builds a UserProperties instance from flattened data.
+             * Builds a Properties instance from flattened data.
+             *
              * @param value - The flattened user properties data
-             * @returns A new UserProperties instance
+             * @returns A new Properties instance
              */
-            public build(value: Flatten): UserProperties {
-                return new UserProperties(value.firstName, value.lastName, value.bio, value.profilePictureUrl);
+            public build(value: Flatten): Properties {
+                return new Properties(value.firstName, value.lastName, value.bio, value.profilePictureUrl);
             }
         }
 
         /**
-         * Singleton builder instance for UserProperties.
+         * Singleton builder instance for Properties.
          */
         export const builder = new TypeBuilder();
     }
 
     /**
-     * Properties that are specific to a user's membership in a particular team.
+     * Properties specific to a user's membership in a particular team.
      */
     export class TeamProperties implements Flattable<TeamProperties.Flatten> {
 
         /**
          * Creates new team-specific user properties.
+         *
          * @param teamId - The ID of the team
          * @param teamName - The display name of the team
          * @param personId - The ID of the person associated with this user in this team
@@ -323,6 +339,7 @@ export namespace User {
 
             /**
              * Builds a TeamProperties instance from flattened data.
+             *
              * @param value - The flattened team properties data
              * @returns A new TeamProperties instance
              */
@@ -337,8 +354,16 @@ export namespace User {
         export const builder = new TypeBuilder();
     }
 
-    export class UserSettings implements Flattable<UserSettings.Flatten> {
+    /**
+     * App-level settings for a user.
+     */
+    export class Settings implements Flattable<Settings.Flatten> {
 
+        /**
+         * Creates new user settings.
+         *
+         * @param notification - The user's notification preferences and device tokens
+         */
         public constructor(
             public notification: NotificationProperties
         ) {}
@@ -346,14 +371,14 @@ export namespace User {
         /**
          * Gets the flattened representation of these user settings for serialization.
          */
-        public get flatten(): UserSettings.Flatten {
+        public get flatten(): Settings.Flatten {
             return {
                 notification: this.notification.flatten
             };
         }
     }
 
-    export namespace UserSettings {
+    export namespace Settings {
 
         /**
          * Flattened representation of user settings for serialization.
@@ -363,22 +388,23 @@ export namespace User {
         };
 
         /**
-         * Builder for constructing UserSettings instances from flattened data.
+         * Builder for constructing Settings instances from flattened data.
          */
-        export class TypeBuilder implements ITypeBuilder<Flatten, UserSettings> {
+        export class TypeBuilder implements ITypeBuilder<Flatten, Settings> {
 
             /**
-             * Builds a UserSettings instance from flattened data.
+             * Builds a Settings instance from flattened data.
+             *
              * @param value - The flattened user settings data
-             * @returns A new UserSettings instance
+             * @returns A new Settings instance
              */
-            public build(value: Flatten): UserSettings {
-                return new UserSettings(NotificationProperties.builder.build(value.notification));
+            public build(value: Flatten): Settings {
+                return new Settings(NotificationProperties.builder.build(value.notification));
             }
         }
 
         /**
-         * Singleton builder instance for UserSettings.
+         * Singleton builder instance for Settings.
          */
         export const builder = new TypeBuilder();
     }
@@ -390,8 +416,8 @@ export namespace User {
         id: Id.Flatten,
         signInDate: string,
         signInType: SignInType.Flatten,
-        properties: UserProperties.Flatten,
-        settings: UserSettings.Flatten,
+        properties: Properties.Flatten,
+        settings: Settings.Flatten,
         teams: Dictionary.Flatten<TeamProperties>
     }
 
@@ -402,11 +428,19 @@ export namespace User {
 
         /**
          * Builds a User instance from flattened data.
+         *
          * @param value - The flattened user data
          * @returns A new User instance with all teams reconstructed
          */
         public build(value: Flatten): User {
-            return new User(Id.builder.build(value.id), UtcDate.builder.build(value.signInDate), SignInType.builder.build(value.signInType), User.UserProperties.builder.build(value.properties), User.UserSettings.builder.build(value.settings), Dictionary.builder(Team.Id.builder, User.TeamProperties.builder).build(value.teams));
+            return new User(
+                Id.builder.build(value.id),
+                UtcDate.builder.build(value.signInDate),
+                SignInType.builder.build(value.signInType),
+                Properties.builder.build(value.properties),
+                Settings.builder.build(value.settings),
+                Dictionary.builder(Team.Id.builder, User.TeamProperties.builder).build(value.teams)
+            );
         }
     }
 

@@ -1,6 +1,6 @@
 import { ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
-import { Localization, localizations } from './Localization';
-import { Locale } from './Locale';
+import { Localization, localizations } from '../localization/Localization';
+import { Locale } from '../localization/Locale';
 
 /**
  * Array of all available team roles.
@@ -20,6 +20,7 @@ const teamRoles = [
 export type TeamRole = typeof teamRoles[number];
 
 export namespace TeamRole {
+
     /**
      * Array of all available team roles.
      */
@@ -27,6 +28,7 @@ export namespace TeamRole {
 
     /**
      * Returns the localized, human-readable name for a team role.
+     *
      * @param role - The team role to format
      * @param locale - The locale to use for localization
      * @returns The localized role name
@@ -38,7 +40,7 @@ export namespace TeamRole {
             'fine-manager': 'fineManager',
             'fine-can-add': 'fineCanAdd',
             'team-manager': 'teamManager'
-        }
+        };
         return Localization.shared(locale).teamRole[localizationKeyMap[role]].value();
     }
 

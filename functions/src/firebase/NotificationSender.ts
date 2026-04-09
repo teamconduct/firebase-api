@@ -1,5 +1,5 @@
 import { Dictionary, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { Fine, FineAmount, InAppNotification, Localization, NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
+import { Fine, InAppNotification, Localization, NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
 import { Firestore } from './Firestore';
 import { FirebaseConfiguration, Notification, BatchResponse } from '.';
 
@@ -30,7 +30,7 @@ export class NotificationSender {
         return new NotificationSenderForUser(userId);
     }
 
-    public async newFine(fineId: Fine.Id, reason: string, amount: FineAmount, teamSettings: Team.TeamSettings): Promise<void> {
+    public async newFine(fineId: Fine.Id, reason: string, amount: Fine.Amount, teamSettings: Team.Settings): Promise<void> {
         const localization = Localization.shared(teamSettings.locale);
         await this.send(
             'new-fine',
@@ -44,7 +44,7 @@ export class NotificationSender {
         );
     }
 
-    public async finePayed(fineId: Fine.Id, reason: string, amount: FineAmount, teamSettings: Team.TeamSettings): Promise<void> {
+    public async finePayed(fineId: Fine.Id, reason: string, amount: Fine.Amount, teamSettings: Team.Settings): Promise<void> {
         const localization = Localization.shared(teamSettings.locale);
         await this.send(
             'fine-state-change',
@@ -59,7 +59,7 @@ export class NotificationSender {
         );
     }
 
-    public async fineUnpayed(fineId: Fine.Id, reason: string, amount: FineAmount, teamSettings: Team.TeamSettings): Promise<void> {
+    public async fineUnpayed(fineId: Fine.Id, reason: string, amount: Fine.Amount, teamSettings: Team.Settings): Promise<void> {
         const localization = Localization.shared(teamSettings.locale);
         await this.send(
             'fine-state-change',
@@ -74,7 +74,7 @@ export class NotificationSender {
         );
     }
 
-    public async fineChanged(fineId: Fine.Id, reason: string, teamSettings: Team.TeamSettings): Promise<void> {
+    public async fineChanged(fineId: Fine.Id, reason: string, teamSettings: Team.Settings): Promise<void> {
         const localization = Localization.shared(teamSettings.locale);
         await this.send(
             'fine-changed',
@@ -86,7 +86,7 @@ export class NotificationSender {
         );
     }
 
-    public async fineDeleted(reason: string, amount: FineAmount, teamSettings: Team.TeamSettings): Promise<void> {
+    public async fineDeleted(reason: string, amount: Fine.Amount, teamSettings: Team.Settings): Promise<void> {
         const localization = Localization.shared(teamSettings.locale);
         await this.send(
             'fine-state-change',

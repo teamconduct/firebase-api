@@ -10,6 +10,7 @@ export class NotificationProperties implements Flattable<NotificationProperties.
 
     /**
      * Creates new notification properties.
+     *
      * @param tokens - Dictionary mapping token IDs to device tokens for push notifications (defaults to empty)
      * @param subscriptions - Array of notification types the user is subscribed to (defaults to empty)
      */
@@ -42,6 +43,7 @@ export namespace NotificationProperties {
         /**
          * Creates a token ID from a device token by hashing it with SHA-512.
          * Only the first 16 characters of the hash are used as the identifier.
+         *
          * @param token - The device push notification token
          * @returns A hashed token ID for secure storage and lookup
          */
@@ -77,6 +79,7 @@ export namespace NotificationProperties {
 
     /**
      * Type representing the available notification subscription options.
+     *
      * - new-fine: Notifications when a new fine is created
      * - fine-changed: Notifications when a fine is updated (non-payed-state change)
      * - fine-reminder: Reminder notifications for unpaid fines
@@ -89,7 +92,7 @@ export namespace NotificationProperties {
         /**
          * Readonly array of all available subscription types.
          */
-        export const all: readonly Subscription[] = subscriptions
+        export const all: readonly Subscription[] = subscriptions;
 
         /**
          * Builder for constructing Subscription values from strings.
@@ -112,11 +115,15 @@ export namespace NotificationProperties {
 
         /**
          * Builds a NotificationProperties instance from flattened data.
+         *
          * @param value - The flattened notification properties data
          * @returns A new NotificationProperties instance
          */
         public build(value: Flatten): NotificationProperties {
-            return new NotificationProperties(Dictionary.builder(TokenId.builder, new ValueTypeBuilder<string>()).build(value.tokens), value.subscriptions);
+            return new NotificationProperties(
+                Dictionary.builder(TokenId.builder, new ValueTypeBuilder<string>()).build(value.tokens),
+                value.subscriptions
+            );
         }
     }
 

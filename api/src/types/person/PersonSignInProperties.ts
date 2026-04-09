@@ -1,20 +1,21 @@
 import { Flattable, ITypeBuilder, UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { User } from './User';
-import { TeamRole } from './TeamRole';
+import { User } from '../user/User';
+import { TeamRole } from '../team/TeamRole';
 
 /**
  * Represents the sign-in properties for a person in the system.
  *
  * Contains authentication-related information including user ID, sign-in timestamp,
- * notification preferences, and assigned user roles for access control.
+ * and assigned team roles for access control.
  */
 export class PersonSignInProperties implements Flattable<PersonSignInProperties.Flatten> {
 
     /**
      * Creates new person sign-in properties.
+     *
      * @param userId - The unique identifier of the user associated with this person
      * @param joinDate - The timestamp when the person joined the team
-     * @param roles - Optional array of user roles for access control (defaults to empty array)
+     * @param roles - Optional array of team roles for access control (defaults to empty array)
      */
     public constructor(
         public userId: User.Id,
@@ -52,11 +53,16 @@ export namespace PersonSignInProperties {
 
         /**
          * Builds a PersonSignInProperties instance from flattened data.
+         *
          * @param value - The flattened sign-in properties data
          * @returns A new PersonSignInProperties instance
          */
         public build(value: Flatten): PersonSignInProperties {
-            return new PersonSignInProperties(User.Id.builder.build(value.userId), UtcDate.builder.build(value.joinDate), value.roles);
+            return new PersonSignInProperties(
+                User.Id.builder.build(value.userId),
+                UtcDate.builder.build(value.joinDate),
+                value.roles
+            );
         }
     }
 

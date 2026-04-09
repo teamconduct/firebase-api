@@ -37,6 +37,7 @@ export class Pluralization {
 
     /**
      * Creates a new Pluralization instance with specified plural forms.
+     *
      * @param countLocals - Object containing plural forms for different count categories
      * @param countLocals.zero - Optional form for zero items
      * @param countLocals.one - Optional form for one item

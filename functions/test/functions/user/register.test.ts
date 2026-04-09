@@ -21,7 +21,7 @@ describe('UserRegisterFunction', () => {
         await FirebaseApp.shared.auth.signOut();
         const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
             userId: userId,
-            signInType: new User.SignInTypeOAuth('google'),
+            signInType: new User.SignInType.OAuth('google'),
             firstName: 'Test',
             lastName: 'User'
         });
@@ -33,7 +33,7 @@ describe('UserRegisterFunction', () => {
         await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
         const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
             userId: userId,
-            signInType: new User.SignInTypeOAuth('google'),
+            signInType: new User.SignInType.OAuth('google'),
             firstName: 'Test',
             lastName: 'User'
         });
@@ -41,11 +41,11 @@ describe('UserRegisterFunction', () => {
     });
 
     it('user already exists', async () => {
-        const user = new User(userId, RandomData.shared.date(), new User.SignInTypeOAuth('google'), new User.UserProperties('Test', 'User', null, null), new User.UserSettings(new NotificationProperties()));
+        const user = new User(userId, RandomData.shared.date(), new User.SignInType.OAuth('google'), new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()));
         await FirebaseApp.shared.firestore.user(userId).set(user);
         const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
             userId: userId,
-            signInType: new User.SignInTypeOAuth('google'),
+            signInType: new User.SignInType.OAuth('google'),
             firstName: 'Test',
             lastName: 'User'
         });
@@ -56,13 +56,13 @@ describe('UserRegisterFunction', () => {
         const userAuthId = await FirebaseApp.shared.auth.signIn();
         const registeredUser = await FirebaseApp.shared.functions.user.register.execute({
             userId: userId,
-            signInType: new User.SignInTypeOAuth('google'),
+            signInType: new User.SignInType.OAuth('google'),
             firstName: 'Test',
             lastName: 'User'
         });
 
         expect(registeredUser.id).toBeEqual(userId);
-        expect(registeredUser.signInType).toBeEqual(new User.SignInTypeOAuth('google'));
+        expect(registeredUser.signInType).toBeEqual(new User.SignInType.OAuth('google'));
         expect(registeredUser.properties.firstName).toBeEqual('Test');
         expect(registeredUser.properties.lastName).toBeEqual('User');
         expect(registeredUser.properties.bio).toBeNull();
@@ -76,7 +76,7 @@ describe('UserRegisterFunction', () => {
         expect(userSnapshot.exists).toBeTrue();
         const storedUser = User.builder.build(userSnapshot.data);
         expect(storedUser.id).toBeEqual(userId);
-        expect(storedUser.signInType).toBeEqual(new User.SignInTypeOAuth('google'));
+        expect(storedUser.signInType).toBeEqual(new User.SignInType.OAuth('google'));
         expect(storedUser.properties.firstName).toBeEqual('Test');
         expect(storedUser.properties.lastName).toBeEqual('User');
         expect(storedUser.properties.bio).toBeNull();
@@ -88,13 +88,13 @@ describe('UserRegisterFunction', () => {
         const email = 'test@example.com';
         const registeredUser = await FirebaseApp.shared.functions.user.register.execute({
             userId: userId,
-            signInType: new User.SignInTypeEmail(email),
+            signInType: new User.SignInType.Email(email),
             firstName: 'Test',
             lastName: 'User'
         });
 
         expect(registeredUser.id).toBeEqual(userId);
-        expect(registeredUser.signInType).toBeEqual(new User.SignInTypeEmail(email));
+        expect(registeredUser.signInType).toBeEqual(new User.SignInType.Email(email));
         expect(registeredUser.properties.firstName).toBeEqual('Test');
         expect(registeredUser.properties.lastName).toBeEqual('User');
         expect(registeredUser.properties.bio).toBeNull();
@@ -108,7 +108,7 @@ describe('UserRegisterFunction', () => {
         expect(userSnapshot.exists).toBeTrue();
         const storedUser = User.builder.build(userSnapshot.data);
         expect(storedUser.id).toBeEqual(userId);
-        expect(storedUser.signInType).toBeEqual(new User.SignInTypeEmail(email));
+        expect(storedUser.signInType).toBeEqual(new User.SignInType.Email(email));
         expect(storedUser.properties.firstName).toBeEqual('Test');
         expect(storedUser.properties.lastName).toBeEqual('User');
         expect(storedUser.properties.bio).toBeNull();
