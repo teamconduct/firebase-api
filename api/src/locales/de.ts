@@ -25,6 +25,10 @@ export const localizationDE: LocalizationDict = {
                 bodyPayed: 'Du hast eine Strafe von {{amount}} bezahlt ({{reason}}).',
                 bodyUnpayed: '{{reason}}, {{amount}} ist noch offen.',
                 bodyDeleted: '{{reason}}, {{amount}} wurde gelöscht.'
+            },
+            changed: {
+                title: '{{reason}}',
+                body: 'Deine Strafe für {{reason}} wurde aktualisiert.'
             }
         }
     },

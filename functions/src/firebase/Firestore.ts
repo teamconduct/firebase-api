@@ -1,7 +1,7 @@
 import { FirestoreBatch, FirestoreCollection, FirestoreDocument, UserAuthId } from '@stevenkellner/firebase-function';
 import { FirestoreScheme } from './FirestoreScheme';
 import { FirebaseConfiguration } from '.';
-import { Fine, FineTemplate, Invitation, Person, Team, User } from '@stevenkellner/team-conduct-api';
+import { Fine, FineTemplate, InAppNotification, Invitation, Person, Team, User } from '@stevenkellner/team-conduct-api';
 
 /**
  * Accessor class for Firestore documents and collections.
@@ -121,7 +121,7 @@ export class Firestore {
      * const userData = await userDoc.get();
      * ```
      */
-    public user(id: User.Id): FirestoreDocument<User> {
+    public user(id: User.Id): FirestoreDocument<User, { notifications: FirestoreCollection<{ [x: string]: FirestoreDocument<InAppNotification, never>; }> }> {
         return this.base
             .collection('users')
             .document(id.value);
@@ -253,6 +253,18 @@ export class Firestore {
      */
     public fine(teamId: Team.Id, id: Fine.Id): FirestoreDocument<Fine> {
         return this.fines(teamId)
+            .document(id.guidString);
+    }
+
+    public notifications(userId: User.Id): FirestoreCollection<{ [x: string]: FirestoreDocument<InAppNotification, never>; }> {
+        return this.base
+            .collection('users')
+            .document(userId.value)
+            .collection('notifications');
+    }
+
+    public notification(userId: User.Id, id: InAppNotification.Id): FirestoreDocument<InAppNotification> {
+        return this.notifications(userId)
             .document(id.guidString);
     }
 }

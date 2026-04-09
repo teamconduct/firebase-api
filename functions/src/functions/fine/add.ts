@@ -1,6 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Person, Localization, FineAddFunction, Team } from '@stevenkellner/team-conduct-api';
-import { checkAuthentication, Firestore, pushNotification } from '../../firebase';
+import { Person, FineAddFunction, Team } from '@stevenkellner/team-conduct-api';
+import { checkAuthentication, Firestore, NotificationSender } from '../../firebase';
 
 export class FineAddExecutableFunction extends FineAddFunction implements ExecutableFirebaseFunction<FineAddFunction.Parameters, void> {
 
@@ -33,14 +33,7 @@ export class FineAddExecutableFunction extends FineAddFunction implements Execut
 
         await batch.commit();
 
-        const localization = Localization.shared(teamSettings.locale);
-        await pushNotification(parameters.teamId, parameters.personId, 'new-fine', {
-            title: localization.notification.fine.new.title.value({
-                reason: parameters.fine.reason
-            }),
-            body: localization.notification.fine.new.body.value({
-                amount: parameters.fine.amount.formatted(teamSettings.currency, teamSettings.locale)
-            })
-        });
+        await NotificationSender.for(parameters.teamId, parameters.personId)
+            .newFine(parameters.fine.id, parameters.fine.reason, parameters.fine.amount, teamSettings);
     }
 }

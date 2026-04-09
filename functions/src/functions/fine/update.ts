@@ -1,6 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { FineUpdateFunction, Localization, Team, ValueLocalization } from '@stevenkellner/team-conduct-api';
-import { checkAuthentication, Firestore, pushNotification } from '../../firebase';
+import { FineUpdateFunction, Team } from '@stevenkellner/team-conduct-api';
+import { checkAuthentication, Firestore, NotificationSender } from '../../firebase';
 
 export class FineUpdateExecutableFunction extends FineUpdateFunction implements ExecutableFirebaseFunction<FineUpdateFunction.Parameters, void> {
 
@@ -19,21 +19,13 @@ export class FineUpdateExecutableFunction extends FineUpdateFunction implements 
 
         await Firestore.shared.fine(parameters.teamId, parameters.fine.id).set(parameters.fine);
 
-        const localization = Localization.shared(teamSettings.locale);
+        const sender = NotificationSender.for(parameters.teamId, parameters.personId);
         if (parameters.fine.payedState !== fineSnapshot.data.payedState) {
-            let bodyLocalization: ValueLocalization;
             if (parameters.fine.payedState === 'payed')
-                bodyLocalization = localization.notification.fine.stateChange.bodyPayed;
+                await sender.finePayed(parameters.fine.id, parameters.fine.reason, parameters.fine.amount, teamSettings);
             else
-                bodyLocalization = localization.notification.fine.stateChange.bodyUnpayed;
-            await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
-                title: localization.notification.fine.stateChange.title.value(),
-                body: bodyLocalization.value({
-                    reason: parameters.fine.reason,
-                    amount: parameters.fine.amount.formatted(teamSettings.currency, teamSettings.locale)
-                })
-            });
-
-        }
+                await sender.fineUnpayed(parameters.fine.id, parameters.fine.reason, parameters.fine.amount, teamSettings);
+        } else
+            await sender.fineChanged(parameters.fine.id, parameters.fine.reason, teamSettings);
     }
 }

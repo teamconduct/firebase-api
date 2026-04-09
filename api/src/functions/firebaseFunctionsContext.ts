@@ -4,8 +4,8 @@ import {
     TeamNewFunction, TeamUpdateFunction, TeamDeleteFunction,
     PersonAddFunction, PersonDeleteFunction, PersonUpdateFunction, PersonKickoutFunction, PersonRoleEditFunction,
     FineTemplateAddFunction, FineTemplateDeleteFunction, FineTemplateUpdateFunction,
-    FineAddFunction, FineDeleteFunction, FineUpdateFunction
-    // PaypalMeEditFunction, NotificationRegisterFunction, NotificationSubscribeFunction,
+    FineAddFunction, FineDeleteFunction, FineUpdateFunction,
+    NotificationRegisterFunction, NotificationMarkNotificationAsReadFunction
     // InvitationInviteFunction, InvitationWithdrawFunction, InvitationGetInvitationFunction, InvitationRegisterFunction,
 } from '.';
 
@@ -36,10 +36,12 @@ export const firebaseFunctionsContext = FirebaseFunctionsContext.build(builder =
         add: builder.function(FineAddFunction),
         update: builder.function(FineUpdateFunction),
         delete: builder.function(FineDeleteFunction)
+    },
+    notification: {
+        register: builder.function(NotificationRegisterFunction),
+        markNotificationAsRead: builder.function(NotificationMarkNotificationAsReadFunction)
     }
-    // notification: {
-    //     register: builder.function(NotificationRegisterFunction)
-    // },
+    //
     // invitation: {
     //     invite: builder.function(InvitationInviteFunction),
     //     withdraw: builder.function(InvitationWithdrawFunction),

@@ -1,14 +1,18 @@
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { pushNotification } from '../../src/firebase/pushNotification';
 import { Dictionary, Guid } from '@stevenkellner/typescript-common-functionality';
-import { configureFirebase, Collection, Document } from './firebase-utils';
-import { NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
-import { Firestore } from '../../src/firebase';
+import { configureFirebase, restoreFirebase, Collection, Document } from './firebase-utils';
+import { Fine, FineAmount, MoneyAmount, NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
+import { Firestore, NotificationSender } from '../../src/firebase';
 
-describe('pushNotification', () => {
+describe('NotificationSender', () => {
     const teamId = Team.Id.builder.build(Guid.generate().guidString);
     const personId = Person.Id.builder.build(Guid.generate().guidString);
+    const fineId = Fine.Id.builder.build(Guid.generate().guidString);
+    const amount = new FineAmount.Money(new MoneyAmount(10, 0));
+    const teamSettings = new Team.TeamSettings(null, false, 'all-fines', 'invite-only', 'EUR', 'de');
+
+    afterEach(() => restoreFirebase());
 
     describe('person does not exist', () => {
         it('should return without error when person does not exist', async () => {
@@ -22,10 +26,7 @@ describe('pushNotification', () => {
                 })
             });
 
-            await pushNotification(teamId, personId, 'new-fine', {
-                title: 'Test Notification',
-                body: 'Test Body'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
         });
     });
 
@@ -41,10 +42,7 @@ describe('pushNotification', () => {
                 })
             });
 
-            await pushNotification(teamId, personId, 'new-fine', {
-                title: 'Test Notification',
-                body: 'Test Body'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
         });
     });
 
@@ -68,10 +66,7 @@ describe('pushNotification', () => {
                 })
             });
 
-            await pushNotification(teamId, personId, 'new-fine', {
-                title: 'Test Notification',
-                body: 'Test Body'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
         });
     });
 
@@ -113,10 +108,7 @@ describe('pushNotification', () => {
                 }
             });
 
-            await pushNotification(teamId, personId, 'new-fine', {
-                title: 'New Fine',
-                body: 'You have received a new fine'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
 
             expect(messagingCalled).toBeTrue();
         });
@@ -157,10 +149,7 @@ describe('pushNotification', () => {
                 }
             });
 
-            await pushNotification(teamId, personId, 'fine-state-change', {
-                title: 'Fine State Changed',
-                body: 'A fine state has been updated'
-            });
+            await NotificationSender.for(teamId, personId).finePayed(fineId, 'Test Reason', amount, teamSettings);
 
             expect(messagingCalled).toBeTrue();
         });
@@ -202,12 +191,9 @@ describe('pushNotification', () => {
                 }
             });
 
-            await pushNotification(teamId, personId, 'new-fine', {
-                title: 'Test Notification',
-                body: 'Test Body'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
 
-            expect(messagingCalled).toBeTrue();
+            expect(messagingCalled).toBeFalse();
         });
 
         it('should handle person with multiple tokens, removing invalid ones', async () => {
@@ -252,10 +238,7 @@ describe('pushNotification', () => {
                 }
             });
 
-            await pushNotification(teamId, personId, 'new-fine', {
-                title: 'Test Notification',
-                body: 'Test Body'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
 
             expect(messagingCalled).toBeTrue();
 
@@ -304,10 +287,7 @@ describe('pushNotification', () => {
                 }
             });
 
-            await pushNotification(teamId, personId, 'fine-reminder', {
-                title: 'Fine Reminder',
-                body: 'This is a reminder about your fine'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
 
             expect(messagingCalled).toBeTrue();
         });
@@ -347,10 +327,7 @@ describe('pushNotification', () => {
                 }
             });
 
-            await pushNotification(teamId, personId, 'fine-state-change', {
-                title: 'Fine State Changed',
-                body: 'A fine state has been updated'
-            });
+            await NotificationSender.for(teamId, personId).finePayed(fineId, 'Test Reason', amount, teamSettings);
 
             expect(messagingCalled).toBeFalse();
         });
@@ -390,10 +367,7 @@ describe('pushNotification', () => {
                 }
             });
 
-            await pushNotification(teamId, personId, 'new-fine', {
-                title: 'Test Notification',
-                body: 'Test Body'
-            });
+            await NotificationSender.for(teamId, personId).newFine(fineId, 'Test Reason', amount, teamSettings);
 
             expect(messagingCalled).toBeFalse();
         });

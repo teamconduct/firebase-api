@@ -9,11 +9,20 @@ service cloud.firestore {
             return request.auth.uid != null && teamId in userTeams;
         }
 
+        function isOwner(userId) {
+            return request.auth.uid != null
+                && get(/databases/$(database)/documents/userAuthIdDict/$(request.auth.uid)).data.userId == userId;
+        }
+
         match /userAuthIdDict/{userId} {
             allow read, write: if false;
         }
         match /users/{userId} {
             allow read, write: if false;
+        }
+        match /users/{userId}/notifications/{notificationId} {
+            allow read: if isOwner(userId);
+            allow write: if false;
         }
         match /teams/{teamId}/{document=**} {
             allow write: if false;

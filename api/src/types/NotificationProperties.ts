@@ -70,6 +70,7 @@ export namespace NotificationProperties {
      */
     const subscriptions = [
         'new-fine',
+        'fine-changed',
         'fine-reminder',
         'fine-state-change'
     ] as const;
@@ -77,8 +78,9 @@ export namespace NotificationProperties {
     /**
      * Type representing the available notification subscription options.
      * - new-fine: Notifications when a new fine is created
+     * - fine-changed: Notifications when a fine is updated (non-payed-state change)
      * - fine-reminder: Reminder notifications for unpaid fines
-     * - fine-state-change: Notifications when a fine's status changes
+     * - fine-state-change: Notifications when a fine's payed status changes or is deleted
      */
     export type Subscription = typeof subscriptions[number];
 

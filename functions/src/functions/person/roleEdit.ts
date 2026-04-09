@@ -1,6 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { PersonRoleEditFunction, Person } from '@stevenkellner/team-conduct-api';
-import { checkAuthentication, Firestore } from '../../firebase';
+import { checkAuthentication, Firestore, NotificationSender } from '../../firebase';
 
 export class PersonRoleEditExecutableFunction extends PersonRoleEditFunction implements ExecutableFirebaseFunction<PersonRoleEditFunction.Parameters, void> {
 
@@ -21,5 +21,8 @@ export class PersonRoleEditExecutableFunction extends PersonRoleEditFunction imp
 
         person.signInProperties.roles = parameters.roles;
         await Firestore.shared.person(parameters.teamId, parameters.personId).set(person);
+
+        await NotificationSender.for(parameters.teamId, parameters.personId)
+            .personRoleChanged();
     }
 }

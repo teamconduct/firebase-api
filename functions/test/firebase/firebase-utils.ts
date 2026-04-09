@@ -9,31 +9,49 @@ import { FirebaseConfiguration, Messaging } from '../../src/firebase';
 export class Collection {
 
     private constructor(
-        public readonly documents: Record<string, Document>
+        public readonly documents: Record<string, Document>,
+        private readonly isDynamic: boolean = false
     ) {}
 
     public document(key: string): Document {
         const documentData = this.documents[key];
-        if (!documentData)
+        if (!documentData) {
+            if (this.isDynamic) {
+                const doc = Document.dynamic();
+                (this.documents as Record<string, Document>)[key] = doc;
+                return doc;
+            }
             throw new Error(`Unexpected document key: ${key}`);
+        }
         return documentData;
     }
 
     public static docs(documents: Record<string, Document>): Collection {
         return new Collection(documents);
     }
+
+    public static dynamic(): Collection {
+        return new Collection({}, true);
+    }
 }
 
 export class Document {
     private constructor(
         public readonly collections: Record<string, Collection>,
-        public data: any
+        public data: any,
+        private readonly isDynamic: boolean = false
     ) {}
 
     public collection(key: string): Collection {
         const collectionData = this.collections[key];
-        if (!collectionData)
+        if (!collectionData) {
+            if (this.isDynamic) {
+                const coll = Collection.dynamic();
+                (this.collections as Record<string, Collection>)[key] = coll;
+                return coll;
+            }
             throw new Error(`Unexpected collection key: ${key}`);
+        }
         return collectionData;
     }
 
@@ -60,19 +78,26 @@ export class Document {
         return new Document({}, undefined);
     }
 
+    public static dynamic(): Document {
+        return new Document({}, undefined, true);
+    }
+
     public static collsAndData(collections: Record<string, Collection>, data: any): Document {
         return new Document(collections, data);
     }
 
     public static user(id: User.Id, properties: User.UserProperties, settings: User.UserSettings, teams: Dictionary<Team.Id, User.TeamProperties>): Document {
-        return Document.data(User.builder.build({
-            id: id.value,
-            signInDate: UtcDate.now.flatten,
-            signInType: { type: 'google' },
-            properties: properties.flatten,
-            settings: settings.flatten,
-            teams: teams.flatten
-        }).flatten);
+        return Document.collsAndData(
+            { notifications: Collection.dynamic() },
+            User.builder.build({
+                id: id.value,
+                signInDate: UtcDate.now.flatten,
+                signInType: { type: 'google' },
+                properties: properties.flatten,
+                settings: settings.flatten,
+                teams: teams.flatten
+            }).flatten
+        );
     }
 
     public static personNotSignedIn(id: Person.Id): Document {
@@ -117,10 +142,26 @@ export async function expectThrowsFunctionsError(fn: () => Promise<any>, expecte
     }
 }
 
+let savedConfig: { firebaseFirestore: any; baseFirestoreDocument: any; messaging: any } | null = null;
+
 export function configureFirebase(collections: Record<string, Collection>, messaging?: Messaging) {
+    if (!savedConfig) {
+        const config = FirebaseConfiguration.shared as any;
+        savedConfig = {
+            firebaseFirestore: config._firebaseFirestore,
+            baseFirestoreDocument: config._baseFirestoreDocument,
+            messaging: config._messaging
+        };
+    }
     FirebaseConfiguration.shared.reconfigure({
         firebaseFirestore: undefined as any,
         baseFirestoreDocument: Document.colls(collections) as any,
         messaging: messaging as any
     });
+}
+
+export function restoreFirebase() {
+    if (savedConfig) {
+        FirebaseConfiguration.shared.reconfigure(savedConfig);
+    }
 }

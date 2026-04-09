@@ -1,6 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { FineAmount, FineDeleteFunction, Localization, Person, Team } from '@stevenkellner/team-conduct-api';
-import { checkAuthentication, Firestore, pushNotification } from '../../firebase';
+import { FineAmount, FineDeleteFunction, Person, Team } from '@stevenkellner/team-conduct-api';
+import { checkAuthentication, Firestore, NotificationSender } from '../../firebase';
 
 export class FineDeleteExecutableFunction extends FineDeleteFunction implements ExecutableFirebaseFunction<FineDeleteFunction.Parameters, void> {
 
@@ -31,13 +31,7 @@ export class FineDeleteExecutableFunction extends FineDeleteFunction implements 
 
         await batch.commit();
 
-        const localization = Localization.shared(teamSettings.locale);
-        await pushNotification(parameters.teamId, parameters.personId, 'fine-state-change', {
-            title: localization.notification.fine.stateChange.title.value(),
-            body: localization.notification.fine.stateChange.bodyDeleted.value({
-                amount: FineAmount.builder.build(fineSnapshot.data.amount).formatted(teamSettings.currency, teamSettings.locale),
-                reason: fineSnapshot.data.reason
-            })
-        });
+        await NotificationSender.for(parameters.teamId, parameters.personId)
+            .fineDeleted(fineSnapshot.data.reason, FineAmount.builder.build(fineSnapshot.data.amount), teamSettings);
     }
 }

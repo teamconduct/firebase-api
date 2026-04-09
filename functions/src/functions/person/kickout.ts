@@ -1,6 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
 import { PersonKickoutFunction, User, Person } from '@stevenkellner/team-conduct-api';
-import { checkAuthentication, Firestore } from '../../firebase';
+import { checkAuthentication, Firestore, NotificationSender } from '../../firebase';
 
 export class PersonKickoutExecutableFunction extends PersonKickoutFunction implements ExecutableFirebaseFunction<PersonKickoutFunction.Parameters, void> {
 
@@ -31,5 +31,7 @@ export class PersonKickoutExecutableFunction extends PersonKickoutFunction imple
         batch.set(Firestore.shared.user(userId), user);
 
         await batch.commit();
+
+        await NotificationSender.forUser(userId).teamKickout(parameters.teamId);
     }
 }

@@ -105,8 +105,8 @@ describe('FirebaseConfiguration', () => {
 
         it('should maintain singleton pattern', () => {
             const instance = FirebaseConfiguration.shared;
-            expect(instance).not.toBeNull();
-            expect(instance).not.toBeUndefined();
+            expect(instance !== null).toBeTrue();
+            expect(instance !== undefined).toBeTrue();
         });
 
         it('should have configure method', () => {

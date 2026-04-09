@@ -1,5 +1,5 @@
 import { FirestoreCollection, FirestoreDocument } from '@stevenkellner/firebase-function';
-import { Fine, FineTemplate, Invitation, Person, Team, User } from '@stevenkellner/team-conduct-api';
+import { Fine, FineTemplate, InAppNotification, Invitation, Person, Team, User } from '@stevenkellner/team-conduct-api';
 
 /**
  * Type definition for the Firestore database schema.
@@ -20,7 +20,11 @@ export type FirestoreScheme = FirestoreDocument<never, {
         [UserAuthId in string]: FirestoreDocument<{ userId: User.Id }>
     }>,
     users: FirestoreCollection<{
-        [UserId in string]: FirestoreDocument<User>
+        [UserId in string]: FirestoreDocument<User, {
+            notifications: FirestoreCollection<{
+                [NotificationId in string]: FirestoreDocument<InAppNotification>
+            }>
+        }>
     }>
     invitations: FirestoreCollection<{
         [InvitationId in string]: FirestoreDocument<Invitation>

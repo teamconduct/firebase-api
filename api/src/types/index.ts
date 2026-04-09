@@ -2,6 +2,7 @@ export * from './Fine';
 export * from './FineAmount';
 export * from './FineTemplate';
 export * from './FineTemplateRepetition';
+export * from './InAppNotification';
 export * from './Invitation';
 export * from './Localization';
 export * from './MoneyAmount';

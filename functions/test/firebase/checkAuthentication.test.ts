@@ -1,8 +1,8 @@
-import { describe, it } from 'mocha';
+import { describe, it, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
 import { checkAuthentication } from '../../src/firebase/checkAuthentication';
 import { Dictionary } from '@stevenkellner/typescript-common-functionality';
-import { configureFirebase, expectThrowsFunctionsError, Collection, Document } from './firebase-utils';
+import { configureFirebase, expectThrowsFunctionsError, restoreFirebase, Collection, Document } from './firebase-utils';
 import { UserAuthId } from '@stevenkellner/firebase-function';
 import { NotificationProperties, Person, Team, User } from '@stevenkellner/team-conduct-api';
 
@@ -11,6 +11,8 @@ describe('checkAuthentication', () => {
     const personId = Person.Id.builder.build('22222222-2222-4222-2222-222222222222');
     const userAuthId = UserAuthId.builder.build('auth-123');
     const userId = User.Id.builder.build('user123');
+
+    afterEach(() => restoreFirebase());
 
     describe('checkAuthentication - basic validation', () => {
         it('should throw "unauthenticated" error if rawUserId is null', async () => {

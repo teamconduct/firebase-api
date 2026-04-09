@@ -35,6 +35,10 @@ export const localizationEN = satisfiesLocalization({
                 bodyPayed: 'You have paid a fine of {{amount}} ({{reason}}).',
                 bodyUnpayed: '{{reason}}, {{amount}} is still outstanding.',
                 bodyDeleted: '{{reason}}, {{amount}} has been deleted.'
+            },
+            changed: {
+                title: '{{reason}}',
+                body: 'Your fine for {{reason}} has been updated.'
             }
         }
     },

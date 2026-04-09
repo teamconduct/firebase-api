@@ -69,4 +69,4 @@ module.exports = defineConfig([{
         "new-cap": "off",
         "@typescript-eslint/no-inferrable-types": "off",
     },
-}, globalIgnores(["lib/**/*", "generated/**/*", "coverage/**/*", ".nyc_output/**/*", "eslint.config.js", ".mocharc.js"])]);
+}, globalIgnores(["lib/**/*", "generated/**/*", "coverage/**/*", ".nyc_output/**/*", "old/**/*", "eslint.config.js", ".mocharc.js"])]);
