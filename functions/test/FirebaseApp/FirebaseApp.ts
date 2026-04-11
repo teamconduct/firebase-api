@@ -71,6 +71,8 @@ export class FirebaseApp {
         for (const [index, person] of testTeam.persons.entries()) {
             if (index === 0)
                 person.signInProperties = new PersonSignInProperties(userId, UtcDate.now, roles);
+            else
+                person.signInProperties = null;
             yield FirebaseApp.shared.firestore.person(testTeam.id, person.id).set(person);
         }
         for (const fineTemplate of testTeam.fineTemplates)

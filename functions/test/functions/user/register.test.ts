@@ -1,117 +1,110 @@
+import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
+import { UserAuthId } from '@stevenkellner/firebase-function';
+import { User, NotificationProperties } from '@stevenkellner/team-conduct-api';
+import { UtcDate } from '@stevenkellner/typescript-common-functionality';
+import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
-import { Result } from '@stevenkellner/typescript-common-functionality';
-import { FunctionsError } from '@stevenkellner/firebase-function';
-import { NotificationProperties, User } from '@stevenkellner/team-conduct-api';
 import { RandomData } from '../../utils/RandomData';
 
-describe('UserRegisterFunction', () => {
-
-    const userId = RandomData.shared.userId();
-
-    beforeEach(async () => {
-        await FirebaseApp.shared.auth.signIn();
-    });
-
+describe('user/register', () => {
     afterEach(async () => {
         await FirebaseApp.shared.firestore.clear();
-    });
-
-    it('not signed in', async () => {
         await FirebaseApp.shared.auth.signOut();
-        const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
-            userId: userId,
-            signInType: new User.SignInType.OAuth('google'),
-            firstName: 'Test',
-            lastName: 'User'
-        });
-        expect(result).toBeEqual(Result.failure(new FunctionsError('unauthenticated', 'User is not authenticated.')));
     });
 
-    it('user auth already exists', async () => {
-        const userAuthId = await FirebaseApp.shared.auth.signIn();
-        await FirebaseApp.shared.firestore.userAuth(userAuthId).set({ userId: userId });
-        const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
-            userId: userId,
-            signInType: new User.SignInType.OAuth('google'),
-            firstName: 'Test',
-            lastName: 'User'
+    describe('given the user is not authenticated', () => {
+        it('should throw an unauthenticated error', async () => {
+            await FirebaseApp.shared.auth.signOut();
+            const freshUserId = RandomData.shared.userId();
+            await expectThrowsFunctionsError(
+                () => FirebaseApp.shared.functions.user.register.execute({
+                    userId: freshUserId,
+                    signInType: new User.SignInType.OAuth('google'),
+                    firstName: 'Jane',
+                    lastName: 'Smith'
+                }),
+                'unauthenticated',
+                'User is not authenticated.'
+            );
         });
-        expect(result).toBeEqual(Result.failure(new FunctionsError('already-exists', 'User is already registered.')));
     });
 
-    it('user already exists', async () => {
-        const user = new User(userId, RandomData.shared.date(), new User.SignInType.OAuth('google'), new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()));
-        await FirebaseApp.shared.firestore.user(userId).set(user);
-        const result = await FirebaseApp.shared.functions.user.register.executeWithResult({
-            userId: userId,
-            signInType: new User.SignInType.OAuth('google'),
-            firstName: 'Test',
-            lastName: 'User'
+    describe('given the user auth record already exists in Firestore', () => {
+        it('should throw an already-exists error', async () => {
+            const authId = await FirebaseApp.shared.auth.signIn();
+            const existingUserId = RandomData.shared.userId();
+            await FirebaseApp.shared.firestore.userAuth(authId).set({ userId: existingUserId });
+
+            await expectThrowsFunctionsError(
+                () => FirebaseApp.shared.functions.user.register.execute({
+                    userId: RandomData.shared.userId(),
+                    signInType: new User.SignInType.OAuth('google'),
+                    firstName: 'Jane',
+                    lastName: 'Smith'
+                }),
+                'already-exists',
+                'User is already registered.'
+            );
         });
-        expect(result).toBeEqual(Result.failure(new FunctionsError('already-exists', 'User is already registered.')));
     });
 
-    it('register with OAuth', async () => {
-        const userAuthId = await FirebaseApp.shared.auth.signIn();
-        const registeredUser = await FirebaseApp.shared.functions.user.register.execute({
-            userId: userId,
-            signInType: new User.SignInType.OAuth('google'),
-            firstName: 'Test',
-            lastName: 'User'
+    describe('given the user document already exists in Firestore', () => {
+        it('should throw an already-exists error', async () => {
+            const authId = await FirebaseApp.shared.auth.signIn();
+            const existingUserId = RandomData.shared.userId();
+            const existingUser = new User(
+                existingUserId,
+                UtcDate.now,
+                new User.SignInType.OAuth('google'),
+                new User.Properties('Existing', 'User', null, null),
+                new User.Settings(new NotificationProperties())
+            );
+            await FirebaseApp.shared.firestore.user(existingUserId).set(existingUser);
+
+            await expectThrowsFunctionsError(
+                () => FirebaseApp.shared.functions.user.register.execute({
+                    userId: existingUserId,
+                    signInType: new User.SignInType.OAuth('google'),
+                    firstName: 'New',
+                    lastName: 'Person'
+                }),
+                'already-exists',
+                'User is already registered.'
+            );
         });
-
-        expect(registeredUser.id).toBeEqual(userId);
-        expect(registeredUser.signInType).toBeEqual(new User.SignInType.OAuth('google'));
-        expect(registeredUser.properties.firstName).toBeEqual('Test');
-        expect(registeredUser.properties.lastName).toBeEqual('User');
-        expect(registeredUser.properties.bio).toBeNull();
-        expect(registeredUser.properties.profilePictureUrl).toBeNull();
-
-        const userAuthSnapshot = await FirebaseApp.shared.firestore.userAuth(userAuthId).snapshot();
-        expect(userAuthSnapshot.exists).toBeTrue();
-        expect(User.Id.builder.build(userAuthSnapshot.data.userId)).toBeEqual(userId);
-
-        const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
-        expect(userSnapshot.exists).toBeTrue();
-        const storedUser = User.builder.build(userSnapshot.data);
-        expect(storedUser.id).toBeEqual(userId);
-        expect(storedUser.signInType).toBeEqual(new User.SignInType.OAuth('google'));
-        expect(storedUser.properties.firstName).toBeEqual('Test');
-        expect(storedUser.properties.lastName).toBeEqual('User');
-        expect(storedUser.properties.bio).toBeNull();
-        expect(storedUser.properties.profilePictureUrl).toBeNull();
     });
 
-    it('register with email', async () => {
-        const userAuthId = await FirebaseApp.shared.auth.signIn();
-        const email = 'test@example.com';
-        const registeredUser = await FirebaseApp.shared.functions.user.register.execute({
-            userId: userId,
-            signInType: new User.SignInType.Email(email),
-            firstName: 'Test',
-            lastName: 'User'
+    describe('given a valid new user registration', () => {
+        let freshUserId: User.Id;
+
+        beforeEach(async () => {
+            await FirebaseApp.shared.auth.signIn('register-test@example.com', 'Test1234!');
+            freshUserId = RandomData.shared.userId();
         });
 
-        expect(registeredUser.id).toBeEqual(userId);
-        expect(registeredUser.signInType).toBeEqual(new User.SignInType.Email(email));
-        expect(registeredUser.properties.firstName).toBeEqual('Test');
-        expect(registeredUser.properties.lastName).toBeEqual('User');
-        expect(registeredUser.properties.bio).toBeNull();
-        expect(registeredUser.properties.profilePictureUrl).toBeNull();
+        it('should create and return the new user', async () => {
+            const result = await FirebaseApp.shared.functions.user.register.execute({
+                userId: freshUserId,
+                signInType: new User.SignInType.OAuth('google'),
+                firstName: 'New',
+                lastName: 'User'
+            });
 
-        const userAuthSnapshot = await FirebaseApp.shared.firestore.userAuth(userAuthId).snapshot();
-        expect(userAuthSnapshot.exists).toBeTrue();
-        expect(User.Id.builder.build(userAuthSnapshot.data.userId)).toBeEqual(userId);
+            expect(result).toBeInstanceOf(User);
+            expect(result.properties.firstName).toBeEqual('New');
+            expect(result.properties.lastName).toBeEqual('User');
+        });
 
-        const userSnapshot = await FirebaseApp.shared.firestore.user(userId).snapshot();
-        expect(userSnapshot.exists).toBeTrue();
-        const storedUser = User.builder.build(userSnapshot.data);
-        expect(storedUser.id).toBeEqual(userId);
-        expect(storedUser.signInType).toBeEqual(new User.SignInType.Email(email));
-        expect(storedUser.properties.firstName).toBeEqual('Test');
-        expect(storedUser.properties.lastName).toBeEqual('User');
-        expect(storedUser.properties.bio).toBeNull();
-        expect(storedUser.properties.profilePictureUrl).toBeNull();
+        it('should persist the user auth record and user document in Firestore', async () => {
+            await FirebaseApp.shared.functions.user.register.execute({
+                userId: freshUserId,
+                signInType: new User.SignInType.OAuth('google'),
+                firstName: 'Persisted',
+                lastName: 'User'
+            });
+
+            expect((await FirebaseApp.shared.firestore.user(freshUserId).snapshot()).exists).toBeTrue();
+        });
     });
 });

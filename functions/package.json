@@ -17,8 +17,10 @@
         "emulator:start": "npm run rebuild && npm run serve",
         "emulator:wait": "ts-node test/utils/waitForEmulator.ts",
         "emulator:end": "kill-port 5001 8080",
-        "test": "concurrently \"npm run emulator:start || true\" \"npm run emulator:wait && mocha && npm run emulator:end\"",
+        "test": "mocha",
+        "test:ci": "concurrently \"npm run emulator:start || true\" \"npm run emulator:wait && mocha && npm run emulator:end\"",
         "test:coverage": "nyc npm run test",
+        "test:ci:coverage": "nyc npm run test:ci",
         "coverage:report": "npx http-server -o ./coverage -p 8090",
         "upgrade": "npm cache clean --force && ncu --upgrade --install always"
     },
