@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { RandomData } from '../../utils/RandomData';
@@ -56,10 +55,8 @@ describe('fineTemplate/delete', () => {
     });
 
     describe('given a valid team-manager and an existing template', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
         });
 
         it('should delete the fine template from Firestore', async () => {

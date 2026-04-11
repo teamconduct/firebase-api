@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { FineTemplate } from '@stevenkellner/team-conduct-api';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
@@ -57,10 +56,8 @@ describe('fineTemplate/update', () => {
     });
 
     describe('given a valid update for an existing template', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
         });
 
         it('should update the fine template document', async () => {

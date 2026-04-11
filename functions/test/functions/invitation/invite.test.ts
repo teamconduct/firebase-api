@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { User, Team, Person, Invitation, PersonSignInProperties, PersonProperties, NotificationProperties } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
@@ -115,10 +114,8 @@ describe('invitation/invite', () => {
     });
 
     describe('given a valid invite for a specific person', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
         });
 
         it('should create the invitation and return its ID', async () => {
@@ -135,10 +132,8 @@ describe('invitation/invite', () => {
     });
 
     describe('given a valid open invite with no specific person', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
         });
 
         it('should create the team-wide invitation and return its ID', async () => {

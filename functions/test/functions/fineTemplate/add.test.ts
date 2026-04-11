@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { FineTemplate } from '@stevenkellner/team-conduct-api';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
@@ -58,10 +57,8 @@ describe('fineTemplate/add', () => {
     });
 
     describe('given a valid team-manager and a new fine template', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
         });
 
         it('should create the fine template document', async () => {
@@ -81,10 +78,8 @@ describe('fineTemplate/add', () => {
     });
 
     describe('given a valid fineTemplate-manager', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('fineTemplate-manager');
+            await FirebaseApp.shared.addTestTeam('fineTemplate-manager');
         });
 
         it('should create the fine template using fineTemplate-manager role', async () => {

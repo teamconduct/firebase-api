@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { Person, PersonProperties } from '@stevenkellner/team-conduct-api';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
@@ -60,10 +59,8 @@ describe('person/update', () => {
     });
 
     describe('given a valid team-manager and an existing person', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
         });
 
         it('should update the person properties', async () => {

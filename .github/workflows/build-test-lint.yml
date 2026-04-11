@@ -41,17 +41,17 @@ jobs:
         with:
           node-version: 20
       - run: npm i -g firebase-tools
-      - working-directory: functions
+      - working-directory: api
         run: npm ci
-      - working-directory: functions
+      - working-directory: api
         run: npm run rebuild
-      - working-directory: functions
-        run: npm test
-      - working-directory: functions
+      - working-directory: api
         run: npm run lint
-      - working-directory: api
+      - working-directory: functions
         run: npm ci
-      - working-directory: api
+      - working-directory: functions
         run: npm run rebuild
-      - working-directory: api
+      - working-directory: functions
+        run: npm test:ci
+      - working-directory: functions
         run: npm run lint

@@ -1,7 +1,6 @@
 import { describe, it, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { Person, PersonProperties, Invitation } from '@stevenkellner/team-conduct-api';
-import { User } from '@stevenkellner/team-conduct-api';
+import { Person, PersonProperties, Invitation, User } from '@stevenkellner/team-conduct-api';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
 import { FirebaseApp } from '../../FirebaseApp/FirebaseApp';
 import { RandomData } from '../../utils/RandomData';

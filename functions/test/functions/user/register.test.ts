@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { User, NotificationProperties } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
@@ -51,7 +50,7 @@ describe('user/register', () => {
 
     describe('given the user document already exists in Firestore', () => {
         it('should throw an already-exists error', async () => {
-            const authId = await FirebaseApp.shared.auth.signIn();
+            await FirebaseApp.shared.auth.signIn();
             const existingUserId = RandomData.shared.userId();
             const existingUser = new User(
                 existingUserId,

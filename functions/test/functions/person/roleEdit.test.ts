@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { Person, PersonSignInProperties } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
@@ -79,7 +78,7 @@ describe('person/roleEdit', () => {
 
     describe('given the user tries to remove their own team-manager role', () => {
         it('should throw an unavailable error', async () => {
-            const testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
             const testTeam = FirebaseApp.shared.testTeam;
 
             await expectThrowsFunctionsError(
@@ -95,10 +94,8 @@ describe('person/roleEdit', () => {
     });
 
     describe('given a valid setup with a signed-in target person', () => {
-        let testUserAuthId: UserAuthId;
-
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
             const testTeam = FirebaseApp.shared.testTeam;
 
             const secondUserId = RandomData.shared.userId();

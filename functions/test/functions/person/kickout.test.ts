@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from '@assertive-ts/core';
-import { UserAuthId } from '@stevenkellner/firebase-function';
 import { User, Person, PersonSignInProperties, NotificationProperties } from '@stevenkellner/team-conduct-api';
 import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { expectThrowsFunctionsError } from '../../firebase/firebase-utils';
@@ -74,11 +73,10 @@ describe('person/kickout', () => {
     });
 
     describe('given a valid setup with a signed-in target person', () => {
-        let testUserAuthId: UserAuthId;
         let secondUserId: User.Id;
 
         beforeEach(async () => {
-            testUserAuthId = await FirebaseApp.shared.addTestTeam('team-manager');
+            await FirebaseApp.shared.addTestTeam('team-manager');
             const secondUserAuthId = await FirebaseApp.shared.auth.signIn('kickout-person2@test.com', 'Test1234!');
             secondUserId = RandomData.shared.userId();
 

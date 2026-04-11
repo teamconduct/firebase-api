@@ -45,7 +45,7 @@ jobs:
       - working-directory: functions
         run: npm ci
       - working-directory: functions
-        run: npm run test:coverage
+        run: npm run test:ci:coverage
       - uses: actions/upload-pages-artifact@v3
         with:
           path: functions/coverage/
