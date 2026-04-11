@@ -6,7 +6,8 @@ import {
     PersonKickoutExecutableFunction, PersonRoleEditExecutableFunction, PersonAddExecutableFunction, PersonUpdateExecutableFunction, PersonDeleteExecutableFunction,
     FineAddExecutableFunction, FineUpdateExecutableFunction, FineDeleteExecutableFunction,
     FineTemplateAddExecutableFunction, FineTemplateUpdateExecutableFunction, FineTemplateDeleteExecutableFunction,
-    NotificationRegisterExecutableFunction, NotificationMarkNotificationAsReadExecutableFunction
+    NotificationRegisterExecutableFunction, NotificationMarkNotificationAsReadExecutableFunction,
+    InvitationInviteExecutableFunction, InvitationWithdrawExecutableFunction, InvitationGetInvitationExecutableFunction, InvitationRegisterExecutableFunction
 } from '.';
 
 export const firebaseFunctionsExecutableContext = FirebaseFunctionsExecutableContext.build<typeof firebaseFunctionsContext>(builder => ({
@@ -40,5 +41,11 @@ export const firebaseFunctionsExecutableContext = FirebaseFunctionsExecutableCon
     notification: {
         register: builder.function(NotificationRegisterExecutableFunction),
         markNotificationAsRead: builder.function(NotificationMarkNotificationAsReadExecutableFunction)
+    },
+    invitation: {
+        invite: builder.function(InvitationInviteExecutableFunction),
+        withdraw: builder.function(InvitationWithdrawExecutableFunction),
+        getInvitation: builder.function(InvitationGetInvitationExecutableFunction),
+        register: builder.function(InvitationRegisterExecutableFunction)
     }
 }));

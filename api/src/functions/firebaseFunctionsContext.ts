@@ -5,8 +5,8 @@ import {
     PersonAddFunction, PersonDeleteFunction, PersonUpdateFunction, PersonKickoutFunction, PersonRoleEditFunction,
     FineTemplateAddFunction, FineTemplateDeleteFunction, FineTemplateUpdateFunction,
     FineAddFunction, FineDeleteFunction, FineUpdateFunction,
-    NotificationRegisterFunction, NotificationMarkNotificationAsReadFunction
-    // InvitationInviteFunction, InvitationWithdrawFunction, InvitationGetInvitationFunction, InvitationRegisterFunction,
+    NotificationRegisterFunction, NotificationMarkNotificationAsReadFunction,
+    InvitationInviteFunction, InvitationWithdrawFunction, InvitationGetInvitationFunction, InvitationRegisterFunction
 } from '.';
 
 export const firebaseFunctionsContext = FirebaseFunctionsContext.build(builder => ({
@@ -40,12 +40,11 @@ export const firebaseFunctionsContext = FirebaseFunctionsContext.build(builder =
     notification: {
         register: builder.function(NotificationRegisterFunction),
         markNotificationAsRead: builder.function(NotificationMarkNotificationAsReadFunction)
+    },
+    invitation: {
+        invite: builder.function(InvitationInviteFunction),
+        withdraw: builder.function(InvitationWithdrawFunction),
+        getInvitation: builder.function(InvitationGetInvitationFunction),
+        register: builder.function(InvitationRegisterFunction)
     }
-    //
-    // invitation: {
-    //     invite: builder.function(InvitationInviteFunction),
-    //     withdraw: builder.function(InvitationWithdrawFunction),
-    //     getInvitation: builder.function(InvitationGetInvitationFunction),
-    //     register: builder.function(InvitationRegisterFunction)
-    // },
 }));
