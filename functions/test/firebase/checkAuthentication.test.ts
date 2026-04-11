@@ -10,7 +10,7 @@ describe('checkAuthentication', () => {
     const teamId = Team.Id.builder.build('11111111-1111-4111-1111-111111111111');
     const personId = Person.Id.builder.build('22222222-2222-4222-2222-222222222222');
     const userAuthId = UserAuthId.builder.build('auth-123');
-    const userId = User.Id.builder.build('user123');
+    const userId = User.Id.builder.build('33333333-3333-4333-3333-333333333333');
 
     afterEach(() => restoreFirebase());
 
@@ -36,10 +36,10 @@ describe('checkAuthentication', () => {
         it('should throw "permission-denied" if user does not exist', async () => {
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.empty()
+                    [userId.guidString]: Document.empty()
                 })
             });
 
@@ -52,10 +52,10 @@ describe('checkAuthentication', () => {
             const emptyTeams = new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder);
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), emptyTeams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), emptyTeams)
                 })
             });
 
@@ -73,10 +73,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -101,10 +101,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -131,10 +131,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -159,10 +159,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -186,10 +186,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -214,10 +214,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -241,10 +241,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -268,10 +268,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -297,10 +297,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -327,10 +327,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
@@ -360,10 +360,10 @@ describe('checkAuthentication', () => {
             }));
             configureFirebase({
                 userAuthIdDict: Collection.docs({
-                    [userAuthId.value]: Document.data({ userId: userId.value })
+                    [userAuthId.value]: Document.data({ userId: userId.guidString })
                 }),
                 users: Collection.docs({
-                    [userId.value]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
+                    [userId.guidString]: Document.user(userId, new User.Properties('Test', 'User', null, null), new User.Settings(new NotificationProperties()), teams)
                 }),
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({

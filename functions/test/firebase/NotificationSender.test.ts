@@ -8,6 +8,7 @@ import { Firestore, NotificationSender } from '../../src/firebase';
 describe('NotificationSender', () => {
     const teamId = Team.Id.builder.build(Guid.generate().guidString);
     const personId = Person.Id.builder.build(Guid.generate().guidString);
+    const userId = User.Id.builder.build(Guid.generate().guidString);
     const fineId = Fine.Id.builder.build(Guid.generate().guidString);
     const amount = new Fine.Amount.Money(new Money(10, 0));
     const teamSettings = new Team.Settings(null, false, 'all-fines', 'invite-only', 'EUR', 'de');
@@ -50,8 +51,8 @@ describe('NotificationSender', () => {
         it('should return without sending when person is not subscribed', async () => {
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties()),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -60,7 +61,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })
@@ -79,8 +80,8 @@ describe('NotificationSender', () => {
             let messagingCalled = false;
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties(tokens, ['new-fine', 'fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -89,7 +90,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })
@@ -120,8 +121,8 @@ describe('NotificationSender', () => {
             let messagingCalled = false;
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties(tokens, ['fine-state-change'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -130,7 +131,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })
@@ -162,8 +163,8 @@ describe('NotificationSender', () => {
             let messagingCalled = false;
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties(tokens, ['new-fine'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -172,7 +173,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })
@@ -204,8 +205,8 @@ describe('NotificationSender', () => {
             let messagingCalled = false;
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties(tokens, ['new-fine'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -214,7 +215,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })
@@ -242,7 +243,7 @@ describe('NotificationSender', () => {
 
             expect(messagingCalled).toBeTrue();
 
-            const userSnapshot = await Firestore.shared.user(User.Id.builder.build('user-123')).snapshot();
+            const userSnapshot = await Firestore.shared.user(userId).snapshot();
             expect(userSnapshot.exists).toBeTrue();
             const user = User.builder.build(userSnapshot.data);
             expect(user.settings.notification.tokens.values.length).toBeEqual(3);
@@ -258,8 +259,8 @@ describe('NotificationSender', () => {
             let messagingCalled = false;
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties(tokens, ['new-fine', 'fine-state-change', 'fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -268,7 +269,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })
@@ -299,8 +300,8 @@ describe('NotificationSender', () => {
             let messagingCalled = false;
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties(tokens, ['fine-reminder'])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -309,7 +310,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })
@@ -339,8 +340,8 @@ describe('NotificationSender', () => {
             let messagingCalled = false;
             configureFirebase({
                 users: Collection.docs({
-                    [User.Id.builder.build('user-123').value]: Document.user(
-                        User.Id.builder.build('user-123'),
+                    [userId.guidString]: Document.user(
+                        userId,
                         new User.Properties('Test', 'User', null, null),
                         new User.Settings(new NotificationProperties(tokens, [])),
                         new Dictionary<Team.Id, User.TeamProperties>(Team.Id.builder)
@@ -349,7 +350,7 @@ describe('NotificationSender', () => {
                 teams: Collection.docs({
                     [teamId.guidString]: Document.colls({
                         persons: Collection.docs({
-                            [personId.guidString]: Document.person(personId, User.Id.builder.build('user-123'), [])
+                            [personId.guidString]: Document.person(personId, userId, [])
                         })
                     })
                 })

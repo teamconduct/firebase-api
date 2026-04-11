@@ -16,7 +16,7 @@ export class PersonRoleEditExecutableFunction extends PersonRoleEditFunction imp
         if (person.signInProperties === null)
             throw new FunctionsError('permission-denied', 'User is not signed in');
 
-        if (person.signInProperties.userId.value === userId.value && !parameters.roles.includes('team-manager'))
+        if (person.signInProperties.userId.guidString === userId.guidString && !parameters.roles.includes('team-manager'))
             throw new FunctionsError('unavailable', 'User cannot remove their own team-manager role');
 
         person.signInProperties.roles = parameters.roles;

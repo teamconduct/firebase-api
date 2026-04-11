@@ -1,6 +1,6 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { Invitation, InvitationRegisterFunction, NotificationProperties, Person, PersonSignInProperties, Team, User } from '@stevenkellner/team-conduct-api';
-import { Dictionary, UtcDate } from '@stevenkellner/typescript-common-functionality';
+import { Invitation, InvitationRegisterFunction, Person, PersonSignInProperties, Team, User } from '@stevenkellner/team-conduct-api';
+import { UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { Firestore } from '../../firebase';
 
 export class InvitationRegisterExecutableFunction extends InvitationRegisterFunction implements ExecutableFirebaseFunction<InvitationRegisterFunction.Parameters, User> {
@@ -35,23 +35,17 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
         const batch = Firestore.shared.batch();
 
         const userAuthSnapshot = await Firestore.shared.userAuth(userAuthId).snapshot();
-        let user: User;
+        if (!userAuthSnapshot.exists)
+            throw new FunctionsError('not-found', 'User authentication not found.');
+        const userId = User.Id.builder.build(userAuthSnapshot.data.userId);
 
-        if (userAuthSnapshot.exists) {
-            const userId = User.Id.builder.build(userAuthSnapshot.data.userId);
-            const userSnapshot = await Firestore.shared.user(userId).snapshot();
-            if (!userSnapshot.exists)
-                throw new FunctionsError('not-found', 'User not found.');
-            user = User.builder.build(userSnapshot.data);
-            if (user.teams.has(parameters.teamId))
-                throw new FunctionsError('already-exists', 'User is already a member of this team.');
-        } else {
-            const userId = User.Id.builder.build(userAuthId.value);
-            const userProperties = new User.Properties(person.properties.firstName, person.properties.lastName ?? '', null, null);
-            const userSettings = new User.Settings(new NotificationProperties(new Dictionary(NotificationProperties.TokenId.builder), [...NotificationProperties.Subscription.all]));
-            user = new User(userId, UtcDate.now, parameters.signInType, userProperties, userSettings);
-            batch.set(Firestore.shared.userAuth(userAuthId), { userId: userId });
-        }
+        const userSnapshot = await Firestore.shared.user(userId).snapshot();
+        if (!userSnapshot.exists)
+            throw new FunctionsError('not-found', 'User not found.');
+        const user = User.builder.build(userSnapshot.data);
+
+        if (user.teams.has(parameters.teamId))
+            throw new FunctionsError('already-exists', 'User is already a member of this team.');
 
         const teamPersonProperties = new User.TeamProperties(parameters.teamId, team.name, parameters.personId);
         user.teams.set(parameters.teamId, teamPersonProperties);

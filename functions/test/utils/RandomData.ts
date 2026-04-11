@@ -1,5 +1,5 @@
 import { Dictionary, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { adjectives, animals, colors, names, starWars, uniqueNamesGenerator } from 'unique-names-generator';
+import { adjectives, names, starWars, uniqueNamesGenerator } from 'unique-names-generator';
 import { Fine, FineTemplate, PayedState, Person, Team, User, TeamRole, Money, NotificationProperties, PersonSignInProperties, PersonProperties } from '@stevenkellner/team-conduct-api';
 
 export class RandomData {
@@ -19,7 +19,7 @@ export class RandomData {
     }
 
     public userId(): User.Id {
-        return new Tagged(uniqueNamesGenerator({ dictionaries: [animals] }), 'user');
+        return Tagged.generate('user');
     }
 
     public teamId(): Team.Id {
@@ -58,7 +58,7 @@ export class RandomData {
 
     public personSignInProperties(userId: User.Id | null = null): PersonSignInProperties {
         return new PersonSignInProperties(
-            userId ?? new Tagged(uniqueNamesGenerator({ dictionaries: [adjectives, colors, animals] }), 'user'),
+            userId ?? Tagged.generate('user'),
             this.date(),
             new Array(Math.floor(Math.random() * TeamRole.all.length)).fill(null).map(() => TeamRole.all[Math.floor(Math.random() * TeamRole.all.length)])
         );

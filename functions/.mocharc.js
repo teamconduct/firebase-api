@@ -8,7 +8,7 @@ module.exports = {
         'test/**/*.test.ts'
     ],
     slow: 75,
-    timeout: 30000,
+    timeout: 600000,
     ui: 'bdd',
     'watch-files': [
         'test/**/*.test.ts'

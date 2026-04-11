@@ -130,6 +130,14 @@ describe('invitation/register', () => {
 
             await FirebaseApp.shared.auth.signIn('newregistrant@example.com', 'NewPassw0rd!');
 
+            const newUserId = RandomData.shared.userId();
+            await FirebaseApp.shared.functions.user.register.execute({
+                userId: newUserId,
+                firstName: 'New',
+                lastName: 'Registrant',
+                signInType: new User.SignInType.OAuth('google')
+            });
+
             const result = await FirebaseApp.shared.functions.invitation.register.execute({
                 teamId: testTeam.id,
                 personId: targetPerson.id,

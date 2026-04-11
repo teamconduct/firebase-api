@@ -124,7 +124,7 @@ export class Firestore {
     public user(id: User.Id): FirestoreDocument<User, { notifications: FirestoreCollection<{ [x: string]: FirestoreDocument<InAppNotification, never>; }> }> {
         return this.base
             .collection('users')
-            .document(id.value);
+            .document(id.guidString);
     }
 
     /**
@@ -259,7 +259,7 @@ export class Firestore {
     public notifications(userId: User.Id): FirestoreCollection<{ [x: string]: FirestoreDocument<InAppNotification, never>; }> {
         return this.base
             .collection('users')
-            .document(userId.value)
+            .document(userId.guidString)
             .collection('notifications');
     }
 

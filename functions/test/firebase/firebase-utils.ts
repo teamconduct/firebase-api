@@ -90,7 +90,7 @@ export class Document {
         return Document.collsAndData(
             { notifications: Collection.dynamic() },
             User.builder.build({
-                id: id.value,
+                id: id.guidString,
                 signInDate: UtcDate.now.flatten,
                 signInType: { type: 'google' },
                 properties: properties.flatten,
@@ -122,7 +122,7 @@ export class Document {
             fineIds: [],
             signInProperties: PersonSignInProperties.builder.build({
                 joinDate: UtcDate.now.flatten,
-                userId: userId.value,
+                userId: userId.guidString,
                 roles: roles
             }).flatten
         }).flatten);

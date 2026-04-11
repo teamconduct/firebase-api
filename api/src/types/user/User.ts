@@ -1,4 +1,4 @@
-import { Dictionary, Flattable, ITypeBuilder, Tagged, UtcDate, ValueTypeBuilder } from '@stevenkellner/typescript-common-functionality';
+import { Dictionary, Flattable, Guid, ITypeBuilder, Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
 import { Team } from '../team/Team';
 import { Person } from '../person/Person';
 import { NotificationProperties } from './NotificationProperties';
@@ -50,7 +50,7 @@ export namespace User {
     /**
      * Tagged type for user identifiers to prevent mixing with other string IDs.
      */
-    export type Id = Tagged<string, 'user'>;
+    export type Id = Tagged<Guid, 'user'>;
 
     export namespace Id {
 
@@ -62,7 +62,7 @@ export namespace User {
         /**
          * Builder for constructing User.Id instances from strings.
          */
-        export const builder = Tagged.builder('user' as const, new ValueTypeBuilder<string>());
+        export const builder = Tagged.builder('user' as const, Guid.builder);
     }
 
     /**
