@@ -1,5 +1,5 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { User, UserUpdateFunction } from '@stevenkellner/team-conduct-api';
+import { Person, User, UserUpdateFunction } from '@stevenkellner/team-conduct-api';
 import { Firestore } from '../../firebase';
 
 export class UserUpdateExecutableFunction extends UserUpdateFunction implements ExecutableFirebaseFunction<UserUpdateFunction.Parameters, void> {
@@ -27,12 +27,27 @@ export class UserUpdateExecutableFunction extends UserUpdateFunction implements 
         if (parameters.bio !== 'do-not-update')
             user.properties.bio = parameters.bio === 'remove' ? null : parameters.bio;
 
-        if (parameters.profilePictureUrl !== 'do-not-update')
+        const profilePictureUrlChanged = parameters.profilePictureUrl !== 'do-not-update';
+        if (profilePictureUrlChanged)
             user.properties.profilePictureUrl = parameters.profilePictureUrl === 'remove' ? null : parameters.profilePictureUrl;
 
         if (parameters.notificationSubscriptions !== 'do-not-update')
             user.settings.notification.subscriptions = parameters.notificationSubscriptions;
 
-        await Firestore.shared.user(userId).set(user);
+        const batch = Firestore.shared.batch();
+        batch.set(Firestore.shared.user(userId), user);
+
+        if (profilePictureUrlChanged) {
+            await Promise.all(user.teams.values.map(async teamProperties => {
+                const personSnapshot = await Firestore.shared.person(teamProperties.teamId, teamProperties.personId).snapshot();
+                if (!personSnapshot.exists)
+                    return;
+                const person = Person.builder.build(personSnapshot.data);
+                person.properties.profilePictureUrl = user.properties.profilePictureUrl;
+                batch.set(Firestore.shared.person(teamProperties.teamId, teamProperties.personId), person);
+            }));
+        }
+
+        await batch.commit();
     }
 }

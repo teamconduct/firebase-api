@@ -81,7 +81,7 @@ describe('invitation/register', () => {
             const testTeamId = RandomData.shared.teamId();
             const testPersonId = RandomData.shared.personId();
 
-            const person = new Person(testPersonId, new PersonProperties('Jane', 'Doe'), []);
+            const person = new Person(testPersonId, new PersonProperties('Jane', 'Doe', null), []);
             await FirebaseApp.shared.firestore.person(testTeamId, testPersonId).set(person);
 
             const personInvitation = new Invitation(testTeamId, testPersonId);

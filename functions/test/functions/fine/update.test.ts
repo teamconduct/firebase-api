@@ -54,7 +54,7 @@ describe('fine/update', () => {
                 new User.Properties('J', 'D', null, null), new User.Settings(new NotificationProperties()));
             user.teams.set(testTeamId, new User.TeamProperties(testTeamId, 'Test', testPersonId));
             await FirebaseApp.shared.firestore.user(testUserId).set(user);
-            const person = new Person(testPersonId, new PersonProperties('J', 'D'), []);
+            const person = new Person(testPersonId, new PersonProperties('J', 'D', null), []);
             person.signInProperties = new PersonSignInProperties(testUserId, UtcDate.now, ['team-manager']);
             await FirebaseApp.shared.firestore.person(testTeamId, testPersonId).set(person);
 

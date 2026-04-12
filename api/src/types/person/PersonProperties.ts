@@ -12,10 +12,12 @@ export class PersonProperties implements Flattable<PersonProperties.Flatten> {
      *
      * @param firstName - The first name of the person
      * @param lastName - The last name of the person (null if not provided)
+     * @param profilePictureUrl - The URL of the person's profile picture, or null if not set
      */
     constructor(
         public firstName: string,
-        public lastName: string
+        public lastName: string,
+        public profilePictureUrl: string | null
     ) {}
 
     /**
@@ -24,7 +26,8 @@ export class PersonProperties implements Flattable<PersonProperties.Flatten> {
     public get flatten(): PersonProperties.Flatten {
         return {
             firstName: this.firstName,
-            lastName: this.lastName
+            lastName: this.lastName,
+            profilePictureUrl: this.profilePictureUrl
         };
     }
 }
@@ -37,6 +40,7 @@ export namespace PersonProperties {
     export type Flatten = {
         firstName: string;
         lastName: string;
+        profilePictureUrl: string | null;
     }
 
     /**
@@ -53,7 +57,8 @@ export namespace PersonProperties {
         public build(value: Flatten): PersonProperties {
             return new PersonProperties(
                 value.firstName,
-                value.lastName
+                value.lastName,
+                value.profilePictureUrl
             );
         }
     }

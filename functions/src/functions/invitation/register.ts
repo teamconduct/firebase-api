@@ -52,6 +52,8 @@ export class InvitationRegisterExecutableFunction extends InvitationRegisterFunc
         batch.set(Firestore.shared.user(user.id), user);
 
         person.signInProperties = new PersonSignInProperties(user.id, UtcDate.now, []);
+        if (person.properties.profilePictureUrl === null)
+            person.properties.profilePictureUrl = user.properties.profilePictureUrl;
         batch.set(Firestore.shared.person(parameters.teamId, parameters.personId), person);
 
         await batch.commit();

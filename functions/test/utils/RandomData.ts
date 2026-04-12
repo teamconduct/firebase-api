@@ -45,7 +45,8 @@ export class RandomData {
     public personProperties(): PersonProperties {
         return new PersonProperties(
             uniqueNamesGenerator({ dictionaries: [names] }),
-            uniqueNamesGenerator({ dictionaries: [names] })
+            uniqueNamesGenerator({ dictionaries: [names] }),
+            null
         );
     }
 

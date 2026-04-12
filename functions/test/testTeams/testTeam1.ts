@@ -14,12 +14,12 @@ export const testTeam1: TestTeam = {
     persons: [
         new Person(
             Tagged.generate('person'),
-            new PersonProperties('John', 'Doe'),
+            new PersonProperties('John', 'Doe', null),
             [fineIds[0], fineIds[1]]
         ),
         new Person(
             Tagged.generate('person'),
-            new PersonProperties('Max', 'Mustermann'),
+            new PersonProperties('Max', 'Mustermann', null),
             [fineIds[2]]
         )
     ],

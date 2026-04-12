@@ -18,7 +18,7 @@ describe('person/update', () => {
                 () => FirebaseApp.shared.functions.person.update.execute({
                     teamId: RandomData.shared.teamId(),
                     id: RandomData.shared.personId(),
-                    properties: new PersonProperties('Updated', 'Person')
+                    properties: new PersonProperties('Updated', 'Person', null)
                 }),
                 'unauthenticated'
             );
@@ -34,7 +34,7 @@ describe('person/update', () => {
                 () => FirebaseApp.shared.functions.person.update.execute({
                     teamId: testTeam.id,
                     id: testTeam.persons[1].id,
-                    properties: new PersonProperties('Updated', 'Person')
+                    properties: new PersonProperties('Updated', 'Person', null)
                 }),
                 'permission-denied'
             );
@@ -50,7 +50,7 @@ describe('person/update', () => {
                 () => FirebaseApp.shared.functions.person.update.execute({
                     teamId: testTeam.id,
                     id: RandomData.shared.personId(),
-                    properties: new PersonProperties('Updated', 'Person')
+                    properties: new PersonProperties('Updated', 'Person', null)
                 }),
                 'not-found',
                 'Person not found'
@@ -70,7 +70,7 @@ describe('person/update', () => {
             await FirebaseApp.shared.functions.person.update.execute({
                 teamId: testTeam.id,
                 id: targetPerson.id,
-                properties: new PersonProperties('Updated', 'Person')
+                properties: new PersonProperties('Updated', 'Person', null)
             });
 
             const snapshot = await FirebaseApp.shared.firestore.person(testTeam.id, targetPerson.id).snapshot();
@@ -86,7 +86,7 @@ describe('person/update', () => {
             await FirebaseApp.shared.functions.person.update.execute({
                 teamId: testTeam.id,
                 id: targetPerson.id,
-                properties: new PersonProperties('Updated', 'Person')
+                properties: new PersonProperties('Updated', 'Person', null)
             });
 
             const snapshot = await FirebaseApp.shared.firestore.person(testTeam.id, targetPerson.id).snapshot();

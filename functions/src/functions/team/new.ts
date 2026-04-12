@@ -32,7 +32,7 @@ export class TeamNewExecutableFunction extends TeamNewFunction implements Execut
 
 
         const signInProperties = new PersonSignInProperties(userId, UtcDate.now, [...TeamRole.all]);
-        const personProperties = new PersonProperties(user.properties.firstName, user.properties.lastName);
+        const personProperties = new PersonProperties(user.properties.firstName, user.properties.lastName, null);
         const person = new Person(parameters.teamPersonId, personProperties, [], signInProperties);
         batch.set(Firestore.shared.person(parameters.id, parameters.teamPersonId), person);
 

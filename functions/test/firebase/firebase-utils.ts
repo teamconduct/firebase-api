@@ -105,7 +105,8 @@ export class Document {
             id: id.guidString,
             properties: PersonProperties.builder.build({
                 firstName: 'Test',
-                lastName: 'User'
+                lastName: 'User',
+                profilePictureUrl: null
             }).flatten,
             fineIds: [],
             signInProperties: null
@@ -117,7 +118,8 @@ export class Document {
             id: id.guidString,
             properties: PersonProperties.builder.build({
                 firstName: 'Test',
-                lastName: 'User'
+                lastName: 'User',
+                profilePictureUrl: null
             }).flatten,
             fineIds: [],
             signInProperties: PersonSignInProperties.builder.build({

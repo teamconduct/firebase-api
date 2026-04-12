@@ -18,7 +18,7 @@ describe('person/add', () => {
                 () => FirebaseApp.shared.functions.person.add.execute({
                     teamId: RandomData.shared.teamId(),
                     id: RandomData.shared.personId(),
-                    properties: new PersonProperties('Alice', 'Smith')
+                    properties: new PersonProperties('Alice', 'Smith', null)
                 }),
                 'unauthenticated'
             );
@@ -34,7 +34,7 @@ describe('person/add', () => {
                 () => FirebaseApp.shared.functions.person.add.execute({
                     teamId: testTeam.id,
                     id: RandomData.shared.personId(),
-                    properties: new PersonProperties('Alice', 'Smith')
+                    properties: new PersonProperties('Alice', 'Smith', null)
                 }),
                 'permission-denied'
             );
@@ -67,7 +67,7 @@ describe('person/add', () => {
         it('should create the person document', async () => {
             const testTeam = FirebaseApp.shared.testTeam;
             const newPersonId = RandomData.shared.personId();
-            const newProperties = new PersonProperties('Alice', 'Smith');
+            const newProperties = new PersonProperties('Alice', 'Smith', null);
 
             await FirebaseApp.shared.functions.person.add.execute({
                 teamId: testTeam.id,
@@ -96,7 +96,7 @@ describe('person/add', () => {
             await FirebaseApp.shared.functions.person.add.execute({
                 teamId: testTeam.id,
                 id: newPersonId,
-                properties: new PersonProperties('Bob', 'Jones')
+                properties: new PersonProperties('Bob', 'Jones', null)
             });
 
             const personSnapshot = await FirebaseApp.shared.firestore.person(testTeam.id, newPersonId).snapshot();
