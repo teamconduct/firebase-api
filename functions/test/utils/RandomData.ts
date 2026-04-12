@@ -91,9 +91,10 @@ export class RandomData {
     }
 
     public fine(id: Fine.Id | null = null, date: UtcDate | null = null): Fine {
+        const isPayed = Math.random() < 0.5;
         return new Fine(
             id ?? this.fineId(),
-            PayedState.all[Math.floor(Math.random() * PayedState.all.length)],
+            isPayed ? new PayedState.Payed(this.date()) : new PayedState.NotPayed(),
             date ?? this.date(),
             uniqueNamesGenerator({ dictionaries: [adjectives, starWars] }),
             this.fineAmount()

@@ -1,5 +1,5 @@
 import { Tagged, UtcDate } from '@stevenkellner/typescript-common-functionality';
-import { Money, Fine, FineTemplate, Person, PersonProperties } from '@stevenkellner/team-conduct-api';
+import { Money, Fine, FineTemplate, Person, PersonProperties, PayedState } from '@stevenkellner/team-conduct-api';
 import { TestTeam } from './TestTeam';
 
 const fineIds: [Fine.Id, Fine.Id, Fine.Id] = [
@@ -40,21 +40,21 @@ export const testTeam1: TestTeam = {
     fines: [
         new Fine(
             fineIds[0],
-            'notPayed',
+            new PayedState.NotPayed(),
             UtcDate.now,
             'Fine 1',
             Fine.Amount.money(new Money(10, 50))
         ),
         new Fine(
             fineIds[1],
-            'payed',
+            new PayedState.Payed(UtcDate.now),
             UtcDate.now,
             'Fine 2',
             Fine.Amount.item('crateOfBeer', 2)
         ),
         new Fine(
             fineIds[2],
-            'notPayed',
+            new PayedState.NotPayed(),
             UtcDate.now,
             'Fine 3',
             Fine.Amount.money(new Money(5, 0))

@@ -16,7 +16,7 @@ export class Fine implements Flattable<Fine.Flatten> {
      * Creates a new Fine instance.
      *
      * @param id - Unique identifier for the fine (GUID)
-     * @param payedState - Payment status ('payed' or 'notPayed')
+     * @param payedState - Payment status (Payed with date, or NotPayed)
      * @param date - Date when the fine was issued
      * @param reason - Description or reason for the fine
      * @param amount - Monetary amount of the fine
@@ -35,7 +35,7 @@ export class Fine implements Flattable<Fine.Flatten> {
     public get flatten(): Fine.Flatten {
         return {
             id: this.id.flatten,
-            payedState: this.payedState,
+            payedState: this.payedState.flatten,
             date: this.date.flatten,
             reason: this.reason,
             amount: this.amount.flatten
@@ -364,7 +364,7 @@ export namespace Fine {
      */
     export type Flatten = {
         id: Id.Flatten,
-        payedState: PayedState,
+        payedState: PayedState.Flatten,
         date: UtcDate.Flatten,
         reason: string,
         amount: Amount.Flatten
@@ -384,7 +384,7 @@ export namespace Fine {
         public build(value: Flatten): Fine {
             return new Fine(
                 Id.builder.build(value.id),
-                value.payedState,
+                PayedState.builder.build(value.payedState),
                 UtcDate.builder.build(value.date),
                 value.reason,
                 Amount.builder.build(value.amount)

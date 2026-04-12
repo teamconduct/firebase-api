@@ -1,5 +1,5 @@
 import { ExecutableFirebaseFunction, FunctionsError, UserAuthId } from '@stevenkellner/firebase-function';
-import { FineUpdateFunction, Team } from '@stevenkellner/team-conduct-api';
+import { FineUpdateFunction, Team, PayedState } from '@stevenkellner/team-conduct-api';
 import { checkAuthentication, Firestore, NotificationSender } from '../../firebase';
 
 export class FineUpdateExecutableFunction extends FineUpdateFunction implements ExecutableFirebaseFunction<FineUpdateFunction.Parameters, void> {
@@ -20,8 +20,8 @@ export class FineUpdateExecutableFunction extends FineUpdateFunction implements 
         await Firestore.shared.fine(parameters.teamId, parameters.fine.id).set(parameters.fine);
 
         const sender = NotificationSender.for(parameters.teamId, parameters.personId);
-        if (parameters.fine.payedState !== fineSnapshot.data.payedState) {
-            if (parameters.fine.payedState === 'payed')
+        if (parameters.fine.payedState.type !== fineSnapshot.data.payedState.type) {
+            if (parameters.fine.payedState instanceof PayedState.Payed)
                 await sender.finePayed(parameters.fine.id, parameters.fine.reason, parameters.fine.amount, teamSettings);
             else
                 await sender.fineUnpayed(parameters.fine.id, parameters.fine.reason, parameters.fine.amount, teamSettings);
